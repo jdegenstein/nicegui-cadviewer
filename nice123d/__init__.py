@@ -1,1 +1,1 @@
-from .code_editor import CodeEditor
+from .elements.code_editor import CodeEditor

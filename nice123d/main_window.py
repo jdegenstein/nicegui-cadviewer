@@ -3,11 +3,9 @@ from nicegui.events import KeyEventArguments
 import logging
 
 from app_logging import NiceGUILogHandler
-from project_gallery import ProjectGallery, models_path, code_file, new_file
-from code_editor import CodeEditor
+from nice123d.elements.project_gallery import ProjectGallery, models_path, code_file, new_file
+from nice123d.elements.code_editor import CodeEditor
 
-import platform
-active_os = platform.system()       # get the operating system
 
 # Add custom CSS for responsive sizing
 ui.add_css('''
@@ -48,25 +46,6 @@ class MainWindow(ui.element):
 
     def startup(self):
         self.viewer.startup()
-        ui.keyboard(on_key=self.handle_key)
-
-    def handle_key(self, e: KeyEventArguments):
-        if active_os == "Windows":
-            main_modifier = e.modifiers.ctrl
-        elif active_os == "Mac":
-            main_modifier = e.modifiers.cmd
-        else:
-            main_modifier = e.modifiers.meta
-
-        if main_modifier and e.action.keydown:
-            if e.key.enter:
-                self.editor.on_run()             # TODO: fix editor
-            elif e.key.name == "s":
-                self.editor.on_save()
-            elif e.key.name == "o":
-                self.editor.on_load()
-            elif e.key.name == "t":
-                self.editor.on_new()
 
     def on_close_window(self, event):
         self.viewer.shutdown()

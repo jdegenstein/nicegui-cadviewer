@@ -6,7 +6,7 @@ import os
 from app_logging import NiceGUILogHandler
 
 # [Variables]
-models_path = Path(__file__).parent / ".." / "models"
+models_path = Path(__file__).parent / ".." / ".." / "models"
 code_file = models_path / "basic.py"
 new_file = models_path / "new.py"
 

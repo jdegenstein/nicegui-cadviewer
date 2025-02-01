@@ -1,3 +1,5 @@
+
+# [Imports]
 from nicegui import ui
 from nicegui import events
 import logging
@@ -7,9 +9,13 @@ import time
 from pathlib import Path
 from app_logging import NiceGUILogHandler
 import platform
+
+# [Variables]
+active_os = platform.system()       # get the operating system
 # TODO: consider separate editor execution thread from nicegui thread
 
 
+# [Main Class]
 class CodeEditor(ui.element):
     font_size = 18   # todo: use font size for the editor
 
@@ -22,7 +28,7 @@ class CodeEditor(ui.element):
         
         self.file_name = ''
         self.model_path = ''
-        self.log = None
+        self.logger = None
         
         with self:
             with ui.row().classes('w-full h-full'):
@@ -44,9 +50,8 @@ class CodeEditor(ui.element):
         else:
             self.new_file = new_file
             self.on_new()
-            self.model_path = Path('./models')
+            self.model_path = Path('../../models')
 
-            
 
     def set_logger(self, logger: logging.Logger):
         """Set the logger to use for logging."""
@@ -86,17 +91,17 @@ class CodeEditor(ui.element):
         upload_bar = ui.upload(auto_upload=True, on_upload=handle_upload).props('accept=.py').classes('max-w-full')        
         # TODO: ^ for now we need a second click to upload the file
         
-        self.log.push(self.info('file', 'loaded successfully'))
+        self.logger.push(self.info('file', 'loaded successfully'))
         
     def on_undo(self):
         """Undo the last action in the editor."""
-        self.log.push("TODO: `undo` needs to be implemented")
+        self.logger.push("TODO: `undo` needs to be implemented")
         self.editor.run_method('undo')
 
     def on_redo(self):
         """Redo the last undone action in the editor.
            see https://github.com/codemirror/codemirror5/blob/master/src/edit/commands.js"""
-        self.log.push("TODO: `redo` needs to be implemented")
+        self.logger.push("TODO: `redo` needs to be implemented")
         self.editor.run_method('redo')
 
     def on_new(self):
@@ -105,18 +110,18 @@ class CodeEditor(ui.element):
         if self.new_file:
             with self.new_file.open('r') as f:
                 self.editor.value = f.read()
-            if self.log:    # TODO: move logging registration ealier in main window ?
-                self.log.push(self.info('file', f'loaded template {self.new_file}'))
+            if self.logger:    # TODO: move logging registration ealier in main window ?
+                self.logger.push(self.info('file', f'loaded template {self.new_file}'))
         else:
-            if self.log:    # TODO: move logging registration ealier in main window ?
-                self.log.push(self.info('file', 'No template file specified (`new.py` in `models`). Using minimal default code'))
+            if self.logger:    # TODO: move logging registration ealier in main window ?
+                self.logger.push(self.info('file', 'No template file specified (`new.py` in `models`). Using minimal default code'))
             self.editor.set_value('from build123d import *\nfrom ocp_vscode import *\n\n\nshow_all()')
 
     def on_run(self):
         """Execute the code from the editor."""
         self.time_start()
         result = self.execute_code(self.editor.value)
-        self.log.push(self.info('on_run', result))
+        self.logger.push(self.info('on_run', result))
         
     def prepare_move(self):
         """Prepare to move the editor to a new location."""

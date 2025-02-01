@@ -1,31 +1,22 @@
+
+# [Imports]
 from nicegui import ui
 from nicegui import events
+from nicegui.events import KeyEventArguments
 import logging
 from enum import Enum
-from project_gallery import ProjectGallery
-from note_viewer     import NoteViewer
-from customizer_view import CustomizerView
-from code_editor     import CodeEditor
-from model_viewer    import ModelViewer
-from view_console    import Console
-from settings_view   import SettingsView
-from help_view       import HelpView
-import platform
+from elements.project_gallery import ProjectGallery
+from elements.note_viewer     import NoteViewer
+from elements.customizer_view import CustomizerView
+from elements.code_editor     import CodeEditor
+from elements.model_viewer    import ModelViewer
+from elements.console_view    import ConsoleView
+from elements.settings_view   import SettingsView
+from elements.help_view       import HelpView
 
 # TODO: pass resize of splitter to elements.
+from constants import *
 
-Yes = True 
-No = False
-
-left = True, False 
-right = False, True
-both = True, True
-none = False, False
-P__experimental = Yes or No
-
-class Side(Enum):
-    LEFT = 1
-    RIGHT = 2
 
 # [Variable]
 size_splitter   = None
@@ -36,13 +27,13 @@ left_views      = []
 right_views     = []
 
 class Views():
-    gallery = None
+    gallery    = None
+    notes      = None
     customizer = None
     editor     = None
     viewer     = None
     console    = None
     settings   = None
-    notes      = None
     help       = None
 
     views_left  = None
@@ -79,7 +70,8 @@ class Views():
 
         count = 0
         for page in self.pages:
-            print(f'   - page {page} {page == self.show_left} {page == self.show_right}')
+            if 0:
+                print(f'   - page {page} {page == self.show_left} {page == self.show_right}')
             if page != self.show_left and page != self.show_right:
                 if page:
                     count += 1
@@ -548,15 +540,18 @@ def toggle_drawer(event):
         menu_button.icon = 'menu'
     ui.update()  # Ensure UI updates
     
+pages = None 
+def setup():
+    global pages
+    global size_splitter
 
-if __name__ in {"__main__", "__mp_main__"}:
     pages = PageSwitcher()
 
     with ui.splitter().classes('w-full h-full items-stretch') as main_splitter:
     
         with main_splitter.before:
-            with ui.column().classes('w-full h-full items-stretch') as containter:
-                left_container = containter
+            with ui.column().classes('w-full h-full items-stretch') as container:
+                left_container = container
                 pages.views.gallery    = ProjectGallery()
                 pages.views.customizer = CustomizerView()  
                 pages.views.editor     = CodeEditor()
@@ -574,7 +569,7 @@ if __name__ in {"__main__", "__mp_main__"}:
                 right_container = container
                 pages.views.notes    = NoteViewer()
                 pages.views.viewer   = ModelViewer()
-                pages.views.console  = Console()
+                pages.views.console  = ConsoleView()
                 pages.views.help     = HelpView()
 
                 right_views = [pages.views.notes, pages.views.viewer, pages.views.help]
@@ -639,5 +634,81 @@ if __name__ in {"__main__", "__mp_main__"}:
     pages.views.show_editor(Side.LEFT)
     pages.views.show_viewer(Side.RIGHT)
 
+def handle_key(e: KeyEventArguments):
+    if active_os == "Windows":
+        main_modifier = e.modifiers.ctrl
+    elif active_os == "Mac":
+        main_modifier = e.modifiers.cmd
+    else:
+        main_modifier = e.modifiers.meta
+
+    if main_modifier and e.action.keydown:
+        if e.key.enter:
+            pages.views.editor.on_run()             # TODO: fix editor
+        elif e.key.name == "s":
+            pages.views.editor.on_save()
+        elif e.key.name == "o":
+            pages.views.editor.on_load()
+        elif e.key.name == "t":
+            pages.views.editor.on_new()
+        elif e.key.name == "1":
+            pages.show_gallery_left(e)
+        elif e.key.name == "2":
+            pages.show_customizer_left(e)
+        elif e.key.name == "3":
+            pages.show_editor_left(e)
+        elif e.key.name == "4":
+            if P__experimental:
+                pages.show_viewer_left(e)
+            else:
+                pages.show_console_left(e)
+        elif e.key.name == "5":
+            if P__experimental:
+                pages.show_console_left(e)
+            else:
+                pages.show_settings_left(e)
+        elif e.key.name == "6":
+            if P__experimental:
+                pages.show_settings_left(e)
+            else:
+                pass
+    elif e.modifiers.alt and e.action.keydown:
+        if e.key.name == "1":
+            pages.show_notes_right(e)
+        elif e.key.name == "2":
+            pages.show_customizer_right(e)
+        elif e.key.name == "3":
+            if P__experimental:
+                pages.show_editor_right(e)
+            else:
+                pages.show_viewer_right(e)
+        elif e.key.name == "4":
+            if P__experimental:
+                pages.show_viewer_right(e)
+            else:
+                pages.show_console_right(e)
+
+        elif e.key.name == "5":
+            if P__experimental:
+                pages.show_console_right(e)
+            else:
+                pages.show_help_right(e)
+
+        elif e.key.name == "6":
+            pages.show_help_right(e)
+
+
+if __name__ in {"__main__", "__mp_main__"}:
+    # Call setup function to create the UI
+    setup()
+    ui.keyboard(on_key=handle_key)
+
+
     # Run the NiceGUI app
-    ui.run()
+    ui.run(
+        #native      = True,
+        #window_size = (1800, 900),
+        title       = "nice123d",
+        fullscreen  = False,
+        reload      = False,
+    )

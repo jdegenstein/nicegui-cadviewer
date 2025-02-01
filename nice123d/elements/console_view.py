@@ -2,7 +2,7 @@ from nicegui import ui
 from datetime import datetime
 import time
 
-class Console(ui.element):
+class ConsoleView(ui.element):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
