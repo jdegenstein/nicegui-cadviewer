@@ -5,7 +5,6 @@ import logging
 from app_logging import NiceGUILogHandler
 from project_gallery import ProjectGallery, models_path, code_file, new_file
 from code_editor import CodeEditor
-from ocp_viewer import OcpViewer
 
 import platform
 active_os = platform.system()       # get the operating system

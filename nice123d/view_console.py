@@ -9,8 +9,9 @@ class Console(ui.element):
         self.time_start()
         # TODO:           self.logger = NiceGUILogHandler(self.logger_ui)
 
-        with ui.column().classes('w-full h-full'):
-            self.logger = ui.log(max_lines=40).classes('w-full h-full')
+        with self:
+            with ui.row().classes('w-full h-full'):
+                self.logger = ui.log(max_lines=40).classes('w-full h-full')
     
         self.push(self.info('init', 'Code editor initialized'))
 
@@ -27,7 +28,3 @@ class Console(ui.element):
     def push(self, message):
         self.logger.push(message)
 
-    def set_visibility(self, visible):
-        self.logger.set_visibility(visible)
-        return super().set_visibility(visible)
-    

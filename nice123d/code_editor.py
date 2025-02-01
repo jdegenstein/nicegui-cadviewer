@@ -23,15 +23,16 @@ class CodeEditor(ui.element):
         self.file_name = ''
         self.model_path = ''
         self.log = None
-            
-        with ui.row().classes('w-full h-full'):
-            # Setup editor
-            self.editor = ui.codemirror(language='python', theme='dracula')
-            self.editor.classes('w-full h-full')
-            
-            self.new_file = None 
-            if new_file and new_file.exists():
-                self.new_file = new_file
+        
+        with self:
+            with ui.row().classes('w-full h-full'):
+                # Setup editor
+                self.editor = ui.codemirror(language='python', theme='dracula')
+                self.editor.classes('w-full h-full')
+                
+                self.new_file = None 
+                if new_file and new_file.exists():
+                    self.new_file = new_file
     
         if code_file and code_file.exists():
             with code_file.open() as f:
@@ -135,7 +136,3 @@ class CodeEditor(ui.element):
         except Exception as e:
             return f"Error: {str(e)}"
         
-    def set_visibility(self, visible):
-        self.editor.set_visibility(visible)
-        return super().set_visibility(visible)
-

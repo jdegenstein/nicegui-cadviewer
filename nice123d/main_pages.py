@@ -2,9 +2,17 @@ from nicegui import ui
 from nicegui import events
 import logging
 from enum import Enum
-from view_console import Console
-from code_editor import CodeEditor
+from project_gallery import ProjectGallery
+from note_viewer     import NoteViewer
+from customizer_view import CustomizerView
+from code_editor     import CodeEditor
+from model_viewer    import ModelViewer
+from view_console    import Console
+from settings_view   import SettingsView
+from help_view       import HelpView
 import platform
+
+# TODO: pass resize of splitter to elements.
 
 Yes = True 
 No = False
@@ -13,21 +21,19 @@ left = True, False
 right = False, True
 both = True, True
 none = False, False
-P__experimental = No
+P__experimental = Yes or No
 
 class Side(Enum):
     LEFT = 1
     RIGHT = 2
 
 # [Variable]
-
-
 size_splitter   = None
 
 left_container  = None
 right_container = None
-left_cards      = []
-right_cards     = []
+left_views      = []
+right_views     = []
 
 class Views():
     gallery = None
@@ -73,11 +79,13 @@ class Views():
 
         count = 0
         for page in self.pages:
+            print(f'   - page {page} {page == self.show_left} {page == self.show_right}')
             if page != self.show_left and page != self.show_right:
                 if page:
                     count += 1
                     page.set_visibility(False)
         print(f'- hidden pages {count}')
+        ui.update()
 
     def already_shown_on_side(self, page, side):
         if side == Side.LEFT:
@@ -207,8 +215,10 @@ class Views():
     def move_to_side(self, page, side):
         code = ''
         if page == self.editor:
-            self.views.editor.prepare_move()
-            
+            self.editor.prepare_move()
+        
+        page.set_visibility(False)
+
         if side == Side.LEFT and page in self.views_right:
             self.views_right.remove(page)
             self.views_left.append(page)
@@ -219,6 +229,8 @@ class Views():
             page.move(right_container)
         else:
             pass # impossible
+        
+        page.set_visibility(True)
 
         if page == self.editor:
             self.editor.finish_move()
@@ -424,8 +436,8 @@ class PageSwitcher():
                 'Alt+5': self.show_help_right,
             }
   
-    def setup_left_button_bar(self, cards : list):
-        cards.reverse()
+    def setup_left_button_bar(self, views : list):
+        views.reverse()
 
         with ui.button_group() as bar:	
             self.left_button_bar = bar
@@ -433,7 +445,7 @@ class PageSwitcher():
                 print(page)
                 if self.pages[page].is_left:
                     active = self.pages[page]
-                    active.page = cards.pop()
+                    active.page = views.pop()
                     
                     if 'Meta' in active.short_cut:
                         short_cut = active.short_cut.replace('Meta', 'Ctrl')
@@ -451,15 +463,15 @@ class PageSwitcher():
 
         return self.left_button_bar
 
-    def setup_right_button_bar(self, cards : list):
-        cards.reverse()
+    def setup_right_button_bar(self, views : list):
+        views.reverse()
         
         with ui.button_group() as bar:	
             self.right_button_bar = bar
             for page in self.pages:
                 if self.pages[page].is_right:
                     active = self.pages[page]                    
-                    active.page = cards.pop()
+                    active.page = views.pop()
                     
                     if 'Meta' in active.short_cut:
                         short_cut = active.short_cut.replace('Meta', 'Alt')
@@ -540,34 +552,45 @@ def toggle_drawer(event):
 if __name__ in {"__main__", "__mp_main__"}:
     pages = PageSwitcher()
 
-    with ui.splitter().classes('w-full h-full items-stretch border') as main_splitter:
+    with ui.splitter().classes('w-full h-full items-stretch') as main_splitter:
     
         with main_splitter.before:
-            with ui.column().classes('w-full h-full items-stretch border') as containter:
+            with ui.column().classes('w-full h-full items-stretch') as containter:
                 left_container = containter
-                pages.views.gallery = ui.label('Gallery.').classes('w-full h-full')
-                pages.views.customizer = ui.label('Customizer.').classes('w-full h-full')  
-                pages.views.editor = CodeEditor().classes('w-full h-full')
-                pages.views.settings = ui.label('Settings').classes('w-full h-full')
+                pages.views.gallery    = ProjectGallery()
+                pages.views.customizer = CustomizerView()  
+                pages.views.editor     = CodeEditor()
+                pages.views.settings   = SettingsView()
 
-                left_cards = [pages.views.gallery, pages.views.customizer, pages.views.editor]
+                left_views = [pages.views.gallery, pages.views.customizer, pages.views.editor, pages.views.settings]
+
+                for view in left_views:
+                    view.classes('w-full h-full')
+                    view.set_visibility(False)
+
 
         with main_splitter.after:
-            with ui.column().classes('w-full h-full items-stretch border') as container:
+            with ui.column().classes('w-full h-full items-stretch') as container:
                 right_container = container
-                pages.views.notes = ui.label('Notes.').classes('w-full h-full')
-                pages.views.viewer = ui.label('Viewer.').classes('w-full h-full')
-                pages.views.console = Console().classes('w-full h-full')
-                pages.views.help = ui.label('Help.').classes('w-full h-full')
-                right_cards = [pages.views.notes, pages.views.viewer, pages.views.help]
+                pages.views.notes    = NoteViewer()
+                pages.views.viewer   = ModelViewer()
+                pages.views.console  = Console()
+                pages.views.help     = HelpView()
+
+                right_views = [pages.views.notes, pages.views.viewer, pages.views.help]
+
+                for view in right_views:
+                    view.classes('w-full h-full')
+                    view.set_visibility(False)
 
         with main_splitter.separator:
-            with ui.column().classes('w-full h-full items-stretch border'):
+            with ui.column().classes('w-full h-full items-stretch'):
                 ui.space()
                 ui.button(icon='multiple_stop').classes('text-white text-s')  
                 ui.button(icon='send').classes('text-white')
         
         pages.views.editor.set_logger(pages.views.console.logger)
+        pages.views.viewer.set_logger(pages.views.console.logger)
 
     pages.views.update_pages()
 
@@ -612,6 +635,9 @@ if __name__ in {"__main__", "__mp_main__"}:
         
         alt_bar = pages.setup_right_button_bar(right_buttons)
 
+    pages.views.viewer.startup()
+    pages.views.show_editor(Side.LEFT)
+    pages.views.show_viewer(Side.RIGHT)
 
     # Run the NiceGUI app
     ui.run()

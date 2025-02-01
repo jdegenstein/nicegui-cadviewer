@@ -11,16 +11,15 @@ code_file = models_path / "basic.py"
 new_file = models_path / "new.py"
 
 
-class ProjectGallery(ui.element):
+class NoteViewer(ui.element):
 
     def __init__(self, models_path=models_path, **kwargs):
         super().__init__(**kwargs)
         self.models_path = models_path
         self.models = [model for model in models_path.iterdir() if model.is_dir()]
-
         with self:
             with ui.row():
-                self.main = ui.label("Project Gallery")
+                self.main = ui.markdown("# Note Viewer")
 
     def set_logger(self, logger: logging.Logger):
         """Set the logger to use for logging."""

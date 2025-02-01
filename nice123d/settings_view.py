@@ -6,23 +6,22 @@ import os
 from app_logging import NiceGUILogHandler
 
 # [Variables]
-models_path = Path(__file__).parent / ".." / "models"
-code_file = models_path / "basic.py"
-new_file = models_path / "new.py"
 
 
-class ProjectGallery(ui.element):
+class SettingsView(ui.element):
 
-    def __init__(self, models_path=models_path, **kwargs):
+    def __init__(self, path=Path('./settings'), **kwargs):
         super().__init__(**kwargs)
-        self.models_path = models_path
-        self.models = [model for model in models_path.iterdir() if model.is_dir()]
-
+        self.settings_path = path
         with self:
             with ui.row():
-                self.main = ui.label("Project Gallery")
+                self.main = ui.label("Settings View")
 
     def set_logger(self, logger: logging.Logger):
         """Set the logger to use for logging."""
         self.logger = logger
         # self.logger.addHandler(NiceGUILogHandler(self.log))
+
+    def set_visibility(self, visible):
+        self.main.set_visibility(visible)
+        return super().set_visibility(visible)
