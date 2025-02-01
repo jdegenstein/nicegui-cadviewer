@@ -16,38 +16,13 @@ class CodeEditor(ui.element):
     def set_file_name(self, event):
         self.file_name = event.value
 
-    def __init__(self, code_file=None, new_file=None):
+    def __init__(self, code_file=None, new_file=None, **kwargs):
         """Initialize the Python editor component."""
-        super().__init__()
-        self.time_start()
+        super().__init__(**kwargs)
+        
         self.file_name = ''
         self.model_path = ''
         self.log = None
-
-        
-        # Create a toolbar with buttons
-        with ui.row().classes('w-full h-5'):
-            if platform.system() == 'Mac':
-                meta = "Cmd"
-            else:
-                meta = "Ctrl"
-            
-            self.toolbar = ui.row().classes('w-full h-10')
-            with self.toolbar:
-                # https://fonts.google.com/icons
-                ui.button("",    icon="star",     on_click=self.on_new ).tooltip(f'New `{meta}+N`')
-                ui.button("",    icon="upload",   on_click=self.on_load).tooltip(f'Load `{meta}+O`')
-                self.file = ui.input(    label='File:', value=self.file_name,
-                    on_change=self.set_file_name,
-                ).props('clearable').classes('w-40')
-
-                ui.button("",    icon="download", on_click=self.on_save).tooltip(f'Save `{meta}+S`')
-                ui.button("Run", icon="send",     on_click=self.on_run ).tooltip(f'New `{meta}+Enter`')
-                if 0:
-                    ui.button("",         icon="undo",     on_click=self.on_undo).props('color="grey"')
-                    ui.button("",         icon="redo",     on_click=self.on_redo).props('color="grey"')
-
-
             
         with ui.row().classes('w-full h-full'):
             # Setup editor
@@ -58,11 +33,6 @@ class CodeEditor(ui.element):
             if new_file and new_file.exists():
                 self.new_file = new_file
     
-        with ui.row().classes('w-full h-20'):
-            self.log = ui.log(max_lines=10).classes('w-full h-20')
-    
-        self.log.push(self.info('init', 'Code editor initialized'))
-
         if code_file and code_file.exists():
             with code_file.open() as f:
                 code = f.read()
@@ -73,7 +43,7 @@ class CodeEditor(ui.element):
         else:
             self.new_file = new_file
             self.on_new()
-            self.model_path = code_file.parent
+            self.model_path = Path('./models')
 
             
 
@@ -147,6 +117,15 @@ class CodeEditor(ui.element):
         result = self.execute_code(self.editor.value)
         self.log.push(self.info('on_run', result))
         
+    def prepare_move(self):
+        """Prepare to move the editor to a new location."""
+        self.code = self.editor.value
+
+    def finish_move(self):
+        """Finish moving the editor to a new location."""
+        self.editor.value = self.code
+        self.editor.update()
+
 
     def execute_code(self, code: str):
         """Execute the Python code in the editor."""
@@ -155,4 +134,8 @@ class CodeEditor(ui.element):
             return "Code executed successfully"
         except Exception as e:
             return f"Error: {str(e)}"
+        
+    def set_visibility(self, visible):
+        self.editor.set_visibility(visible)
+        return super().set_visibility(visible)
 

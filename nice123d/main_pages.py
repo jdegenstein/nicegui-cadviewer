@@ -2,17 +2,22 @@ from nicegui import ui
 from nicegui import events
 import logging
 from enum import Enum
+from view_console import Console
+from code_editor import CodeEditor
+import platform
+
+Yes = True 
+No = False
 
 left = True, False 
 right = False, True
 both = True, True
 none = False, False
-
+P__experimental = No
 
 class Side(Enum):
     LEFT = 1
     RIGHT = 2
-
 
 # [Variable]
 
@@ -27,11 +32,12 @@ right_cards     = []
 class Views():
     gallery = None
     customizer = None
-    editor = None
-    viewer = None
-    settings = None
-    notes = None
-    help = None
+    editor     = None
+    viewer     = None
+    console    = None
+    settings   = None
+    notes      = None
+    help       = None
 
     views_left  = None
     views_right = None
@@ -42,12 +48,12 @@ class Views():
         self.show_right = None
     
     def update_pages(self):
-        self.pages = [self.gallery, self.customizer, self.editor, self.viewer, self.settings, self.notes, self.help]
+        self.pages = [self.gallery, self.customizer, self.editor, self.viewer, self.console, self.settings, self.notes, self.help]
         self.show_left = self.gallery
         self.show_right = self.notes
     
-        self.views_left  = [self.gallery, self.customizer, self.editor, self.settings]
-        self.views_right = [self.notes,   self.viewer,     self.help]
+        self.views_left  = [self.gallery, self.editor, self.customizer, self.settings]
+        self.views_right = [self.notes,   self.viewer, self.console,    self.help]
 
 
     def show_all(self):
@@ -90,6 +96,9 @@ class Views():
             return False
 
     def modify_size(self, side):
+        """If a already shown views button is clicked again, the size of the view is modified.
+            50% <-> 100% (for left views), 50% <-> 0% (for right views)
+        """
         if side == Side.LEFT:
 
             if size_splitter.value < 50:
@@ -128,7 +137,9 @@ class Views():
             pass # impossible
 
     def show_gallery(self):
-        """Show the gallery page it is restricted to the left page."""
+        """Show the gallery page it is restricted to the left page.
+        
+        """
 
         page = self.gallery
         side = Side.LEFT
@@ -196,9 +207,8 @@ class Views():
     def move_to_side(self, page, side):
         code = ''
         if page == self.editor:
-            print(f'editor {page} {side} - {page.value}')
-            code = page.value
-
+            self.views.editor.prepare_move()
+            
         if side == Side.LEFT and page in self.views_right:
             self.views_right.remove(page)
             self.views_left.append(page)
@@ -210,8 +220,8 @@ class Views():
         else:
             pass # impossible
 
-        page.value = code
-        page.update()
+        if page == self.editor:
+            self.editor.finish_move()
 
     def show_left_or_right(self, page, side, page_sibling_left=None, page_sibling_right=None):
         if side == Side.LEFT:
@@ -227,7 +237,6 @@ class Views():
 
         if self.is_on_other(page_sibling, self.other(side)):
             self.move_to_side(page_sibling, self.other(side))
-
 
         if self.already_shown_on_side(page, side):
             self.modify_size(side)
@@ -267,24 +276,34 @@ class Views():
 
     def show_customizer(self, side=Side.LEFT):
 
-        self.show_left_or_right(self.customizer, side, self.viewer, self.editor)
+        self.show_left_or_right(self.customizer, side, self.editor, self.viewer)
 
         
     def show_editor(self, side):
-
-        self.show_left_or_right(self.editor, side, self.customizer, self.viewer)
+        if P__experimental:
+            self.show_left_or_right(self.editor, side, self.customizer, self.viewer)
+        else:
+            print(f'show_editor restricted to {side.LEFT} - activate `P__experimental` to enable switching')            
+            self.show_left_or_right(self.editor, Side.LEFT, self.customizer, self.viewer)
         
     def show_viewer(self, side):
 
-        self.show_left_or_right(self.viewer, side, self.editor, self.customizer)
+        if P__experimental:
+            self.show_left_or_right(self.viewer, side, self.editor, self.customizer)
+        else:
+            print(f'show_viewer restricted to {side.RIGHT} - activate `P__experimental` to enable switching')
+            self.show_left_or_right(self.viewer, Side.RIGHT, self.editor, self.customizer)
+
+    def show_console(self, side):
+
+        self.show_left_or_right(self.console, side, self.editor, self.viewer)
 
 class Page():
-    def __init__(self, title, icon, position, sibling_page=None, short_cut=""):
+    def __init__(self, title, icon, position, short_cut=""):
         self.title        = title
         self.icon         = icon
         self.is_left      = position[0]
         self.is_right     = position[1]
-        self.sibling_page = sibling_page
         self.short_cut    = short_cut
         self.on_click     = None
         self.page         = None
@@ -321,19 +340,43 @@ def set_zoom_right():
     else:
         pass # impossible
 
-g__pages = {    # https://fonts.google.com/icons?icon.query=stop
-    'Ctrl+1':    Page('Gallery',    'folder',     left,  "Ctrl+1",    "Meta+1"),
-    'Alt+1' :    Page('Notes',      'info',       right, "Ctrl+1",    "Meta+1"),
-    'Meta+2':    Page('Customizer', 'plumbing',   both,  "Meta+4",    "Meta+2"),
-    'Meta+3':    Page('Editor',     'code',       both,  "Meta+4",    "Meta+3"),
-    'Meta+4':    Page('Viewer',     'view_in_ar', both,  "Meta+1",    "Meta+4"),
-    'Ctrl+5':    Page('Settings',   'settings',   left,  "Ctrl+5",    "Meta+5"),
-    'Alt+5' :    Page('Help',       'help',       right, "Ctrl+3",    "Meta+5"),
-   #'settings'   Page('Settings',   'settings',   none,  ""),
-}
+if P__experimental:
+    g__pages = {    # https://fonts.google.com/icons?icon.query=stop
+                    # use `Meta` for pages that are used on both sides
+                    # use `Ctrl` for pages that are used on the left side
+                    # use `Alt` for pages that are used on the right side
+        'Ctrl+1':    Page('Gallery',    'folder',     left,  "Ctrl+1"),
+        'Alt+1' :    Page('Notes',      'info',       right, "Alt+1"),
+        'Meta+2':    Page('Customizer', 'plumbing',   both,  "Meta+2"), 
+        'Meta+3':    Page('Editor',     'code',       both,  "Meta+3"),
+        'Meta+4':    Page('Viewer',     'view_in_ar', both,  "Meta+4"),
+        'Meta+5':    Page('Console',    'article',    both,  "Meta+5"),
+        'Ctrl+6':    Page('Settings',   'settings',   left,  "Ctrl+6"),
+        'Alt+6' :    Page('Help',       'help',       right, "Alt+6"),
+    }
+    left_buttons  = ['Ctrl+1', 'Meta+2', 'Ctrl+3', 'Meta+4', 'Ctrl+5', 'Ctrl+6']
+    right_buttons = ['Alt+1', 'Meta+2',  'Alt+3',  'Meta+4', 'Alt+5', 'Alt+6']
 
-left_buttons = ['Ctrl+1', 'Meta+2', 'Meta+3', 'Meta+4', 'Ctrl+5']
-right_buttons = ['Alt+1', 'Meta+2', 'Meta+3', 'Meta+4', 'Alt+5']
+else:
+    g__pages = {    # https://fonts.google.com/icons?icon.query=stop
+                    # use `Meta` for pages that are used on both sides
+                    # use `Ctrl` for pages that are used on the left side
+                    # use `Alt` for pages that are used on the right side
+        'Ctrl+1':    Page('Gallery',    'folder',     left,  "Ctrl+1"),
+        'Alt+1' :    Page('Notes',      'info',       right, "Alt+1"),
+        'Meta+2':    Page('Customizer', 'plumbing',   both,  "Meta+2"), 
+        'Ctrl+3':    Page('Editor',     'code',       left,  "Ctrl+3"),
+        'Alt+3':     Page('Viewer',     'view_in_ar', right, "Alt+3"),
+        'Meta+4':    Page('Console',    'article',    both,  "Meta+4"),
+        'Ctrl+5':    Page('Settings',   'settings',   left,  "Ctrl+5"),
+        'Alt+5' :    Page('Help',       'help',       right, "Alt+5"),
+    } 
+    left_buttons  = ['Ctrl+1', 'Ctrl+2', 'Ctrl+3', 'Ctrl+4', 'Ctrl+5']
+    right_buttons = ['Alt+1',  'Alt+2',  'Alt+3',  'Alt+4', 'Alt+5']
+
+
+
+    # TODO: g__pages needs to change ... a +6 will be needed
 
 class PageSwitcher():
     def __init__(self, pages = g__pages, add_zoom=False):
@@ -342,22 +385,44 @@ class PageSwitcher():
         self.add_zoom = add_zoom
         # TODO: move default to a yaml file
 
-        self.left_page   = 'Meta+3'
-        self.right_page  = 'Meta+4'
+        if P__experimental:
+            # TODO: needs to also change th g__pages
+            self.left_page   = 'Meta+3' # editor
+            self.right_page  = 'Meta+4' # viewer
+        else:
+            self.left_page   = 'Ctrl+3' # editor, restricted to left
+            self.right_page  = 'Alt+3'  # viewer, restricted to right
 
         self.views = Views()
-        self.map_button_to_views = {
-            'Ctrl+1': self.show_gallery_left,	
-            'Ctrl+2': self.show_customizer_left,
-            'Ctrl+3': self.show_editor_left,
-            'Ctrl+4': self.show_viewer_left,
-            'Ctrl+5': self.show_settings_left,
-            'Alt+1': self.show_notes_right,
-            'Alt+2': self.show_customizer_right,
-            'Alt+3': self.show_editor_right,
-            'Alt+4': self.show_viewer_right,
-            'Alt+5': self.show_help_right,
-        }
+
+        if P__experimental:
+            self.map_button_to_views = {
+                'Ctrl+1': self.show_gallery_left,	
+                'Alt+1': self.show_notes_right,
+                'Ctrl+2': self.show_customizer_left,
+                'Ctrl+3': self.show_editor_left,
+                'Ctrl+4': self.show_viewer_left,
+                'Ctrl+5': self.show_console_left,
+                'Ctrl+6': self.show_settings_left,
+                'Alt+2':  self.show_customizer_right,
+                'Alt+3':  self.show_editor_right,
+                'Alt+4':  self.show_viewer_right,
+                'Alt+5':  self.show_console_right,
+                'Alt+6':  self.show_help_right,
+            }
+        else:
+            self.map_button_to_views = {
+                'Ctrl+1': self.show_gallery_left,	
+                'Ctrl+2': self.show_customizer_left,
+                'Ctrl+3': self.show_editor_left,
+                'Ctrl+4': self.show_console_left,
+                'Ctrl+5': self.show_settings_left,
+                'Alt+1': self.show_notes_right,
+                'Alt+2': self.show_customizer_right,
+                'Alt+3': self.show_viewer_right,
+                'Alt+4': self.show_console_right,
+                'Alt+5': self.show_help_right,
+            }
   
     def setup_left_button_bar(self, cards : list):
         cards.reverse()
@@ -446,6 +511,15 @@ class PageSwitcher():
         print(f'show_viewer_right')
         self.views.show_viewer(Side.RIGHT)
 
+    def show_console_left(self, event):
+        print(f'show_console_left')
+        self.views.show_console(Side.LEFT)
+
+    def show_console_right(self, event):
+        print(f'show_console_right')
+        self.views.show_console(Side.RIGHT)
+
+
     def show_settings_left(self, event):
         print(f'show_settings_left')
         self.views.show_settings()
@@ -453,6 +527,15 @@ class PageSwitcher():
     def show_help_right(self, event):
         print(f'show_help_right')
         self.views.show_help()
+
+def toggle_drawer(event):
+    left_drawer.toggle()
+    if menu_button.icon == 'menu':
+        menu_button.icon = 'close'
+    else:
+        menu_button.icon = 'menu'
+    ui.update()  # Ensure UI updates
+    
 
 if __name__ in {"__main__", "__mp_main__"}:
     pages = PageSwitcher()
@@ -464,8 +547,8 @@ if __name__ in {"__main__", "__mp_main__"}:
                 left_container = containter
                 pages.views.gallery = ui.label('Gallery.').classes('w-full h-full')
                 pages.views.customizer = ui.label('Customizer.').classes('w-full h-full')  
-                pages.views.editor = ui.codemirror(language='python', theme='dracula').classes('w-full h-full')
-                pages.views.settings = ui.label('Settings.').classes('w-full h-full')
+                pages.views.editor = CodeEditor().classes('w-full h-full')
+                pages.views.settings = ui.label('Settings').classes('w-full h-full')
 
                 left_cards = [pages.views.gallery, pages.views.customizer, pages.views.editor]
 
@@ -474,15 +557,47 @@ if __name__ in {"__main__", "__mp_main__"}:
                 right_container = container
                 pages.views.notes = ui.label('Notes.').classes('w-full h-full')
                 pages.views.viewer = ui.label('Viewer.').classes('w-full h-full')
+                pages.views.console = Console().classes('w-full h-full')
                 pages.views.help = ui.label('Help.').classes('w-full h-full')
                 right_cards = [pages.views.notes, pages.views.viewer, pages.views.help]
 
         with main_splitter.separator:
-            ui.icon('multiple_stop').classes('text-grey text-2xl')  
+            with ui.column().classes('w-full h-full items-stretch border'):
+                ui.space()
+                ui.button(icon='multiple_stop').classes('text-white text-s')  
+                ui.button(icon='send').classes('text-white')
         
+        pages.views.editor.set_logger(pages.views.console.logger)
+
     pages.views.update_pages()
 
+    with ui.left_drawer(top_corner=True, bottom_corner=True).classes('p-3').style('background-color: #d7e3f4').props('mini dense') as left_drawer:
+        if platform.system() == 'Mac':
+            meta = "Cmd"
+        else:
+            meta = "Ctrl"
+
+        # https://fonts.google.com/icons
+        ui.icon('code').classes('text-4xl')
+        ui.button(icon="send",     on_click=pages.views.editor.on_run
+                  ).tooltip(f'Run Code `{meta}+Enter`').classes('text-small').props('color=accent dense')           
+        ui.button(icon="star",     on_click=pages.views.editor.on_new 
+                  ).tooltip(f'New `{meta}+N`').props('dense')
+        ui.button(icon="upload",   on_click=pages.views.editor.on_load
+                  ).tooltip(f'Load `{meta}+O`').props('dense')
+        ui.button("",    icon="download", on_click=pages.views.editor.on_save
+                  ).tooltip(f'Save `{meta}+S`').props('dense')
+        if 0:
+            ui.button("",         icon="undo",     on_click=pages.views.editor.on_undo).props('color="grey"')
+            ui.button("",         icon="redo",     on_click=pages.views.editor.on_redo).props('color="grey"')
+
+        ui.button(icon="cancel",   on_click=toggle_drawer
+                  ).tooltip(f'close drawer').classes('text-small') \
+                   .props('background-color: #d7e3f4') \
+                   .props('dense')
+        
     with ui.header(elevated=True).style('background-color: #3874c8').classes('items-center justify-between'):
+        menu_button = ui.button(on_click=toggle_drawer, icon='close').props('flat color=white')
         
         ctrl_bar = pages.setup_left_button_bar(left_buttons)
         ui.space()
@@ -490,8 +605,13 @@ if __name__ in {"__main__", "__mp_main__"}:
         ui.space()
         size_splitter = ui.number('Value', format='%.0f', value=50, min=0, max=100, step=10)
         size_splitter.bind_value(main_splitter)  
+        if P__experimental:
+            size_splitter.set_visibility(Yes)
+        else:
+            size_splitter.set_visibility(No)
+        
         alt_bar = pages.setup_right_button_bar(right_buttons)
-    
+
 
     # Run the NiceGUI app
     ui.run()
