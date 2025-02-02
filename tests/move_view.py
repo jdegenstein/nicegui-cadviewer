@@ -1,4 +1,4 @@
-from nicegui import ui
+from nicegui import ui      # [docs](https://nicegui.readthedocs.io/en/latest/)   
 
 # Create a splitter
 splitter = ui.splitter(value=50).classes("w-full h-64")

@@ -6,7 +6,7 @@ review: 2025-01-25
 
 """
 
-from nicegui import ui  # https://github.com/zauberzeug/nicegui
+from nicegui import ui      # [docs](https://nicegui.readthedocs.io/en/latest/)     # https://github.com/zauberzeug/nicegui
 import yaml  # https://pyyaml.org/
 from pathlib import Path
 from typing import List

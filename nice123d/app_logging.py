@@ -1,4 +1,4 @@
-from nicegui import ui
+from nicegui import ui      # [docs](https://nicegui.readthedocs.io/en/latest/)   
 import logging
 from rich.logging import RichHandler  # https://rich.readthedocs.io/en/stable/logging.html
 

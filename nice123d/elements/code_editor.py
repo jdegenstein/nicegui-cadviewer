@@ -1,34 +1,34 @@
+"""
+TODO: docs for this file
+"""
 
-# [Imports]
-from nicegui import ui
-from nicegui import events
-import logging
+# [Imports]                                      #| description or links
+from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
+from nice123d.elements.base_view import BaseView #| Base class for all views
+from constants import *                          #| The application constants
+from ..backend.path_manager import PathManager   #| Managing file and directory handling for the application
 
-from datetime import datetime
-import time
-from pathlib import Path
-from app_logging import NiceGUILogHandler
-import platform
 
 # [Variables]
-active_os = platform.system()       # get the operating system
 # TODO: consider separate editor execution thread from nicegui thread
 
 
 # [Main Class]
-class CodeEditor(ui.element):
+class CodeEditor(BaseView):
+    """
+    A Python code editor component.
+    """
+
+    # [Variables]
     font_size = 18   # todo: use font size for the editor
 
-    def set_file_name(self, event):
-        self.file_name = event.value
-
+    # [Constructor]
     def __init__(self, code_file=None, new_file=None, **kwargs):
         """Initialize the Python editor component."""
         super().__init__(**kwargs)
         
         self.file_name = ''
         self.model_path = ''
-        self.logger = None
         
         with self:
             with ui.row().classes('w-full h-full'):
@@ -52,22 +52,29 @@ class CodeEditor(ui.element):
             self.on_new()
             self.model_path = Path('../../models')
 
+    # [API]
+    def set_file_name(self, event):
+        self.file_name = event.value
 
-    def set_logger(self, logger: logging.Logger):
-        """Set the logger to use for logging."""
-        self.logger = logger
-        # self.logger.addHandler(NiceGUILogHandler(self.log))
-    
-    def time_start(self):
-        self.start_time = time.time()
+    def prepare_move(self):
+        """Prepare to move the editor to a new location."""
+        self.code = self.editor.value
 
-    def info(self, function, message, do_time=True):
-        timestamp = datetime.now().strftime('%X.%f')[:-5]
-        use_time = ''
-        if do_time:
-            used_time = f'in {time.time() - self.start_time:0.2}s'
-        return f'{timestamp}: [{function}] {message} {used_time}'
-    
+    def finish_move(self):
+        """Finish moving the editor to a new location."""
+        self.editor.value = self.code
+        self.editor.update()
+
+    def execute_code(self, code: str):
+        """Execute the Python code in the editor."""
+        # TODO: look into `RestrictedPython` or  `Jupyter` for security 
+        try:
+            exec(code)
+            return "Code executed successfully"
+        except Exception as e:
+            return f"Error: {str(e)}"
+
+    # [Event Handlers]
     def on_save(self):
         """Save the current code to a file."""
         self.time_start()
@@ -93,17 +100,6 @@ class CodeEditor(ui.element):
         
         self.logger.push(self.info('file', 'loaded successfully'))
         
-    def on_undo(self):
-        """Undo the last action in the editor."""
-        self.logger.push("TODO: `undo` needs to be implemented")
-        self.editor.run_method('undo')
-
-    def on_redo(self):
-        """Redo the last undone action in the editor.
-           see https://github.com/codemirror/codemirror5/blob/master/src/edit/commands.js"""
-        self.logger.push("TODO: `redo` needs to be implemented")
-        self.editor.run_method('redo')
-
     def on_new(self):
         """Clear the editor."""
         self.time_start()
@@ -123,21 +119,4 @@ class CodeEditor(ui.element):
         result = self.execute_code(self.editor.value)
         self.logger.push(self.info('on_run', result))
         
-    def prepare_move(self):
-        """Prepare to move the editor to a new location."""
-        self.code = self.editor.value
-
-    def finish_move(self):
-        """Finish moving the editor to a new location."""
-        self.editor.value = self.code
-        self.editor.update()
-
-
-    def execute_code(self, code: str):
-        """Execute the Python code in the editor."""
-        try:
-            exec(code)
-            return "Code executed successfully"
-        except Exception as e:
-            return f"Error: {str(e)}"
         

@@ -9,7 +9,7 @@ import yaml
 import git
 from pathlib import Path
 from typing import Optional
-from nicegui import ui
+from nicegui import ui      # [docs](https://nicegui.readthedocs.io/en/latest/)   
 
 # Settings file to store Git configuration
 SETTINGS_FILE = "./tests/settings.yaml"

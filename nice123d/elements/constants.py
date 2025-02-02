@@ -1,0 +1,31 @@
+"""
+TODO: docs for this file
+"""
+
+# [Imports]                                      #|
+from enum import Enum                            #| [docs](https://docs.python.org/3/library/enum.html)
+import platform                                  #| [docs](https://docs.python.org/3/library/platform.html)
+
+# [Types]
+class Side(Enum):
+    """"
+    Enum for defining the side in the view.
+    """
+    LEFT = 1
+    RIGHT = 2
+
+
+# [Constants]
+Yes = True
+No  = False
+
+active_os = platform.system()       # get the operating system
+
+left = True, False 
+right = False, True
+both = True, True
+none = False, False
+
+# [Parameters]
+P__experimental = Yes or No
+

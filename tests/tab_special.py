@@ -1,4 +1,4 @@
-from nicegui import ui
+from nicegui import ui      # [docs](https://nicegui.readthedocs.io/en/latest/)   
 
 page_gallery = None
 page_customizer = None

@@ -1,4 +1,4 @@
-from nicegui import ui
+from nicegui import ui      # [docs](https://nicegui.readthedocs.io/en/latest/)   
 from nicegui.events import KeyEventArguments
 import logging
 

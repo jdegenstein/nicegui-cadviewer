@@ -1,27 +1,30 @@
-from nicegui import ui
-import logging
+"""
+TODO: docs for this file
+"""
 
-from pathlib import Path
-import os
-from app_logging import NiceGUILogHandler
+# [Imports]                                      #| description or links
+from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
+from nice123d.elements.base_view import BaseView #| Base class for all views
+from constants import *                          #| The application constants
+from ..backend.path_manager import PathManager   #| Managing file and directory handling for the application
 
 # [Variables]
 
-
+# [Main Class]
 class SettingsView(ui.element):
 
+    # [Variables]
+
+    # [Constructor]
     def __init__(self, path=Path('./settings'), **kwargs):
         super().__init__(**kwargs)
         self.settings_path = path
         with self:
-            with ui.row():
-                self.main = ui.label("Settings View")
+            with ui.row() as main:
+                ui.label("Settings View")
 
-    def set_logger(self, logger: logging.Logger):
-        """Set the logger to use for logging."""
-        self.logger = logger
-        # self.logger.addHandler(NiceGUILogHandler(self.log))
+        self.main = main
 
-    def set_visibility(self, visible):
-        self.main.set_visibility(visible)
-        return super().set_visibility(visible)
+    # [API]
+    # [Event Handlers]
+

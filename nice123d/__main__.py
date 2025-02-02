@@ -33,7 +33,7 @@ license:
 
 """
 # [Imports]
-from constants import *
+from nice123d.elements.constants import *
 from nicegui import app, ui
 from pathlib import Path
 from main_window import MainWindow

@@ -3,35 +3,45 @@
 
 This module provides a model viewer based on `OCP_vscode` for nice123d.
 
-
 """
 
-from nicegui import ui
-import logging
-from ocp_vscode import *
+# [Imports]                                      #| description or links
+from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
+from nice123d.elements.base_view import BaseView #| Base class for all views
+from constants import *                          #| The application constants
+from ..backend.path_manager import PathManager   #| Managing file and directory handling for the application
+from ocp_vscode import *                         #| [docs](https://ocp_vscode.readthedocs.io/en/latest/)
 
-import subprocess
-from app_logging import NiceGUILogHandler
+import subprocess                                #| [docs](https://docs.python.org/3/library/subprocess.html)
 
+
+# [Variables]
+
+
+# [Main Class]
 class ModelViewer(ui.element):
-
+    """"
+    Model viewer element keeps track of the model files.
+    Using:
+    - OCP_vscode for viewing the models.
+    - pywebview for the GUI.
+    """
+    # [Variables]
+    # [Constructor]
     def __init__(self, ip_address= '127.0.0.1', port=3939, **kwargs):
         super().__init__(**kwargs)
         self.port = port
 
         with self:
-            with ui.row().classes('w-full h-full'):
+            with ui.row().classes('w-full h-full') as main:
                 self.ocpcv = (
                                 ui.element("iframe")
                                 .props(f'src="http://{ip_address}:{port}/viewer"')
                                 .classes("w-full h-[calc(100vh-5rem)]")
                             )
+        self.main = main
 
-    def set_logger(self, logger: logging.Logger):
-        """Set the logger to use for logging."""
-        self.logger = logger
-        # self.logger.addHandler(NiceGUILogHandler(self.log))
-
+    # [API]
     # run ocp_vscode in a subprocess
     def startup(self):
         # spawn separate viewer process
@@ -43,3 +53,4 @@ class ModelViewer(ui.element):
         self.ocpcv_proc.kill()
         # ocpcv_proc.terminate() # TODO: investigate best cross-platform solution
 
+    # [Event Handlers]

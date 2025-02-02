@@ -1,8 +1,18 @@
-from nicegui import ui
-from datetime import datetime
-import time
+"""
+TODO: docs for this file
+"""
 
-class ConsoleView(ui.element):
+# [Imports]                                      #| description or links
+from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
+from nice123d.elements.base_view import BaseView #| Base class for all views
+from constants import *                          #| The application constants
+from ..backend.path_manager import PathManager   #| Managing file and directory handling for the application
+
+# [Main Class]
+class ConsoleView(BaseView):
+    """
+    Keeping a common ui element for logging messages from the different views.
+    """
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -10,20 +20,14 @@ class ConsoleView(ui.element):
         # TODO:           self.logger = NiceGUILogHandler(self.logger_ui)
 
         with self:
-            with ui.row().classes('w-full h-full'):
+            with ui.row().classes('w-full h-full') as main:
                 self.logger = ui.log(max_lines=40).classes('w-full h-full')
-    
+        
+        self.main = main
+
+        super().define_logger(self.logger)
+
         self.push(self.info('init', 'Code editor initialized'))
-
-    def time_start(self):
-        self.start_time = time.time()
-
-    def info(self, function, message, do_time=True):
-        timestamp = datetime.now().strftime('%X.%f')[:-5]
-        use_time = ''
-        if do_time:
-            used_time = f'in {time.time() - self.start_time:0.2}s'
-        return f'{timestamp}: [{function}] {message} {used_time}'
 
     def push(self, message):
         self.logger.push(message)

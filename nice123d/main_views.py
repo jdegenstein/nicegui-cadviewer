@@ -1,6 +1,6 @@
 
 # [Imports]
-from nicegui import ui
+from nicegui import ui      # [docs](https://nicegui.readthedocs.io/en/latest/)   
 from nicegui import events
 from nicegui.events import KeyEventArguments
 import logging
@@ -15,7 +15,7 @@ from elements.settings_view   import SettingsView
 from elements.help_view       import HelpView
 
 # TODO: pass resize of splitter to elements.
-from constants import *
+from nice123d.elements.constants import *
 
 
 # [Variable]
