@@ -1,12 +1,10 @@
-from nicegui import ui      # [docs](https://nicegui.readthedocs.io/en/latest/)   
-from nicegui.events import KeyEventArguments
-import logging
 
-from app_logging import NiceGUILogHandler
-from nice123d.elements.project_gallery import ProjectGallery, models_path, code_file, new_file
-from nice123d.elements.code_editor import CodeEditor
-
-
+# [Include]                                      #| Description      
+from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
+from nicegui.events import KeyEventArguments     #| [docs](https://nicegui.readthedocs.io/en/latest/events.html)
+from main_views import MainViews                 #| All views collected in main
+from backend.path_manager import PathManager     #| Path manager
+from elements.constants import *                 #| Constants
 # Add custom CSS for responsive sizing
 ui.add_css('''
     :root {
@@ -17,41 +15,42 @@ ui.add_css('''
 
 class MainWindow(ui.element):
     
-    def __init__(self, app, models_path=models_path, code_file=code_file, new_file=new_file):
+    def __init__(self, app):
         self.app = app
         self.width =1800
         self.height= 900
-        self.title="nicegui-cadviewer"
+        self.title="nice123d"
+        self.path_manager = PathManager()
+        self.views = MainViews(self.path_manager)    
 
-        self.model_path = models_path
-        self.code_file = models_path / code_file
-        self.new_file = models_path / new_file
+    def run(self):
+        self.views.setup()
 
-        ui.add_css('''
-            :root {
-                --nicegui-default-padding: 0.5rem;
-                --nicegui-default-gap: 0.5rem;
-            }
-        ''')
+
+        # Run the NiceGUI app
+        if P__native_window:
+            ui.run(
+                native      = P__native_window,
+                window_size = (1800, 900),
+                title       = "nice123d",
+                fullscreen  = False,
+                reload      = False,
+            )
+        else:
+            ui.run(
+                title       = "nice123d",
+                fullscreen  = False,
+                reload      = False,
+            )
                 
-
-        # connect logger to sub elements
-        self.gallery.set_logger(self.logger)
-        self.editor.set_logger(self.logger)
-        self.viewer.set_logger(self.logger)
-
     @property
     def size(self):
         return (self.width, self.height)
 
     def startup(self):
-        self.viewer.startup()
+        self.views.viewer.startup()
 
     def on_close_window(self, event):
-        self.viewer.shutdown()
-        self.editor.on_save()
-        self.close()
+        self.views.viewer.shutdown()
+        self.views.editor.on_save()
         self.app.shutdown()
-
-
-

@@ -11,8 +11,10 @@ class Side(Enum):
     """"
     Enum for defining the side in the view.
     """
+    NONE = 0
     LEFT = 1
     RIGHT = 2
+    BOTH = 3
 
 
 # [Constants]
@@ -28,4 +30,4 @@ none = False, False
 
 # [Parameters]
 P__experimental = Yes or No
-
+P__native_window = No

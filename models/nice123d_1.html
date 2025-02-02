@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>nice123d</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/_nicegui/2.10.1/static/favicon.ico" rel="shortcut icon" />
+    <link href="/_nicegui/2.10.1/static/nicegui.css" rel="stylesheet" type="text/css" />
+    <link href="/_nicegui/2.10.1/static/fonts.css" rel="stylesheet" type="text/css" />
+    
+    <link href="/_nicegui/2.10.1/static/quasar.prod.css" rel="stylesheet" type="text/css" />
+    
+    <!-- prevent Prettier from removing this line -->
+    
+  </head>
+  <body>
+    <script src="/_nicegui/2.10.1/static/es-module-shims.js"></script>
+    <script src="/_nicegui/2.10.1/static/socket.io.min.js"></script>
+    
+    <script src="/_nicegui/2.10.1/static/tailwindcss.min.js"></script>
+    
+    <!-- prevent Prettier from removing this line -->
+    
+    <script src="/_nicegui/2.10.1/static/vue.global.prod.js"></script>
+    <script src="/_nicegui/2.10.1/static/quasar.umd.prod.js"></script>
+    
+    <script src="/_nicegui/2.10.1/static/nicegui.js"></script>
+
+    <script src="/_nicegui/2.10.1/static/lang/en-US.umd.prod.js"></script>
+    <script type="importmap">
+      {"imports": {"ag-grid-community":"/_nicegui/2.10.1/libraries/824761fa71c0302be6be68e483808b57/ag-grid-community.min.js","mermaid":"/_nicegui/2.10.1/libraries/a022d63bc2efb68f616955feada73028/mermaid.esm.min.mjs","blockDiagram-NDWNTGEE":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/blockDiagram-NDWNTGEE.mjs","c4Diagram-AUYESYAG":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/c4Diagram-AUYESYAG.mjs","chunk-2RSIMOBZ":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-2RSIMOBZ.mjs","chunk-4BPNZXC3":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-4BPNZXC3.mjs","chunk-4KE642ED":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-4KE642ED.mjs","chunk-4SRTBRON":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-4SRTBRON.mjs","chunk-6BY5RJGC":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-6BY5RJGC.mjs","chunk-6IZS222M":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-6IZS222M.mjs","chunk-6XGRHI2A":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-6XGRHI2A.mjs","chunk-AC3VT7B7":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-AC3VT7B7.mjs","chunk-BKDDFIKN":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-BKDDFIKN.mjs","chunk-BOP2KBYH":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-BOP2KBYH.mjs","chunk-C7NU23FD":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-C7NU23FD.mjs","chunk-CBSWTUHP":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-CBSWTUHP.mjs","chunk-D3PZO57J":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-D3PZO57J.mjs","chunk-DZFIHE2J":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-DZFIHE2J.mjs","chunk-E4AWDUZE":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-E4AWDUZE.mjs","chunk-F4773GRL":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-F4773GRL.mjs","chunk-GTKDMUJJ":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-GTKDMUJJ.mjs","chunk-KMOJB3TB":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-KMOJB3TB.mjs","chunk-NQURTBEV":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-NQURTBEV.mjs","chunk-OUDNNCD4":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-OUDNNCD4.mjs","chunk-RRFB4HDS":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-RRFB4HDS.mjs","chunk-TI4EEUUG":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-TI4EEUUG.mjs","chunk-U6LOUQAF":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-U6LOUQAF.mjs","chunk-UWHJNN4Q":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-UWHJNN4Q.mjs","chunk-VRGDDFRA":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-VRGDDFRA.mjs","chunk-VSLJSFIP":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-VSLJSFIP.mjs","chunk-WVHPJQMP":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-WVHPJQMP.mjs","chunk-YFFLADYN":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-YFFLADYN.mjs","chunk-YJEQJWB7":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-YJEQJWB7.mjs","chunk-YPUTD6PB":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/chunk-YPUTD6PB.mjs","classDiagram-EPVPYR3L":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/classDiagram-EPVPYR3L.mjs","classDiagram-v2-NO4EPWGV":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/classDiagram-v2-NO4EPWGV.mjs","dagre-EVPMPUST":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/dagre-EVPMPUST.mjs","diagram-V25JEYTC":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/diagram-V25JEYTC.mjs","erDiagram-Y4N7DENO":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/erDiagram-Y4N7DENO.mjs","flowDiagram-JTTVBJUY":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/flowDiagram-JTTVBJUY.mjs","ganttDiagram-6SR64PWN":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/ganttDiagram-6SR64PWN.mjs","gitGraph-F2EDSAW4-LKDW3VZQ":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/gitGraph-F2EDSAW4-LKDW3VZQ.mjs","gitGraphDiagram-LRIBUTDQ":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/gitGraphDiagram-LRIBUTDQ.mjs","info-PWGDJKR5-T7ZKA3RY":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/info-PWGDJKR5-T7ZKA3RY.mjs","infoDiagram-YTPSHCSX":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/infoDiagram-YTPSHCSX.mjs","journeyDiagram-VRXW2F6L":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/journeyDiagram-VRXW2F6L.mjs","katex-SWYD7GD6":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/katex-SWYD7GD6.mjs","mindmap-definition-KLCIANCF":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/mindmap-definition-KLCIANCF.mjs","packet-7PPW3X5M-O6SZ3T2R":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/packet-7PPW3X5M-O6SZ3T2R.mjs","pie-RF5LNP4B-V656W2AT":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/pie-RF5LNP4B-V656W2AT.mjs","pieDiagram-WYSUK7CQ":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/pieDiagram-WYSUK7CQ.mjs","quadrantDiagram-K5BY4R5E":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/quadrantDiagram-K5BY4R5E.mjs","requirementDiagram-2DBX4ZW4":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/requirementDiagram-2DBX4ZW4.mjs","sankeyDiagram-F3GI3WFI":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/sankeyDiagram-F3GI3WFI.mjs","sequenceDiagram-QBGN4KDC":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/sequenceDiagram-QBGN4KDC.mjs","stateDiagram-S3XGF733":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/stateDiagram-S3XGF733.mjs","stateDiagram-v2-BSO5MUCZ":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/stateDiagram-v2-BSO5MUCZ.mjs","timeline-definition-MHTE3MCH":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/timeline-definition-MHTE3MCH.mjs","xychartDiagram-RLS75X5Z":"/_nicegui/2.10.1/libraries/cfe32b157f25617b6d945cdaa9efc3d0/xychartDiagram-RLS75X5Z.mjs","echarts":"/_nicegui/2.10.1/libraries/c3db162d662122eb0e7be8cd04794fac/echarts.min.js","echarts-gl":"/_nicegui/2.10.1/libraries/03262291cc1f8c805209dc27af296755/echarts-gl.min.js","nipplejs":"/_nicegui/2.10.1/libraries/d41977ee1b3e11c33e82694895ca2ba9/nipplejs.js","standalone":"/_nicegui/2.10.1/libraries/26e9f3a0290f18f1ab866f8d6faa7480/standalone.js","plotly":"/_nicegui/2.10.1/libraries/a7b1c4d4fc8dfc15b2e1a1f5e04b13ae/plotly.min.js","three":"/_nicegui/2.10.1/libraries/b762210ea1a93dc0f46fb5b27705c9e0/three.module.js","BufferGeometryUtils":"/_nicegui/2.10.1/libraries/76e9d2120ee202fa3a567f310e68de5f/BufferGeometryUtils.js","CSS2DRenderer":"/_nicegui/2.10.1/libraries/76e9d2120ee202fa3a567f310e68de5f/CSS2DRenderer.js","CSS3DRenderer":"/_nicegui/2.10.1/libraries/76e9d2120ee202fa3a567f310e68de5f/CSS3DRenderer.js","DragControls":"/_nicegui/2.10.1/libraries/76e9d2120ee202fa3a567f310e68de5f/DragControls.js","GLTFLoader":"/_nicegui/2.10.1/libraries/76e9d2120ee202fa3a567f310e68de5f/GLTFLoader.js","OrbitControls":"/_nicegui/2.10.1/libraries/76e9d2120ee202fa3a567f310e68de5f/OrbitControls.js","STLLoader":"/_nicegui/2.10.1/libraries/76e9d2120ee202fa3a567f310e68de5f/STLLoader.js","tween":"/_nicegui/2.10.1/libraries/56fb5b540488dffdd933adb0cc513c53/tween.umd.js"}}
+    </script>
+    <style>*[data-joystick] > div {width: 100%; height: 100%; position: relative; }
+.js-plotly-plot .plotly .modebar-group {display: flex; }
+.js-plotly-plot .plotly .modebar-btn {display: flex; }
+.js-plotly-plot .plotly .modebar-btn svg {position: static; }
+.js-plotly-plot {box-sizing: content-box; }</style>
+
+                <script>
+                    window.onload = () => {
+                        const header = getHtmlElement(52);
+                        new ResizeObserver(() => {
+                            document.documentElement.style.scrollPaddingTop = `${header.offsetHeight}px`;
+                        }).observe(header);
+                    };
+                </script>
+            
+
+<script type="text/x-template" id="tpl-joystick"><div data-joystick><div></div></div></script>
+<script type="text/x-template" id="tpl-plotly"><div data-plotly></div></script>
+
+    <div id="app"></div>
+    <div id="popup" aria-hidden="true">
+      <span>Connection lost.</span>
+      <span>Trying to reconnect...</span>
+    </div>
+    <script type="module">
+      const app = createApp(parseElements(String.raw`{"0":{"tag":"q-layout","class":["nicegui-layout"],"props":{"view":"lHh Lpr lff"},"children":[52,40,1]},"1":{"tag":"q-page-container","children":[2]},"2":{"tag":"q-page","children":[3]},"3":{"tag":"div","class":["nicegui-content"],"children":[4,5,84]},"4":{"tag":"nicegui-colors","props":{"primary":"#5898d4","secondary":"#26a69a","accent":"#00006A","dark":"#1d1d1d","dark_page":"#121212","positive":"#21ba45","negative":"#c10015","info":"#555555","warning":"#f2c037","customColors":{}},"component":{"key":"b0b17893a51343979e2090deee730538/colors.js","name":"colors","tag":"nicegui-colors"}},"5":{"tag":"q-splitter","class":["nicegui-splitter","w-full","h-full","items-stretch"],"props":{"model-value":50,"loopback":true,"horizontal":false,"limits":[0,100],"reverse":false},"slots":{"before":{"ids":[6]},"after":{"ids":[19]},"separator":{"ids":[35]}},"events":[{"listener_id":"f97243d5-8b5c-4af4-b1cf-f533fa2aa2fc","type":"update:modelValue","specials":[],"modifiers":[],"keys":[],"args":[null],"throttle":0.05,"leading_events":true,"trailing_events":true,"js_handler":null}]},"6":{"tag":"div","class":["nicegui-column","w-full","h-full","items-stretch"],"children":[7,10,13,16]},"7":{"tag":"div","class":["w-full","h-full","hidden"],"children":[8]},"8":{"tag":"div","class":["nicegui-row","row","hidden"],"children":[9]},"9":{"tag":"div","text":"Project Gallery"},"10":{"tag":"div","class":["w-full","h-full","hidden"],"children":[11]},"11":{"tag":"div","class":["nicegui-row","row","hidden"],"children":[12]},"12":{"tag":"div","text":"Customizer"},"13":{"tag":"div","class":["w-full","h-full"],"children":[14]},"14":{"tag":"div","class":["nicegui-row","row","w-full","h-full"],"children":[15]},"15":{"tag":"nicegui-codemirror","class":["nicegui-codemirror","w-full","h-full"],"props":{"value":"from build123d import *\nfrom ocp_vscode import *\n\n# Create a new part\nmain = Box(10, 10, 10)\n\nshow(main)","loopback":null,"resource_path":"/_nicegui/2.10.1/resources/85bbe05f06862a2ef612c9d56a16ff70","language":"python","theme":"dracula","indent":"    ","lineWrapping":false,"highlightWhitespace":false},"events":[{"listener_id":"1bed8528-d2d1-40d9-a7dc-95f34e8e7956","type":"update:value","specials":[],"modifiers":[],"keys":[],"args":[null],"throttle":0,"leading_events":true,"trailing_events":true,"js_handler":null}],"component":{"key":"b0b17893a51343979e2090deee730538/codemirror.js","name":"codemirror","tag":"nicegui-codemirror"}},"16":{"tag":"div","class":["w-full","h-full","hidden"],"children":[17]},"17":{"tag":"div","class":["nicegui-row","row","hidden"],"children":[18]},"18":{"tag":"div","text":"Settings View"},"19":{"tag":"div","class":["nicegui-column","w-full","h-full","items-stretch"],"children":[20,23,24,25,29]},"20":{"tag":"div","class":["w-full","h-full","hidden"],"children":[21]},"21":{"tag":"div","class":["nicegui-row","row","hidden"],"children":[22]},"22":{"tag":"nicegui-markdown","class":["nicegui-markdown"],"props":{"innerHTML":"&lt;h1&gt;Note Viewer&lt;/h1&gt;\n","codehilite_css_url":"/_nicegui/2.10.1/codehilite.css"},"component":{"key":"b0b17893a51343979e2090deee730538/markdown.js","name":"markdown","tag":"nicegui-markdown"}},"23":{"tag":"div","class":["w-full","h-full"]},"24":{"tag":"iframe","class":["w-full","h-[calc(100vh-5rem)]"],"props":{"src":"http://127.0.0.1:3939/viewer"}},"25":{"tag":"div","class":["w-full","h-full","hidden"],"children":[26]},"26":{"tag":"div","class":["nicegui-row","row","w-full","h-full","hidden"],"children":[27]},"27":{"tag":"div","class":["nicegui-log","w-full","h-full"],"children":[28]},"28":{"tag":"div","text":"13:46:49.5: [init] Code editor initialized in 9.5e-05s"},"29":{"tag":"div","class":["w-full","h-full","hidden"],"children":[30]},"30":{"tag":"div","class":["nicegui-column","hidden"],"children":[31]},"31":{"tag":"div","class":["nicegui-row","row"],"children":[32,33,34]},"32":{"tag":"div","text":"Help View"},"33":{"tag":"nicegui-input","props":{"value":"","loopback":false,"error":null,"placeholder":"Search","type":"text","_autocomplete":[]},"events":[{"listener_id":"f9765e1d-a65f-4be5-8587-622c1c171ec0","type":"update:value","specials":[],"modifiers":[],"keys":[],"args":[null],"throttle":0,"leading_events":true,"trailing_events":true,"js_handler":null}],"component":{"key":"b0b17893a51343979e2090deee730538/input.js","name":"input","tag":"nicegui-input"}},"34":{"tag":"q-btn","props":{"color":"primary","label":"Load Help"}},"35":{"tag":"div","class":["nicegui-column","w-full","h-full","items-stretch"],"children":[36,37,38,39]},"36":{"tag":"q-btn","class":["text-white","text-s"],"props":{"color":"accent","label":"","icon":"multiple_stop","dense":true}},"37":{"tag":"q-space"},"38":{"tag":"q-btn","class":["text-white"],"props":{"color":"accent","label":"","icon":"send","dense":true},"events":[{"listener_id":"f4c91a53-2055-437c-8432-5d1b90c1d936","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"39":{"tag":"q-space"},"40":{"tag":"q-drawer","class":["nicegui-drawer","p-3"],"style":{"background-color":"#d7e3f4"},"props":{"show-if-above":true,"side":"left","bordered":false,"elevated":false,"mini":true,"dense":true},"children":[41,42,44,46,48,50]},"41":{"tag":"q-icon","class":["text-4xl"],"props":{"name":"code"}},"42":{"tag":"q-btn","class":["text-small"],"props":{"color":"accent","label":"","icon":"send","dense":true},"children":[43],"events":[{"listener_id":"38152339-df44-4b1e-93de-3847563378dc","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"43":{"tag":"q-tooltip","text":"Run Code &#96;Ctrl+Enter&#96;"},"44":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"star","dense":true},"children":[45],"events":[{"listener_id":"4daa8518-d9cc-49de-8fe8-e18691f48619","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"45":{"tag":"q-tooltip","text":"New &#96;Ctrl+N&#96;"},"46":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"upload","dense":true},"children":[47],"events":[{"listener_id":"a54497d9-c85c-474b-9e01-3d30fc0c3f95","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"47":{"tag":"q-tooltip","text":"Load &#96;Ctrl+O&#96;"},"48":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"download","dense":true},"children":[49],"events":[{"listener_id":"605d4184-cc68-4eef-bbb5-87da5be9b498","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"49":{"tag":"q-tooltip","text":"Save &#96;Ctrl+S&#96;"},"50":{"tag":"q-btn","class":["text-small"],"props":{"color":"primary","label":"","icon":"cancel","background-color:":true,"d7e3f4":true,"dense":true},"children":[51],"events":[{"listener_id":"f17deb48-c224-4fd5-9389-d820c4750ad9","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"51":{"tag":"q-tooltip","text":"close drawer"},"52":{"tag":"q-header","class":["nicegui-header","wrap","items-center","justify-between"],"style":{"background-color":"#3874c8"},"props":{"model-value":true,"loopback":true,"bordered":false,"elevated":true},"children":[53,54,67,68,69,70,71],"events":[{"listener_id":"d6409800-62e9-49b4-8a28-3a6113d41161","type":"update:modelValue","specials":[],"modifiers":[],"keys":[],"args":[null],"throttle":0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"53":{"tag":"q-btn","props":{"color":"white","label":"","icon":"close","flat":true},"events":[{"listener_id":"e35fcb3d-88a0-463a-b021-240730dd67c1","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"54":{"tag":"q-btn-group","children":[55,57,59,61,63,65]},"55":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"folder"},"children":[56],"events":[{"listener_id":"596391ba-2c3d-4d3c-9509-ee08105b1c2a","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"56":{"tag":"q-tooltip","text":"Gallery &#96;Ctrl+1&#96;"},"57":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"plumbing"},"children":[58],"events":[{"listener_id":"5b57a63a-4794-4303-be3e-25e4a45964de","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"58":{"tag":"q-tooltip","text":"Customizer &#96;Ctrl+2&#96;"},"59":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"code"},"children":[60],"events":[{"listener_id":"76b2e901-ef21-47bc-a9d2-1af40ad23ac7","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"60":{"tag":"q-tooltip","text":"Editor &#96;Ctrl+3&#96;"},"61":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"view_in_ar"},"children":[62],"events":[{"listener_id":"37f0cf3b-285c-4942-ba85-bdbf8a8978ac","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"62":{"tag":"q-tooltip","text":"Viewer &#96;Ctrl+4&#96;"},"63":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"article"},"children":[64],"events":[{"listener_id":"3dc1ca12-4f4f-4885-b3da-318bcd111c93","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"64":{"tag":"q-tooltip","text":"Console &#96;Ctrl+5&#96;"},"65":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"settings"},"children":[66],"events":[{"listener_id":"bd26f0e4-b754-48d4-b3c2-8118f62932b0","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"66":{"tag":"q-tooltip","text":"Settings &#96;Ctrl+6&#96;"},"67":{"tag":"q-space"},"68":{"tag":"div","text":"model / path / file name","class":["text-xl"]},"69":{"tag":"q-space"},"70":{"tag":"q-input","props":{"model-value":"50","loopback":false,"error":null,"type":"number","label":"Value","min":0,"max":100,"step":10},"events":[{"listener_id":"61876f64-a8db-4d8d-ab2e-8485b8c5371e","type":"update:modelValue","specials":[],"modifiers":[],"keys":[],"args":[null],"throttle":0,"leading_events":true,"trailing_events":true,"js_handler":null},{"listener_id":"5e9bd204-6210-4f46-9e09-cc853bb05534","type":"blur","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"71":{"tag":"q-btn-group","children":[72,74,76,78,80,82]},"72":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"info"},"children":[73],"events":[{"listener_id":"54da8697-9932-4aff-a0e8-706bc0ce479d","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"73":{"tag":"q-tooltip","text":"Notes Alt+1"},"74":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"plumbing"},"children":[75],"events":[{"listener_id":"f8f41f9e-8dff-493c-9837-0deece87187d","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"75":{"tag":"q-tooltip","text":"Customizer Alt+2"},"76":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"code"},"children":[77],"events":[{"listener_id":"ef32382a-2d15-49b6-b0fb-752f6e7d88d4","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"77":{"tag":"q-tooltip","text":"Editor Alt+3"},"78":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"view_in_ar"},"children":[79],"events":[{"listener_id":"796693b2-b9fa-4842-b677-bd12230069de","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"79":{"tag":"q-tooltip","text":"Viewer Alt+4"},"80":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"article"},"children":[81],"events":[{"listener_id":"88f4492a-d638-492d-9392-2c0a7d338c31","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"81":{"tag":"q-tooltip","text":"Console Alt+5"},"82":{"tag":"q-btn","props":{"color":"primary","label":"","icon":"help"},"children":[83],"events":[{"listener_id":"56c9a32c-2660-4357-9b1e-5e46d866ad0d","type":"click","specials":[],"modifiers":[],"keys":[],"args":[],"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}]},"83":{"tag":"q-tooltip","text":"Help Alt+6"},"84":{"tag":"nicegui-keyboard","props":{"events":["keydown","keyup"],"repeating":true,"ignore":["input","select","button","textarea"]},"events":[{"listener_id":"6a4aa7a5-7493-4492-81d3-294692645487","type":"key","specials":[],"modifiers":[],"keys":[],"args":null,"throttle":0.0,"leading_events":true,"trailing_events":true,"js_handler":null}],"component":{"key":"b0b17893a51343979e2090deee730538/keyboard.js","name":"keyboard","tag":"nicegui-keyboard"}}}`), {
+        version: "2.10.1",
+        prefix: "",
+        query: {'client_id': '7a0d18d3-1722-4619-b726-8aebdf84dbf4', 'next_message_id': 0},
+        extraHeaders: {},
+        transports: ['websocket', 'polling'],
+        quasarConfig: {"brand":{"primary":"#5898d4"},"loadingBar":{"color":"primary","skipHijack":false}},
+      });
+
+      import { default as colors } from "/_nicegui/2.10.1/components/b0b17893a51343979e2090deee730538/colors.js";
+app.component("nicegui-colors", colors);
+import { default as codemirror } from "/_nicegui/2.10.1/components/b0b17893a51343979e2090deee730538/codemirror.js";
+app.component("nicegui-codemirror", codemirror);
+import { default as markdown } from "/_nicegui/2.10.1/components/b0b17893a51343979e2090deee730538/markdown.js";
+app.component("nicegui-markdown", markdown);
+import { default as input } from "/_nicegui/2.10.1/components/b0b17893a51343979e2090deee730538/input.js";
+app.component("nicegui-input", input);
+import { default as keyboard } from "/_nicegui/2.10.1/components/b0b17893a51343979e2090deee730538/keyboard.js";
+app.component("nicegui-keyboard", keyboard);
+      var joystick = app.component('nicegui-joystick', {template:'#tpl-joystick',
+  async mounted() {
+    await import("nipplejs");
+    const joystick = nipplejs.create({
+      zone: this.$el.children[0],
+      position: { left: "50%", top: "50%" },
+      dynamicPage: true,
+      ...this.options,
+    });
+    joystick.on("start", (e) => this.$emit("start", e));
+    joystick.on("move", (_, data) => this.$emit("move", { data }));
+    joystick.on("end", (e) => this.$emit("end", e));
+  },
+  props: {
+    options: Object,
+  },
+});
+var plotly = app.component('nicegui-plotly', {template:'#tpl-plotly',
+  async mounted() {
+    await import("plotly");
+    this.update();
+  },
+  updated() {
+    this.update();
+  },
+  methods: {
+    update() {
+      // wait for plotly to be loaded
+      if (typeof Plotly === "undefined") {
+        setTimeout(this.update, 10);
+        return;
+      }
+
+      // default responsive to true
+      const options = this.options;
+      if (options.config === undefined) options.config = { responsive: true };
+      if (options.config.responsive === undefined) options.config.responsive = true;
+
+      // re-use plotly instance if config is the same
+      if (JSON.stringify(options.config) == JSON.stringify(this.last_options.config)) {
+        Plotly.react(this.$el.id, this.options.data, this.options.layout);
+      } else {
+        Plotly.newPlot(this.$el.id, this.options.data, this.options.layout, options.config);
+        this.set_handlers();
+      }
+
+      // store last options
+      this.last_options = options;
+    },
+    set_handlers() {
+      // forward events
+      for (const name of [
+        // source: https://plotly.com/javascript/plotlyjs-events/
+        "plotly_click",
+        "plotly_legendclick",
+        "plotly_selecting",
+        "plotly_selected",
+        "plotly_hover",
+        "plotly_unhover",
+        "plotly_legenddoubleclick",
+        "plotly_restyle",
+        "plotly_relayout",
+        "plotly_webglcontextlost",
+        "plotly_afterplot",
+        "plotly_autosize",
+        "plotly_deselect",
+        "plotly_doubleclick",
+        "plotly_redraw",
+        "plotly_animated",
+      ]) {
+        this.$el.on(name, (event) => {
+          const args = {
+            ...event,
+            points: event?.points?.map((p) => ({
+              ...p,
+              fullData: undefined,
+              xaxis: undefined,
+              yaxis: undefined,
+            })),
+            xaxes: undefined,
+            yaxes: undefined,
+          };
+          this.$emit(name, args);
+        });
+      }
+    },
+  },
+  data() {
+    return {
+      last_options: {},
+    };
+  },
+  props: {
+    options: Object,
+  },
+});
+
+      const dark = False;
+      Quasar.lang.set(Quasar.lang["en-US".replace('-', '')]);
+      Quasar.Dark.set(dark === None ? "auto" : dark);
+      
+      if (dark !== None) tailwind.config.darkMode = "class";
+      if (dark === True) document.body.classList.add("dark");
+      
+
+      app.mount("#app");
+    </script>
+  </body>
+</html>

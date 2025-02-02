@@ -72,7 +72,7 @@ class CodeEditor(BaseView):
         """Save the current code to a file."""
         self.time_start('on_save')
         content = self.editor.value
-        file_path = Path(self.model_path, self.code_file)
+        file_path = self.paths.code_file
         with file_path.open('w') as f:
             f.write(content)
         self.info('file', 'saved successfully', call_id='on_save')

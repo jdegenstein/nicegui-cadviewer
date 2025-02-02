@@ -11,20 +11,19 @@ from elements.console_view    import ConsoleView           #|
 from elements.settings_view   import SettingsView          #| 
 from elements.help_view       import HelpView              #| 
 from backend.path_manager     import PathManager           #| Managing file and directory handling for the application
+from elements.view_manager    import ViewManager           #|
+from elements.view_data       import ViewData              #|
 
 # TODO: pass resize of splitter to elements.
 from elements.constants import *
 
 
 # [Variable]
-size_splitter   = None
 
-left_container  = None
-right_container = None
-left_views      = []
-right_views     = []
-
-class Views():
+# [Main Class]
+class MainViews():
+    # [Variables]
+    # - Views
     gallery    = None
     notes      = None
     customizer = None
@@ -34,16 +33,135 @@ class Views():
     settings   = None
     help       = None
 
+    # - Management
     views_left  = None
     views_right = None
-
-    def __init__(self):
-        self.pages = [self.gallery, self.customizer, self.editor, self.viewer, self.settings, self.notes, self.help]
-        self.show_left = None
-        self.show_right = None
     
-    def update_pages(self):
-        self.pages = [self.gallery, self.customizer, self.editor, self.viewer, self.console, self.settings, self.notes, self.help]
+    left_views      = []
+    right_views     = []
+
+    # [Constructor]
+    def __init__(self, path_manager):
+
+        
+        if type(path_manager) is not PathManager:
+            raise TypeError("The path_manager must be an instance of PathManager.")
+        
+        self.manager = ViewManager(g__views, P__experimental)
+
+        self.path_manager = path_manager
+
+        self.views       = [self.gallery, self.customizer, self.editor, self.viewer, self.settings, self.notes, self.help]
+        self.show_left   = None
+        self.show_right  = None
+
+    
+    def setup(self):
+        path_manager = self.path_manager
+
+        with ui.splitter().classes('w-full h-full items-stretch') as main_splitter:
+        
+            with main_splitter.before:
+                with ui.column().classes('w-full h-full items-stretch') as container:
+                    self.left_container = container
+                    self.gallery    = ProjectGallery(path_manager)
+                    self.customizer = CustomizerView(path_manager)  
+                    self.editor     = CodeEditor(path_manager)
+                    self.settings   = SettingsView(path_manager)
+
+                    self.left_views = [self.gallery, self.customizer, self.editor, self.settings]
+
+                    for view in self.left_views:
+                        view.classes('w-full h-full')
+                        view.set_visibility(False)
+
+
+            with main_splitter.after:
+                with ui.column().classes('w-full h-full items-stretch') as container:
+                    self.right_container = container
+                    self.notes    = NoteViewer(path_manager)
+                    self.viewer   = ModelViewer()
+                    self.console  = ConsoleView()
+                    self.help     = HelpView(path_manager)
+
+                    self.right_views = [self.notes, self.viewer, self.console, self.help]
+
+                    for view in self.right_views:
+                        view.classes('w-full h-full')
+                        view.set_visibility(False)
+
+            with main_splitter.separator:
+                splitter_buttons = []
+                with ui.column().classes('w-full h-full items-stretch'):
+                    a = ui.button(icon='multiple_stop')
+                    splitter_buttons.append(a)
+                    ui.space()
+                    b = ui.button(icon='send', on_click=self.editor.on_run)
+                    splitter_buttons.append(b)
+                    ui.space()
+                for button in splitter_buttons:
+                    button.classes('text-white')
+                    button.props('color=accent')
+
+        self.setup_views()
+
+        with ui.left_drawer(top_corner=True, bottom_corner=True).classes('p-3').style('background-color: #d7e3f4').props('mini dense') as left_drawer:
+            self.left_drawer = left_drawer
+
+            if platform.system() == 'Mac':
+                meta = "Cmd"
+            else:
+                meta = "Ctrl"
+
+            # https://fonts.google.com/icons
+            ui.icon('code').classes('text-4xl')
+            ui.button(icon="send",     on_click=self.editor.on_run
+                    ).tooltip(f'Run Code `{meta}+Enter`').classes('text-small').props('color=accent dense')           
+            ui.button(icon="star",     on_click=self.editor.on_new 
+                    ).tooltip(f'New `{meta}+N`').props('dense')
+            ui.button(icon="upload",   on_click=self.editor.on_load
+                    ).tooltip(f'Load `{meta}+O`').props('dense')
+            ui.button("",    icon="download", on_click=self.editor.on_save
+                    ).tooltip(f'Save `{meta}+S`').props('dense')
+            if 0:
+                ui.button("",         icon="undo",     on_click=self.editor.on_undo).props('color="grey"')
+                ui.button("",         icon="redo",     on_click=self.editor.on_redo).props('color="grey"')
+
+            ui.button(icon="cancel",   on_click=self.toggle_drawer
+                    ).tooltip(f'close drawer').classes('text-small') \
+                    .props('background-color: #d7e3f4') \
+                    .props('dense')
+            
+        with ui.header(elevated=True).style('background-color: #3874c8').classes('items-center justify-between'):
+            self.menu_button = ui.button(on_click=self.toggle_drawer, icon='close').props('flat color=white')
+            
+            self.ctrl_bar = self.manager.setup_left_button_bar(left_buttons)
+            ui.space()
+            # TODO: use path_manager
+            ui.label('model / path / file name').classes('text-xl')
+            ui.space()
+            self.splitter_value(main_splitter)
+            
+            self.alt_bar = self.manager.setup_right_button_bar(right_buttons)
+
+        self.viewer.startup()
+        self.show_editor(Side.LEFT)
+        self.show_viewer(Side.RIGHT)
+        ui.keyboard(on_key=self.handle_key)
+
+        self.manager.setup(self.views)
+
+    def splitter_value(self, main_splitter):
+        size_splitter = ui.number('Value', format='%.0f', value=50, min=0, max=100, step=10)
+        size_splitter.bind_value(main_splitter)  
+        if P__experimental:
+            size_splitter.set_visibility(Yes)
+        else:
+            size_splitter.set_visibility(No)
+
+                
+    def setup_views(self):
+        self.views = [self.gallery, self.customizer, self.editor, self.viewer, self.console, self.settings, self.notes, self.help]
         self.show_left = self.gallery
         self.show_right = self.notes
     
@@ -55,10 +173,10 @@ class Views():
         print(f'show_views {self.show_left} {self.show_right}')	
 
         count = 0
-        for page in self.pages:
-            if page:
+        for view in self.views:
+            if view:
                 count += 1
-                page.set_visibility(True)
+                view.set_visibility(True)
 
 
     def update_views(self):
@@ -67,14 +185,14 @@ class Views():
         self.show_right.set_visibility(True)
 
         count = 0
-        for page in self.pages:
+        for view in self.views:
             if 0:
-                print(f'   - page {page} {page == self.show_left} {page == self.show_right}')
-            if page != self.show_left and page != self.show_right:
-                if page:
+                print(f'   - view {view} {view == self.show_left} {view == self.show_right}')
+            if view != self.show_left and view != self.show_right:
+                if view:
                     count += 1
-                    page.set_visibility(False)
-        print(f'- hidden pages {count}')
+                    view.set_visibility(False)
+        print(f'- hidden views {count}')
         ui.update()
 
     def already_shown_on_side(self, page, side):
@@ -97,42 +215,26 @@ class Views():
         """If a already shown views button is clicked again, the size of the view is modified.
             50% <-> 100% (for left views), 50% <-> 0% (for right views)
         """
+        if type(side) is not Side:
+            raise TypeError("The side must be an instance of Side.")
+        elif side not in [Side.LEFT, Side.RIGHT]:
+            raise ValueError("The side must be either Side.LEFT or Side.RIGHT.")
+
         if side == Side.LEFT:
-
-            if size_splitter.value < 50:
-                size_splitter.value = 50
-            elif size_splitter.value < 100:
-                size_splitter.value = 100
-            else:
-                size_splitter.value = 50
-                
-        elif side == Side.RIGHT:
-
-            if size_splitter.value > 50:
-                size_splitter.value = 50
-            elif size_splitter.value == 50:
-                size_splitter.value = 0
-            else:
-                size_splitter.value = 50
-
+            self.manager.left()                
         else:
-            pass # impossible
+            self.manager.right()
 
     def make_visible(self, side):
+        if type(side) is not Side:
+            raise TypeError("The side must be an instance of Side.")
+        elif side not in [Side.LEFT, Side.RIGHT]:
+            raise ValueError("The side must be either Side.LEFT or Side.RIGHT.")
+
         if side == Side.LEFT:
-            if size_splitter.value < 50:
-                size_splitter.value = 50
-            else:
-                pass # no change necessary
-                
-        elif side == Side.RIGHT:
-            if size_splitter.value > 50:
-                size_splitter.value = 50
-            else:
-                pass # no change necessary
-            
-        else:
-            pass # impossible
+            self.manager.ensure_left_visible()
+        else: # side == Side.RIGHT:
+            self.manager.ensure_right_visible()
 
     def show_gallery(self):
         """Show the gallery page it is restricted to the left page.
@@ -212,11 +314,11 @@ class Views():
         if side == Side.LEFT and page in self.views_right:
             self.views_right.remove(page)
             self.views_left.append(page)
-            page.move(left_container)
+            page.move(self.left_container)
         elif side == Side.RIGHT and page in self.views_left:
             self.views_left.remove(page)
             self.views_right.append(page)
-            page.move(right_container)
+            page.move(self.right_container)
         else:
             pass # impossible
         
@@ -300,414 +402,137 @@ class Views():
 
         self.show_left_or_right(self.console, side, self.editor, self.viewer)
 
-class Page():
-    def __init__(self, title, icon, position, short_cut=""):
-        self.title        = title
-        self.icon         = icon
-        self.is_left      = position[0]
-        self.is_right     = position[1]
-        self.short_cut    = short_cut
-        self.on_click     = None
-        self.page         = None
-
-    def set_visibility(self, visible):
-        if self.page:
-            self.page.set_visibility(visible)
-    
-    def create_page(self, object, on_click):
-        self.page = object
-        self.on_click = on_click
+    def toggle_drawer(self, event):
+        self.left_drawer.toggle()
+        if self.menu_button.icon == 'menu':
+            self.menu_button.icon = 'close'
+        else:
+            self.menu_button.icon = 'menu'
+        ui.update()  # Ensure UI updates
 
 
-def set_zoom_left():
-    if size_splitter.value == 100:
-        size_splitter.value = 50
-    elif size_splitter.value < 50:
-        size_splitter.value = 50
-    elif size_splitter.value >= 50:
-        size_splitter.value = 100
-    else:
-        pass # impossible
+    def handle_key(self, e: events.KeyEventArguments):
+        manager = self.manager
 
-def set_zoom_right():
+        if active_os == "Windows":
+            main_modifier = e.modifiers.ctrl
+        elif active_os == "Mac":
+            main_modifier = e.modifiers.cmd
+        else:
+            main_modifier = e.modifiers.meta
 
-    pages.views.show_all()
+        if main_modifier and e.action.keydown:
+            if e.key.enter:
+                self.editor.on_run()             # TODO: fix editor
+            elif e.key.name == "s":
+                self.editor.on_save()
+            elif e.key.name == "o":
+                self.editor.on_load()
+            elif e.key.name == "t":
+                self.editor.on_new()
+            elif e.key.name == "1":
+                self.manager.show_gallery_left(e)
+            elif e.key.name == "2":
+                self.manager.show_customizer_left(e)
+            elif e.key.name == "3":
+                self.manager.show_editor_left(e)
+            elif e.key.name == "4":
+                if P__experimental:
+                    self.manager.show_viewer_left(e)
+                else:
+                    self.manager.show_console_left(e)
+            elif e.key.name == "5":
+                if P__experimental:
+                    self.manager.show_console_left(e)
+                else:
+                    self.manager.show_settings_left(e)
+            elif e.key.name == "6":
+                if P__experimental:
+                    self.manager.show_settings_left(e)
 
-    if size_splitter.value == 0:
-        size_splitter.value = 50
-    elif size_splitter.value > 50:
-        size_splitter.value = 50
-    elif size_splitter.value <= 50:
-        size_splitter.value = 0
-    else:
-        pass # impossible
+        elif e.modifiers.alt and e.action.keydown:
+            if e.key.name == "1":
+                self.manager.show_notes_right(e)
+            elif e.key.name == "2":
+                self.manager.show_customizer_right(e)
+            elif e.key.name == "3":
+                if P__experimental:
+                    self.manager.show_editor_right(e)
+                else:
+                    self.manager.show_viewer_right(e)
+            elif e.key.name == "4":
+                if P__experimental:
+                    self.manager.show_viewer_right(e)
+                else:
+                    self.manager.show_console_right(e)
+
+            elif e.key.name == "5":
+                if P__experimental:
+                    self.manager.show_console_right(e)
+                else:
+                    self.manager.show_help_right(e)
+
+            elif e.key.name == "6":
+                self.manager.show_help_right(e)
+
+
 
 if P__experimental:
-    g__pages = {    # https://fonts.google.com/icons?icon.query=stop
-                    # use `Meta` for pages that are used on both sides
-                    # use `Ctrl` for pages that are used on the left side
-                    # use `Alt` for pages that are used on the right side
-        'Ctrl+1':    Page('Gallery',    'folder',     left,  "Ctrl+1"),
-        'Alt+1' :    Page('Notes',      'info',       right, "Alt+1"),
-        'Meta+2':    Page('Customizer', 'plumbing',   both,  "Meta+2"), 
-        'Meta+3':    Page('Editor',     'code',       both,  "Meta+3"),
-        'Meta+4':    Page('Viewer',     'view_in_ar', both,  "Meta+4"),
-        'Meta+5':    Page('Console',    'article',    both,  "Meta+5"),
-        'Ctrl+6':    Page('Settings',   'settings',   left,  "Ctrl+6"),
-        'Alt+6' :    Page('Help',       'help',       right, "Alt+6"),
+    g__views = {    # https://fonts.google.com/icons?icon.query=stop
+                    # use `Meta` for views that are used on both sides
+                    # use `Ctrl` for views that are used on the left side
+                    # use `Alt` for views that are used on the right side
+        'Ctrl+1':    ViewData('Gallery',    'folder',     left,  "Ctrl+1"),
+        'Alt+1' :    ViewData('Notes',      'info',       right, "Alt+1"),
+        'Meta+2':    ViewData('Customizer', 'plumbing',   both,  "Meta+2"), 
+        'Meta+3':    ViewData('Editor',     'code',       both,  "Meta+3"),
+        'Meta+4':    ViewData('Viewer',     'view_in_ar', both,  "Meta+4"),
+        'Meta+5':    ViewData('Console',    'article',    both,  "Meta+5"),
+        'Ctrl+6':    ViewData('Settings',   'settings',   left,  "Ctrl+6"),
+        'Alt+6' :    ViewData('Help',       'help',       right, "Alt+6"),
     }
     left_buttons  = ['Ctrl+1', 'Meta+2', 'Ctrl+3', 'Meta+4', 'Ctrl+5', 'Ctrl+6']
     right_buttons = ['Alt+1', 'Meta+2',  'Alt+3',  'Meta+4', 'Alt+5', 'Alt+6']
 
 else:
-    g__pages = {    # https://fonts.google.com/icons?icon.query=stop
-                    # use `Meta` for pages that are used on both sides
-                    # use `Ctrl` for pages that are used on the left side
-                    # use `Alt` for pages that are used on the right side
-        'Ctrl+1':    Page('Gallery',    'folder',     left,  "Ctrl+1"),
-        'Alt+1' :    Page('Notes',      'info',       right, "Alt+1"),
-        'Meta+2':    Page('Customizer', 'plumbing',   both,  "Meta+2"), 
-        'Ctrl+3':    Page('Editor',     'code',       left,  "Ctrl+3"),
-        'Alt+3':     Page('Viewer',     'view_in_ar', right, "Alt+3"),
-        'Meta+4':    Page('Console',    'article',    both,  "Meta+4"),
-        'Ctrl+5':    Page('Settings',   'settings',   left,  "Ctrl+5"),
-        'Alt+5' :    Page('Help',       'help',       right, "Alt+5"),
+    g__views = {    # https://fonts.google.com/icons?icon.query=stop
+                    # use `Meta` for views that are used on both sides
+                    # use `Ctrl` for views that are used on the left side
+                    # use `Alt` for views that are used on the right side
+        'Ctrl+1':    ViewData('Gallery',    'folder',     left,  "Ctrl+1"),
+        'Alt+1' :    ViewData('Notes',      'info',       right, "Alt+1"),
+        'Meta+2':    ViewData('Customizer', 'plumbing',   both,  "Meta+2"), 
+        'Ctrl+3':    ViewData('Editor',     'code',       left,  "Ctrl+3"),
+        'Alt+3':     ViewData('Viewer',     'view_in_ar', right, "Alt+3"),
+        'Meta+4':    ViewData('Console',    'article',    both,  "Meta+4"),
+        'Ctrl+5':    ViewData('Settings',   'settings',   left,  "Ctrl+5"),
+        'Alt+5' :    ViewData('Help',       'help',       right, "Alt+5"),
     } 
     left_buttons  = ['Ctrl+1', 'Ctrl+2', 'Ctrl+3', 'Ctrl+4', 'Ctrl+5']
     right_buttons = ['Alt+1',  'Alt+2',  'Alt+3',  'Alt+4', 'Alt+5']
 
-
-
-    # TODO: g__pages needs to change ... a +6 will be needed
-
-class PageSwitcher():
-    def __init__(self, pages = g__pages, add_zoom=False):
-        ui.colors(accent='#6A0000', info='#555555')
-        self.pages = pages
-        self.add_zoom = add_zoom
-        # TODO: move default to a yaml file
-
-        if P__experimental:
-            # TODO: needs to also change th g__pages
-            self.left_page   = 'Meta+3' # editor
-            self.right_page  = 'Meta+4' # viewer
-        else:
-            self.left_page   = 'Ctrl+3' # editor, restricted to left
-            self.right_page  = 'Alt+3'  # viewer, restricted to right
-
-        self.views = Views()
-
-        if P__experimental:
-            self.map_button_to_views = {
-                'Ctrl+1': self.show_gallery_left,	
-                'Alt+1': self.show_notes_right,
-                'Ctrl+2': self.show_customizer_left,
-                'Ctrl+3': self.show_editor_left,
-                'Ctrl+4': self.show_viewer_left,
-                'Ctrl+5': self.show_console_left,
-                'Ctrl+6': self.show_settings_left,
-                'Alt+2':  self.show_customizer_right,
-                'Alt+3':  self.show_editor_right,
-                'Alt+4':  self.show_viewer_right,
-                'Alt+5':  self.show_console_right,
-                'Alt+6':  self.show_help_right,
-            }
-        else:
-            self.map_button_to_views = {
-                'Ctrl+1': self.show_gallery_left,	
-                'Ctrl+2': self.show_customizer_left,
-                'Ctrl+3': self.show_editor_left,
-                'Ctrl+4': self.show_console_left,
-                'Ctrl+5': self.show_settings_left,
-                'Alt+1': self.show_notes_right,
-                'Alt+2': self.show_customizer_right,
-                'Alt+3': self.show_viewer_right,
-                'Alt+4': self.show_console_right,
-                'Alt+5': self.show_help_right,
-            }
-  
-    def setup_left_button_bar(self, views : list):
-        views.reverse()
-
-        with ui.button_group() as bar:	
-            self.left_button_bar = bar
-            for page in self.pages:
-                print(page)
-                if self.pages[page].is_left:
-                    active = self.pages[page]
-                    active.page = views.pop()
-                    
-                    if 'Meta' in active.short_cut:
-                        short_cut = active.short_cut.replace('Meta', 'Ctrl')
-                    else: 
-                        short_cut = active.short_cut
-                    
-                    button = ui.button('', icon=active.icon, on_click=self.map_button_to_views[short_cut])
-                    button.tooltip(f'{active.title} `{short_cut}`')
-
-                    if active.title == self.left_page:
-                        button.props('fab color=accent')
-            if self.add_zoom:
-                z = ui.button('', icon='zoom_out_map', on_click=set_zoom_left).tooltip('Zoom left `Meta+0`')
-                z.props('fab color=info')
-
-        return self.left_button_bar
-
-    def setup_right_button_bar(self, views : list):
-        views.reverse()
-        
-        with ui.button_group() as bar:	
-            self.right_button_bar = bar
-            for page in self.pages:
-                if self.pages[page].is_right:
-                    active = self.pages[page]                    
-                    active.page = views.pop()
-                    
-                    if 'Meta' in active.short_cut:
-                        short_cut = active.short_cut.replace('Meta', 'Alt')
-                    else: 
-                        short_cut = active.short_cut
-                    
-                    button = ui.button('', icon=active.icon, on_click=self.map_button_to_views[short_cut])
-                    button.tooltip(f'{active.title} {short_cut}')
-                    
-                    
-                    if active.title == self.right_page:
-                        button.props('fab color=accent')
-        
-            if self.add_zoom:
-                z = ui.button('', icon='zoom_out_map', on_click=set_zoom_right).tooltip('Zoom right `Meta+0`')
-                z.props('fab color=info')
-
-        return self.right_button_bar
-
-    def show_gallery_left(self, event):
-        print(f'show_gallery_left')
-        self.views.show_gallery()
-
-    def show_notes_right(self, event):
-        print(f'show_notes_right')
-        self.views.show_notes()
-
-    def show_customizer_left(self, event):
-        print(f'show_customizer_left')
-        self.views.show_customizer(Side.LEFT)
-
-    def show_customizer_right(self, event):
-        print(f'show_customizer_right')
-        self.views.show_customizer(Side.RIGHT)
-
-    def show_editor_left(self, event):
-        print(f'show_editor_left')
-        self.views.show_editor(Side.LEFT)
-
-    def show_editor_right(self, event):
-        print(f'show_editor_right')
-        self.views.show_editor(Side.RIGHT)
-    
-    def show_viewer_left(self, event):
-        print(f'show_viewer_left')
-        self.views.show_viewer(Side.LEFT)
-    
-    def show_viewer_right(self, event):
-        print(f'show_viewer_right')
-        self.views.show_viewer(Side.RIGHT)
-
-    def show_console_left(self, event):
-        print(f'show_console_left')
-        self.views.show_console(Side.LEFT)
-
-    def show_console_right(self, event):
-        print(f'show_console_right')
-        self.views.show_console(Side.RIGHT)
-
-
-    def show_settings_left(self, event):
-        print(f'show_settings_left')
-        self.views.show_settings()
-
-    def show_help_right(self, event):
-        print(f'show_help_right')
-        self.views.show_help()
-
-def toggle_drawer(event):
-    left_drawer.toggle()
-    if menu_button.icon == 'menu':
-        menu_button.icon = 'close'
-    else:
-        menu_button.icon = 'menu'
-    ui.update()  # Ensure UI updates
-    
-pages = None 
-def setup():
-    global pages
-    global size_splitter
-    global left_container
-    global right_container
-
-    pages = PageSwitcher()
+# [Main]
+if __name__ in {"__main__", "__mp_main__"}:
+    # This is for test - remove or modify later
+    # Call setup function to create the UI
     path_manager = PathManager()
 
-    with ui.splitter().classes('w-full h-full items-stretch') as main_splitter:
-    
-        with main_splitter.before:
-            with ui.column().classes('w-full h-full items-stretch') as container:
-                left_container = container
-                pages.views.gallery    = ProjectGallery(path_manager)
-                pages.views.customizer = CustomizerView(path_manager)  
-                pages.views.editor     = CodeEditor(path_manager)
-                pages.views.settings   = SettingsView(path_manager)
-
-                left_views = [pages.views.gallery, pages.views.customizer, pages.views.editor, pages.views.settings]
-
-                for view in left_views:
-                    view.classes('w-full h-full')
-                    view.set_visibility(False)
-
-
-        with main_splitter.after:
-            with ui.column().classes('w-full h-full items-stretch') as container:
-                right_container = container
-                pages.views.notes    = NoteViewer(path_manager)
-                pages.views.viewer   = ModelViewer()
-                pages.views.console  = ConsoleView()
-                pages.views.help     = HelpView(path_manager)
-
-                right_views = [pages.views.notes, pages.views.viewer, pages.views.console, pages.views.help]
-
-                for view in right_views:
-                    view.classes('w-full h-full')
-                    view.set_visibility(False)
-
-        with main_splitter.separator:
-            with ui.column().classes('w-full h-full items-stretch'):
-                ui.space()
-                ui.button(icon='multiple_stop').classes('text-white text-s')  
-                ui.button(icon='send').classes('text-white')
-        
-
-    pages.views.update_pages()
-
-    with ui.left_drawer(top_corner=True, bottom_corner=True).classes('p-3').style('background-color: #d7e3f4').props('mini dense') as left_drawer:
-        if platform.system() == 'Mac':
-            meta = "Cmd"
-        else:
-            meta = "Ctrl"
-
-        # https://fonts.google.com/icons
-        ui.icon('code').classes('text-4xl')
-        ui.button(icon="send",     on_click=pages.views.editor.on_run
-                  ).tooltip(f'Run Code `{meta}+Enter`').classes('text-small').props('color=accent dense')           
-        ui.button(icon="star",     on_click=pages.views.editor.on_new 
-                  ).tooltip(f'New `{meta}+N`').props('dense')
-        ui.button(icon="upload",   on_click=pages.views.editor.on_load
-                  ).tooltip(f'Load `{meta}+O`').props('dense')
-        ui.button("",    icon="download", on_click=pages.views.editor.on_save
-                  ).tooltip(f'Save `{meta}+S`').props('dense')
-        if 0:
-            ui.button("",         icon="undo",     on_click=pages.views.editor.on_undo).props('color="grey"')
-            ui.button("",         icon="redo",     on_click=pages.views.editor.on_redo).props('color="grey"')
-
-        ui.button(icon="cancel",   on_click=toggle_drawer
-                  ).tooltip(f'close drawer').classes('text-small') \
-                   .props('background-color: #d7e3f4') \
-                   .props('dense')
-        
-    with ui.header(elevated=True).style('background-color: #3874c8').classes('items-center justify-between'):
-        menu_button = ui.button(on_click=toggle_drawer, icon='close').props('flat color=white')
-        
-        ctrl_bar = pages.setup_left_button_bar(left_buttons)
-        ui.space()
-        ui.label('model / path / file name').classes('text-xl')
-        ui.space()
-        size_splitter = ui.number('Value', format='%.0f', value=50, min=0, max=100, step=10)
-        size_splitter.bind_value(main_splitter)  
-        if P__experimental:
-            size_splitter.set_visibility(Yes)
-        else:
-            size_splitter.set_visibility(No)
-        
-        alt_bar = pages.setup_right_button_bar(right_buttons)
-
-    pages.views.viewer.startup()
-    pages.views.show_editor(Side.LEFT)
-    pages.views.show_viewer(Side.RIGHT)
-
-def handle_key(e: events.KeyEventArguments):
-    if active_os == "Windows":
-        main_modifier = e.modifiers.ctrl
-    elif active_os == "Mac":
-        main_modifier = e.modifiers.cmd
-    else:
-        main_modifier = e.modifiers.meta
-
-    if main_modifier and e.action.keydown:
-        if e.key.enter:
-            pages.views.editor.on_run()             # TODO: fix editor
-        elif e.key.name == "s":
-            pages.views.editor.on_save()
-        elif e.key.name == "o":
-            pages.views.editor.on_load()
-        elif e.key.name == "t":
-            pages.views.editor.on_new()
-        elif e.key.name == "1":
-            pages.show_gallery_left(e)
-        elif e.key.name == "2":
-            pages.show_customizer_left(e)
-        elif e.key.name == "3":
-            pages.show_editor_left(e)
-        elif e.key.name == "4":
-            if P__experimental:
-                pages.show_viewer_left(e)
-            else:
-                pages.show_console_left(e)
-        elif e.key.name == "5":
-            if P__experimental:
-                pages.show_console_left(e)
-            else:
-                pages.show_settings_left(e)
-        elif e.key.name == "6":
-            if P__experimental:
-                pages.show_settings_left(e)
-            else:
-                pass
-    elif e.modifiers.alt and e.action.keydown:
-        if e.key.name == "1":
-            pages.show_notes_right(e)
-        elif e.key.name == "2":
-            pages.show_customizer_right(e)
-        elif e.key.name == "3":
-            if P__experimental:
-                pages.show_editor_right(e)
-            else:
-                pages.show_viewer_right(e)
-        elif e.key.name == "4":
-            if P__experimental:
-                pages.show_viewer_right(e)
-            else:
-                pages.show_console_right(e)
-
-        elif e.key.name == "5":
-            if P__experimental:
-                pages.show_console_right(e)
-            else:
-                pages.show_help_right(e)
-
-        elif e.key.name == "6":
-            pages.show_help_right(e)
-
-
-if __name__ in {"__main__", "__mp_main__"}:
-    # Call setup function to create the UI
-    setup()
-    ui.keyboard(on_key=handle_key)
+    views = MainViews(path_manager)    
+    views.setup()
 
 
     # Run the NiceGUI app
-    ui.run(
-        native      = True,
-        window_size = (1800, 900),
-        title       = "nice123d",
-        fullscreen  = False,
-        reload      = False,
-    )
+    if P__native_window:
+        ui.run(
+            native      = P__native_window,
+            window_size = (1800, 900),
+            title       = "nice123d",
+            fullscreen  = False,
+            reload      = False,
+        )
+    else:
+        ui.run(
+            title       = "nice123d",
+            fullscreen  = False,
+            reload      = False,
+        )

@@ -33,7 +33,7 @@ license:
 
 """
 # [Imports]
-from nice123d.elements.constants import *
+from elements.constants import *
 from nicegui import app, ui
 from pathlib import Path
 from main_window import MainWindow
@@ -62,13 +62,7 @@ def main():
     app.on_shutdown(win.on_close_window) #TODO: maybe this is not needed ... 
     
     # Execution
-    ui.run(
-        native=True,
-        window_size=win.size,
-        title=win.title,
-        fullscreen=False,
-        reload=False,
-    )
+    win.run()
 
 # [Main]
 if __name__ == '__main__':
