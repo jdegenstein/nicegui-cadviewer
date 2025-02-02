@@ -15,11 +15,12 @@ from backend.path_manager import PathManager   #| Managing file and directory ha
 class ViewManager():
 
     # [Variables]
-    last_button = None
+    last_button_left  = None
+    last_button_right = None
 
     # [Constructor]
     def __init__(self, pages = None, add_zoom=False):
-        ui.colors(active='#4f0000',accent='#00004f', info='#555555')
+        ui.colors(active='#00004f',accent='#004f4f', info='#555555')
         self.pages = pages
         self.add_zoom = add_zoom
         # TODO: move default to a yaml file
@@ -65,6 +66,7 @@ class ViewManager():
   
     def setup(self, views):
         self.views = views
+        #self.pages[]
 
     def setup_left_button_bar(self, views : list):
         views.reverse()
@@ -75,7 +77,7 @@ class ViewManager():
                 print(page)
                 if self.pages[page].is_left:
                     active = self.pages[page]
-                    active.page = views.pop()
+                    active.view = views.pop()
                     
                     if 'Meta' in active.short_cut:
                         short_cut = active.short_cut.replace('Meta', 'Ctrl')
@@ -104,7 +106,7 @@ class ViewManager():
             for page in self.pages:
                 if self.pages[page].is_right:
                     active = self.pages[page]                    
-                    active.page = views.pop()
+                    active.view = views.pop()
                     
                     if 'Meta' in active.short_cut:
                         short_cut = active.short_cut.replace('Meta', 'Alt')
@@ -126,67 +128,131 @@ class ViewManager():
 
         return self.right_button_bar
 
+    def highlight_button(self, button, side):
+        if type(button) is not ui.button:
+            return # TODO: raise exception
+        if type(side) is not Side:
+            return # TODO: raise exception
+        if side not in (Side.LEFT, Side.RIGHT):
+            return # TODO: raise exception
+
+        if side == Side.LEFT:        
+            if button != self.last_button_left:
+                button.props('fab color=active')
+                if self.last_button_left:
+                    self.last_button_left.props('fab color=default')
+            # else: nothing to do - keep same button active
+
+            self.last_button_left = button
+
+        else: # side == Side.RIGHT:        
+            if button != self.last_button_right:
+                button.props('fab color=active')
+                if self.last_button_right:
+                    self.last_button_right.props('fab color=default')
+            # else: nothing to do - keep same button active
+            self.last_button_right = button  
+
+    def move(self, page, side):
+        page_info = None 
+
+        # find the correct page
+        for view_data in self.pages.values():
+            print(view_data)
+            if view_data.view == page:
+                page_info = view_data
+                break
+
+        # if found highlight the buttons
+        if page_info is not None:
+            if side == Side.LEFT:
+                self.highlight_button(page_info.button_left, side)
+            else:
+                self.highlight_button(page_info.button_right, side)
+
     def show_gallery_left(self, event):
         print(f'show_gallery_left')
         self.views.show_gallery()
-        if self.last_button:
-            self.last_button.props('fab color=inactive')
-        button = self.pages["Ctrl+1"].button_left
-        button.props('fab color=active')
-        if self.last_button:
-            self.last_button = button
+        self.highlight_button(self.pages["Ctrl+1"].button_left, side=Side.LEFT)
+            
 
     def show_notes_right(self, event):
         print(f'show_notes_right')
         self.views.show_notes()
-        if self.last_button:
-            self.last_button.props('fab color=inactive')
-        button = self.pages["Alt+1"].button_right
-        button.props('fab color=active')
-        if self.last_button:
-            self.last_button = button
+        self.highlight_button(self.pages["Alt+1"].button_right, side=Side.RIGHT)
 
     def show_customizer_left(self, event):
         print(f'show_customizer_left')
         self.views.show_customizer(Side.LEFT)
+        self.highlight_button(self.pages["Meta+2"].button_left, side=Side.LEFT)
 
     def show_customizer_right(self, event):
         print(f'show_customizer_right')
         self.views.show_customizer(Side.RIGHT)
+        self.highlight_button(self.pages["Meta+2"].button_right, side=Side.RIGHT)
 
     def show_editor_left(self, event):
         print(f'show_editor_left')
         self.views.show_editor(Side.LEFT)
+        if P__experimental:
+            self.highlight_button(self.pages["Meta+3"].button_left, side=Side.LEFT)
+        else:
+            self.highlight_button(self.pages["Ctrl+3"].button_left, side=Side.LEFT)
 
     def show_editor_right(self, event):
         print(f'show_editor_right')
         self.views.show_editor(Side.RIGHT)
-    
+        self.highlight_button(self.pages["Meta+3"].button_right, side=Side.RIGHT)
+
     def show_viewer_left(self, event):
         print(f'show_viewer_left')
         self.views.show_viewer(Side.LEFT)
+        self.highlight_button(self.pages["Meta+4"].button_left, side=Side.LEFT)
     
     def show_viewer_right(self, event):
         print(f'show_viewer_right')
         self.views.show_viewer(Side.RIGHT)
+        if P__experimental:
+            self.highlight_button(self.pages["Meta+4"].button_right, side=Side.RIGHT)
+        else:
+            self.highlight_button(self.pages["Alt+3"].button_right, side=Side.RIGHT)
 
     def show_console_left(self, event):
         print(f'show_console_left')
         self.views.show_console(Side.LEFT)
+        if P__experimental:
+            self.highlight_button(self.pages["Meta+5"].button_left, side=Side.LEFT)
+        else:
+            self.highlight_button(self.pages["Meta+4"].button_left, side=Side.LEFT)
 
     def show_console_right(self, event):
         print(f'show_console_right')
         self.views.show_console(Side.RIGHT)
+        if P__experimental:
+            self.highlight_button(self.pages["Meta+5"].button_right, side=Side.RIGHT)
+        else:
+            self.highlight_button(self.pages["Meta+4"].button_right, side=Side.RIGHT)
 
 
     def show_settings_left(self, event):
         print(f'show_settings_left')
         self.views.show_settings()
+        if P__experimental:
+            self.highlight_button(self.pages["Ctrl+6"].button_left, side=Side.LEFT)
+        else:
+            self.highlight_button(self.pages["Ctrl+5"].button_left, side=Side.LEFT)
+
 
     def show_help_right(self, event):
         print(f'show_help_right')
         self.views.show_help()
-        self.manager.right_button_bar.children[5].props('fab color=active')
+        if P__experimental:
+            self.highlight_button(self.pages["Alt+6"].button_right, side=Side.RIGHT)
+        else:
+            self.highlight_button(self.pages["Alt+5"].button_right, side=Side.RIGHT)
+
+    def set_zoom(self, value):
+        self.size_splitter.value = value        
 
     def set_zoom_left(self):
         if self.size_splitter.value == 100:

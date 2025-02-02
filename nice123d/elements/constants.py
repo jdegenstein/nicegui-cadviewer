@@ -31,3 +31,4 @@ none = False, False
 # [Parameters]
 P__experimental = Yes or No
 P__native_window = No
+P__use_splitter_buttons = No

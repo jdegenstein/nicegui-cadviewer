@@ -91,17 +91,18 @@ class MainViews():
                         view.set_visibility(False)
 
             with main_splitter.separator:
-                splitter_buttons = []
-                with ui.column().classes('w-full h-full items-stretch'):
-                    a = ui.button(icon='multiple_stop')
-                    splitter_buttons.append(a)
-                    ui.space()
-                    b = ui.button(icon='send', on_click=self.editor.on_run)
-                    splitter_buttons.append(b)
-                    ui.space()
-                for button in splitter_buttons:
-                    button.classes('text-white')
-                    button.props('color=accent')
+                if P__use_splitter_buttons:
+                    splitter_buttons = []
+                    with ui.column().classes('w-full h-full items-stretch'):
+                        a = ui.button(icon='multiple_stop')
+                        splitter_buttons.append(a)
+                        ui.space()
+                        b = ui.button(icon='send', on_click=self.editor.on_run)
+                        splitter_buttons.append(b)
+                        ui.space()
+                    for button in splitter_buttons:
+                        button.classes('text-white')
+                        button.props('color=accent')
 
         self.setup_views()
 
@@ -145,11 +146,11 @@ class MainViews():
             self.alt_bar = self.manager.setup_right_button_bar(right_buttons)
 
         self.viewer.startup()
-        self.show_editor(Side.LEFT)
-        self.show_viewer(Side.RIGHT)
+        self.manager.setup(self)
+        self.manager.show_editor_left(None)
+        self.manager.show_viewer_right(None)
         ui.keyboard(on_key=self.handle_key)
 
-        self.manager.setup(self)
 
     def splitter_value(self, main_splitter):
         size_splitter = ui.number('Value', format='%.0f', value=50, min=0, max=100, step=10)
@@ -265,7 +266,7 @@ class MainViews():
             self.modify_size(side)
         else:
             print(f'   - else {page} {side}')
-            size_splitter.value = 100
+            self.manager.set_zoom(100)
             page.set_visibility(True)
             self.show_left = page
 
@@ -317,10 +318,13 @@ class MainViews():
             self.list_views_right.remove(page)
             self.list_views_left.append(page)
             page.move(self.left_container)
+            self.manager.move(page, side)            
+
         elif side == Side.RIGHT and page in self.list_views_left:
             self.list_views_left.remove(page)
             self.list_views_right.append(page)
             page.move(self.right_container)
+            self.manager.move(page, side)            
         else:
             pass # impossible
         
