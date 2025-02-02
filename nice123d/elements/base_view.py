@@ -3,10 +3,12 @@ TODO: docs for this file
 """
 
 # [Imports]
-from nicegui import ui      # [docs](https://nicegui.readthedocs.io/en/latest/)   
-from constants import *
+from nicegui import ui      #| [docs](https://nicegui.readthedocs.io/en/latest/)   
+from .constants import *
 from datetime import datetime
 import time
+from typing import Optional #| [docs](https://docs.python.org/3/library/typing.html)
+
 
 # [Main Class]
 class BaseView(ui.element):
@@ -16,11 +18,20 @@ class BaseView(ui.element):
     main = None                 # The main ui element
     
     # [Constructor]
-    def __init__(self, **kwargs):
+    def __init__(self, path_manager=None, **kwargs):
         super().__init__(**kwargs)
+
+        if path_manager is not None:
+            self._paths = path_manager
+
         self.start_time = {}
 
     # [API]
+
+    @property
+    def paths(self):
+        return self._paths
+
     def define_logger(self, logger):
         """Set the logger to use for logging."""
 
@@ -44,3 +55,18 @@ class BaseView(ui.element):
         return f'{timestamp}: [{function}] {message} {used_time}'
 
     # [Event Handlers]
+    def set_visibility(self, visible):
+        if self.main:
+            self.main.set_visibility(visible)
+
+        return super().set_visibility(visible)
+    
+    def move(self,
+            target_container: Optional[ui.element] = None,
+            target_index: int = -1, *,
+            target_slot: Optional[str] = None) -> None:
+
+        if self.main:
+            self.main.move(target_container, target_index, target_slot)
+
+        return super().move(target_container, target_index, target_slot)

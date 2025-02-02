@@ -1,21 +1,19 @@
 
-# [Imports]
-from nicegui import ui      # [docs](https://nicegui.readthedocs.io/en/latest/)   
-from nicegui import events
-from nicegui.events import KeyEventArguments
-import logging
-from enum import Enum
-from elements.project_gallery import ProjectGallery
-from elements.note_viewer     import NoteViewer
-from elements.customizer_view import CustomizerView
-from elements.code_editor     import CodeEditor
-from elements.model_viewer    import ModelViewer
-from elements.console_view    import ConsoleView
-from elements.settings_view   import SettingsView
-from elements.help_view       import HelpView
+# [Imports]                                                #| description or links
+from nicegui import ui                                     #| [docs](https://nicegui.readthedocs.io/en/latest/)   
+from nicegui import events  
+from elements.project_gallery import ProjectGallery        #| 
+from elements.note_viewer     import NoteViewer            #| 
+from elements.customizer_view import CustomizerView        #| 
+from elements.code_editor     import CodeEditor            #| 
+from elements.model_viewer    import ModelViewer           #| 
+from elements.console_view    import ConsoleView           #| 
+from elements.settings_view   import SettingsView          #| 
+from elements.help_view       import HelpView              #| 
+from backend.path_manager     import PathManager           #| Managing file and directory handling for the application
 
 # TODO: pass resize of splitter to elements.
-from nice123d.elements.constants import *
+from elements.constants import *
 
 
 # [Variable]
@@ -546,16 +544,17 @@ def setup():
     global size_splitter
 
     pages = PageSwitcher()
+    path_manager = PathManager()
 
     with ui.splitter().classes('w-full h-full items-stretch') as main_splitter:
     
         with main_splitter.before:
             with ui.column().classes('w-full h-full items-stretch') as container:
                 left_container = container
-                pages.views.gallery    = ProjectGallery()
-                pages.views.customizer = CustomizerView()  
-                pages.views.editor     = CodeEditor()
-                pages.views.settings   = SettingsView()
+                pages.views.gallery    = ProjectGallery(path_manager)
+                pages.views.customizer = CustomizerView(path_manager)  
+                pages.views.editor     = CodeEditor(path_manager)
+                pages.views.settings   = SettingsView(path_manager)
 
                 left_views = [pages.views.gallery, pages.views.customizer, pages.views.editor, pages.views.settings]
 
@@ -567,10 +566,10 @@ def setup():
         with main_splitter.after:
             with ui.column().classes('w-full h-full items-stretch') as container:
                 right_container = container
-                pages.views.notes    = NoteViewer()
-                pages.views.viewer   = ModelViewer()
+                pages.views.notes    = NoteViewer(path_manager)
+                pages.views.viewer   = ModelViewer(path_manager)
                 pages.views.console  = ConsoleView()
-                pages.views.help     = HelpView()
+                pages.views.help     = HelpView(path_manager)
 
                 right_views = [pages.views.notes, pages.views.viewer, pages.views.help]
 
@@ -584,8 +583,6 @@ def setup():
                 ui.button(icon='multiple_stop').classes('text-white text-s')  
                 ui.button(icon='send').classes('text-white')
         
-        pages.views.editor.set_logger(pages.views.console.logger)
-        pages.views.viewer.set_logger(pages.views.console.logger)
 
     pages.views.update_pages()
 
@@ -634,7 +631,7 @@ def setup():
     pages.views.show_editor(Side.LEFT)
     pages.views.show_viewer(Side.RIGHT)
 
-def handle_key(e: KeyEventArguments):
+def handle_key(e: events.KeyEventArguments):
     if active_os == "Windows":
         main_modifier = e.modifiers.ctrl
     elif active_os == "Mac":

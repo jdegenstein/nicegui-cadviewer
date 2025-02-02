@@ -4,9 +4,11 @@ TODO: docs for this file
 
 # [Imports]                                      #| description or links
 from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
-from nice123d.elements.base_view import BaseView #| Base class for all views
-from constants import *                          #| The application constants
-from ..backend.path_manager import PathManager   #| Managing file and directory handling for the application
+from elements.base_view import BaseView #| Base class for all views
+from .constants import *                          #| The application constants
+from backend.path_manager import PathManager   #| Managing file and directory handling for the application
+
+# [Variables]
 
 # [Main Class]
 class ConsoleView(BaseView):
@@ -16,7 +18,7 @@ class ConsoleView(BaseView):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.time_start()
+        self.time_start('init_console_view')
         # TODO:           self.logger = NiceGUILogHandler(self.logger_ui)
 
         with self:
@@ -27,7 +29,7 @@ class ConsoleView(BaseView):
 
         super().define_logger(self.logger)
 
-        self.push(self.info('init', 'Code editor initialized'))
+        self.push(self.info('init', 'Code editor initialized', call_id='init_console_view'))
 
     def push(self, message):
         self.logger.push(message)
