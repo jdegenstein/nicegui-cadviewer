@@ -32,14 +32,13 @@ class ModelViewer(BaseView):
         self.port = port
         self.time_start('model_viewer')
         with self:
-            with ui.row().classes('w-full h-full') as main:
-                self.ocpcv = (
-                                ui.element("iframe")
-                                .props(f'src="http://{ip_address}:{port}/viewer"')
-                                .classes("w-full h-[calc(100vh-5rem)]")
-                            )
-                self.info('ModelViewer', f'init src="http://{ip_address}:{port}/viewer"', call_id='model_viewer')
-        self.main = main
+            self.ocpcv = (
+                            ui.element("iframe")
+                            .props(f'src="http://{ip_address}:{port}/viewer"')
+                            .classes("w-full h-[calc(100vh-5rem)]")
+                        )
+            self.info('ModelViewer', f'init src="http://{ip_address}:{port}/viewer"', call_id='model_viewer')
+        self.main = self.ocpcv
 
     # [API]
     def startup(self):

@@ -62,11 +62,9 @@ class BaseView(ui.element):
         return super().set_visibility(visible)
     
     def move(self,
-            target_container: Optional[ui.element] = None,
-            target_index: int = -1, *,
-            target_slot: Optional[str] = None) -> None:
+            target_container: Optional[ui.element] = None ) -> None:
 
         if self.main:
-            self.main.move(target_container, target_index, target_slot)
+            self.main.move(target_container)
 
-        return super().move(target_container, target_index, target_slot)
+        return super().move(target_container)

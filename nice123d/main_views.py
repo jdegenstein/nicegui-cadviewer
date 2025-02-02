@@ -542,6 +542,8 @@ pages = None
 def setup():
     global pages
     global size_splitter
+    global left_container
+    global right_container
 
     pages = PageSwitcher()
     path_manager = PathManager()
@@ -571,7 +573,7 @@ def setup():
                 pages.views.console  = ConsoleView()
                 pages.views.help     = HelpView(path_manager)
 
-                right_views = [pages.views.notes, pages.views.viewer, pages.views.help]
+                right_views = [pages.views.notes, pages.views.viewer, pages.views.console, pages.views.help]
 
                 for view in right_views:
                     view.classes('w-full h-full')
@@ -703,8 +705,8 @@ if __name__ in {"__main__", "__mp_main__"}:
 
     # Run the NiceGUI app
     ui.run(
-        #native      = True,
-        #window_size = (1800, 900),
+        native      = True,
+        window_size = (1800, 900),
         title       = "nice123d",
         fullscreen  = False,
         reload      = False,
