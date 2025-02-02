@@ -31,13 +31,12 @@ class ModelViewer(BaseView):
         super().__init__(**kwargs)
         self.port = port
         self.time_start('model_viewer')
-        with self:
-            self.ocpcv = (
-                            ui.element("iframe")
-                            .props(f'src="http://{ip_address}:{port}/viewer"')
-                            .classes("w-full h-[calc(100vh-5rem)]")
-                        )
-            self.info('ModelViewer', f'init src="http://{ip_address}:{port}/viewer"', call_id='model_viewer')
+        self.ocpcv = (
+                        ui.element("iframe")
+                        .props(f'src="http://{ip_address}:{port}/viewer"')
+                        .classes("w-full h-[calc(100vh-5rem)]")
+                    )
+        self.info('ModelViewer', f'init src="http://{ip_address}:{port}/viewer"', call_id='model_viewer')
         self.main = self.ocpcv
 
     # [API]

@@ -569,7 +569,7 @@ def setup():
             with ui.column().classes('w-full h-full items-stretch') as container:
                 right_container = container
                 pages.views.notes    = NoteViewer(path_manager)
-                pages.views.viewer   = ModelViewer(path_manager)
+                pages.views.viewer   = ModelViewer()
                 pages.views.console  = ConsoleView()
                 pages.views.help     = HelpView(path_manager)
 

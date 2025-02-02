@@ -2,12 +2,13 @@
 TODO: docs for this file
 """
 
-# [Imports]
-from nicegui import ui      #| [docs](https://nicegui.readthedocs.io/en/latest/)   
+# [Imports]                                      #| description or links 
+from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
+from typing import Optional                      #| [docs](https://docs.python.org/3/library/typing.html)
+from datetime import datetime                    #| [docs](https://docs.python.org/3/library/datetime.html)
+import time                                      #| [docs](https://docs.python.org/3/library/time.html)
 from .constants import *
-from datetime import datetime
-import time
-from typing import Optional #| [docs](https://docs.python.org/3/library/typing.html)
+from backend.path_manager import PathManager     #| Managing file and directory handling for the application
 
 
 # [Main Class]
@@ -20,6 +21,10 @@ class BaseView(ui.element):
     # [Constructor]
     def __init__(self, path_manager=None, **kwargs):
         super().__init__(**kwargs)
+
+        # Type check the path_manager
+        if path_manager is not None and type(path_manager) is not PathManager:
+            raise TypeError('The path_manager must be of type PathManager')
 
         if path_manager is not None:
             self._paths = path_manager
