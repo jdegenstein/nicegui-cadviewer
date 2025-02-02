@@ -51,7 +51,7 @@ class MainViews():
 
         self.path_manager = path_manager
 
-        self.views       = [self.gallery, self.customizer, self.editor, self.viewer, self.settings, self.notes, self.help]
+        self.list_views  = [self.gallery, self.customizer, self.editor, self.viewer, self.settings, self.notes, self.help]
         self.show_left   = None
         self.show_right  = None
 
@@ -149,7 +149,7 @@ class MainViews():
         self.show_viewer(Side.RIGHT)
         ui.keyboard(on_key=self.handle_key)
 
-        self.manager.setup(self.views)
+        self.manager.setup(self)
 
     def splitter_value(self, main_splitter):
         size_splitter = ui.number('Value', format='%.0f', value=50, min=0, max=100, step=10)
@@ -158,22 +158,24 @@ class MainViews():
             size_splitter.set_visibility(Yes)
         else:
             size_splitter.set_visibility(No)
+        
+        self.manager.size_splitter = size_splitter
 
                 
     def setup_views(self):
-        self.views = [self.gallery, self.customizer, self.editor, self.viewer, self.console, self.settings, self.notes, self.help]
+        self.list_views = [self.gallery, self.customizer, self.editor, self.viewer, self.console, self.settings, self.notes, self.help]
         self.show_left = self.gallery
         self.show_right = self.notes
     
-        self.views_left  = [self.gallery, self.editor, self.customizer, self.settings]
-        self.views_right = [self.notes,   self.viewer, self.console,    self.help]
+        self.list_views_left  = [self.gallery, self.editor, self.customizer, self.settings]
+        self.list_views_right = [self.notes,   self.viewer, self.console,    self.help]
 
 
     def show_all(self):
         print(f'show_views {self.show_left} {self.show_right}')	
 
         count = 0
-        for view in self.views:
+        for view in self.list_views:
             if view:
                 count += 1
                 view.set_visibility(True)
@@ -185,7 +187,7 @@ class MainViews():
         self.show_right.set_visibility(True)
 
         count = 0
-        for view in self.views:
+        for view in self.list_views:
             if 0:
                 print(f'   - view {view} {view == self.show_left} {view == self.show_right}')
             if view != self.show_left and view != self.show_right:
@@ -205,9 +207,9 @@ class MainViews():
 
     def is_on_other(self, page, side):
         if side == Side.LEFT:
-            return page in self.views_right
+            return page in self.list_views_right
         elif side == Side.RIGHT:
-            return page in self.views_left
+            return page in self.list_views_left
         else:
             return False
 
@@ -311,13 +313,13 @@ class MainViews():
         
         page.set_visibility(False)
 
-        if side == Side.LEFT and page in self.views_right:
-            self.views_right.remove(page)
-            self.views_left.append(page)
+        if side == Side.LEFT and page in self.list_views_right:
+            self.list_views_right.remove(page)
+            self.list_views_left.append(page)
             page.move(self.left_container)
-        elif side == Side.RIGHT and page in self.views_left:
-            self.views_left.remove(page)
-            self.views_right.append(page)
+        elif side == Side.RIGHT and page in self.list_views_left:
+            self.list_views_left.remove(page)
+            self.list_views_right.append(page)
             page.move(self.right_container)
         else:
             pass # impossible
@@ -512,7 +514,7 @@ else:
     right_buttons = ['Alt+1',  'Alt+2',  'Alt+3',  'Alt+4', 'Alt+5']
 
 # [Main]
-if __name__ in {"__main__", "__mp_main__"}:
+if __name__ in ('__main__', '__mp_main__'):
     # This is for test - remove or modify later
     # Call setup function to create the UI
     path_manager = PathManager()

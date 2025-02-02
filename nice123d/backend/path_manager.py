@@ -31,12 +31,12 @@ class PathManager():
         if models_path and Path(models_path).exists():
             self.models_path = models_path
         else:
-            print(f'[ERROR]] User defined models path does not exist using {self.models_path}')
+            print(f'[ERROR] User defined models path does not exist using {self.models_path}')
 
         if help_path and Path(help_path).exists():
             self.help_path = help_path
         else:
-            print(f'[ERROR]] User defined help path does not exist using {self.help_path}')
+            print(f'[ERROR] User defined help path does not exist using {self.help_path}')
 
     # [API]
     @property
@@ -66,5 +66,5 @@ class PathManager():
 
 
 # [Main]
-
-path = PathManager()
+if __name__ in ('__main__', '__mp_main__'):
+    path = PathManager()

@@ -15,10 +15,11 @@ from backend.path_manager import PathManager   #| Managing file and directory ha
 class ViewManager():
 
     # [Variables]
-    
+    last_button = None
+
     # [Constructor]
     def __init__(self, pages = None, add_zoom=False):
-        ui.colors(accent='#00006A', info='#555555')
+        ui.colors(active='#4f0000',accent='#00004f', info='#555555')
         self.pages = pages
         self.add_zoom = add_zoom
         # TODO: move default to a yaml file
@@ -32,7 +33,6 @@ class ViewManager():
             self.right_page  = 'Alt+3'  # viewer, restricted to right
 
         self.views = None 
-        self.size_splitter = 50 # % of the screen
 
         if P__experimental:
             self.map_button_to_views = {
@@ -84,6 +84,9 @@ class ViewManager():
                     
                     button = ui.button('', icon=active.icon, on_click=self.map_button_to_views[short_cut])
                     button.tooltip(f'{active.title} `{short_cut}`')
+                    
+                    self.pages[page].button_left = button
+                    print(f'active.title: {active.title} self.left_page: {page}')
 
                     if active.title == self.left_page:
                         button.props('fab color=accent')
@@ -111,6 +114,8 @@ class ViewManager():
                     button = ui.button('', icon=active.icon, on_click=self.map_button_to_views[short_cut])
                     button.tooltip(f'{active.title} {short_cut}')
                     
+                    self.pages[page].button_right = button   
+                    print(f'active.title: {active.title} self.left_page: {page}')
                     
                     if active.title == self.right_page:
                         button.props('fab color=accent')
@@ -124,10 +129,22 @@ class ViewManager():
     def show_gallery_left(self, event):
         print(f'show_gallery_left')
         self.views.show_gallery()
+        if self.last_button:
+            self.last_button.props('fab color=inactive')
+        button = self.pages["Ctrl+1"].button_left
+        button.props('fab color=active')
+        if self.last_button:
+            self.last_button = button
 
     def show_notes_right(self, event):
         print(f'show_notes_right')
         self.views.show_notes()
+        if self.last_button:
+            self.last_button.props('fab color=inactive')
+        button = self.pages["Alt+1"].button_right
+        button.props('fab color=active')
+        if self.last_button:
+            self.last_button = button
 
     def show_customizer_left(self, event):
         print(f'show_customizer_left')
@@ -169,6 +186,7 @@ class ViewManager():
     def show_help_right(self, event):
         print(f'show_help_right')
         self.views.show_help()
+        self.manager.right_button_bar.children[5].props('fab color=active')
 
     def set_zoom_left(self):
         if self.size_splitter.value == 100:

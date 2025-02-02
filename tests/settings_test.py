@@ -113,7 +113,7 @@ def main(file_paths = [Path("./tests/ocp_vscode.yaml"), Path("./tests/editor.yam
 
 
 
-if __name__ in {"__main__"}:
+if __name__ in ('__main__', '__mp_main__'):
     editor = main()
     # Execution
     ui.run(

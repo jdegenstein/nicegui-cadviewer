@@ -3,6 +3,7 @@ TODO: docs for this file
 """
 
 # [Imports]
+from nicegui import ui
 from typing import Callable, Optional, Tuple
 
 # [Variables]
@@ -34,4 +35,6 @@ class ViewData:
         self.is_right: bool = position[1]
         self.short_cut: str = short_cut
         self.on_click: Optional[Callable[[], None]] = None
-        self.page: Optional[str] = None
+        self.view: Optional[str] = None
+        self.button_left: Optional[ui.button]  = None
+        self.button_right: Optional[ui.button] = None
