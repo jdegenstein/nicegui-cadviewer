@@ -1,12 +1,19 @@
-# nicegui-cadviewer
+# nice123d
 A nicegui-based CAD editor and viewer for OCP-based projects like build123d.
 
 * Thanks especially to the [ocp_vscode](https://github.com/bernhard-42/vscode-ocp-cad-viewer) project
 * Also thanks to the [nicegui](https://github.com/zauberzeug/nicegui) project
 
-After installing the dependencies, just run the file like:
+## Installation
+
+From a checkout of this repo which should install nice123d and dependencies in editable mode
 ```
-python cadviewer.py
+pip install -e .  
+```
+
+After installing nice123d, just run like this:
+```
+python -m nice123d
 ```
 
 Example screenshot:
