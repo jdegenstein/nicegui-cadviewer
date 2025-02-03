@@ -32,6 +32,7 @@ license:
     limitations under the License.
 
 """
+
 # [Imports]
 from elements.constants import *
 from nicegui import app, ui
@@ -47,23 +48,25 @@ from main_window import MainWindow
 
 # [Functions]
 
+
 def main():
-    
+
     # Startup
     win = MainWindow(app)
-    
+
     # - register handlers
     app.native.window_args["resizable"] = Yes
-    app.native.start_args["debug"]      = Yes
-    app.native.settings["MATPLOTLIB"]   = No
+    app.native.start_args["debug"] = Yes
+    app.native.settings["MATPLOTLIB"] = No
     # app.native.settings['ALLOW_DOWNLOADS'] = Yes # export "downloads" ?
 
     app.on_startup(win.startup)
-    app.on_shutdown(win.on_close_window) #TODO: maybe this is not needed ... 
-    
+    app.on_shutdown(win.on_close_window)  # TODO: maybe this is not needed ...
+
     # Execution
     win.run()
 
+
 # [Main]
-if __name__ in ('__main__', '__mp_main__'):
+if __name__ in ("__main__", "__mp_main__"):
     main()

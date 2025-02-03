@@ -16,3 +16,7 @@ description = "A nicegui-based CAD editor and viewer for OCP-based projects like
 
 [tool.setuptools.packages.find]
 where = ["nice123d"]
+
+[tool.black]
+target-version = ["py310", "py311", "py312", "py313"]
+line-length = 88
