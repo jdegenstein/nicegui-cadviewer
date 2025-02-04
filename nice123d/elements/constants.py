@@ -25,12 +25,13 @@ No = False
 
 active_os = platform.system()  # get the operating system
 
+# TODO: check if still used
 left = True, False
 right = False, True
 both = True, True
 none = False, False
 
 # [Parameters]
-P__experimental = Yes or No
-P__native_window = No
+P__experimental = Yes # or No
+P__native_window = Yes
 P__use_splitter_buttons = No

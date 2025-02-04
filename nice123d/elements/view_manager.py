@@ -26,7 +26,7 @@ class ViewManager():
         # TODO: move default to a yaml file
 
         if P__experimental:
-            # TODO: needs to also change th g__pages
+            # TODO: needs to also change th g__views
             self.left_page   = 'Meta+3' # editor
             self.right_page  = 'Meta+4' # viewer
         else:
