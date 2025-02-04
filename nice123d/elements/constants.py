@@ -9,7 +9,7 @@ import platform  # | [docs](https://docs.python.org/3/library/platform.html)
 
 # [Types]
 class Side(Enum):
-    """ "
+    """
     Enum for defining the side in the view.
     """
 
@@ -32,5 +32,5 @@ none = False, False
 
 # [Parameters]
 P__experimental = Yes or No
-P__native_window = Yes
+P__native_window = No
 P__use_splitter_buttons = No
