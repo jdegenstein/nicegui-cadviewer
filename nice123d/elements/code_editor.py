@@ -79,6 +79,7 @@ class CodeEditor(BaseView):
 
     def on_load(self):
         """Load code from a file into the editor."""
+        # TODO: add test/load file
         self.time_start('on_load')
 
         def handle_upload(e: events.UploadEventArguments):

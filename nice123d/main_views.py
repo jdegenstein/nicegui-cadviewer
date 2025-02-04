@@ -127,7 +127,8 @@ class MainViews():
             if 0:
                 ui.button("",         icon="undo",     on_click=self.editor.on_undo).props('color="grey"')
                 ui.button("",         icon="redo",     on_click=self.editor.on_redo).props('color="grey"')
-
+            #TODO: add extend buttons function
+            #TODO: add light / dark theme from test/examples
             ui.button(icon="cancel",   on_click=self.toggle_drawer
                     ).tooltip(f'close drawer').classes('text-small') \
                     .props('background-color: #d7e3f4') \
@@ -147,8 +148,12 @@ class MainViews():
 
         self.viewer.startup()
         self.manager.setup(self)
-        self.manager.show_editor_left(None)
-        self.manager.show_viewer_right(None)
+        if P__experimental:
+            self.manager.pages['Meta+3'].button_left.on_click(None)
+            self.manager.pages['Meta+4'].button_right.on_click(None)
+        else:
+            self.manager.pages['Ctrl+3'].button_left.on_click(None)
+            self.manager.pages['Alt+3'].button_right.on_click(None)
         ui.keyboard(on_key=self.handle_key)
 
 
@@ -173,8 +178,7 @@ class MainViews():
 
 
     def show_all(self):
-        print(f'show_views {self.show_left} {self.show_right}')	
-
+        
         count = 0
         for view in self.list_views:
             if view:
@@ -183,19 +187,16 @@ class MainViews():
 
 
     def update_views(self):
-        print(f'update_views {self.show_left} {self.show_right}')	
         self.show_left.set_visibility(True)
         self.show_right.set_visibility(True)
 
         count = 0
         for view in self.list_views:
-            if 0:
-                print(f'   - view {view} {view == self.show_left} {view == self.show_right}')
             if view != self.show_left and view != self.show_right:
                 if view:
                     count += 1
                     view.set_visibility(False)
-        print(f'- hidden views {count}')
+        
         ui.update()
 
     def already_shown_on_side(self, page, side):
@@ -262,10 +263,8 @@ class MainViews():
         page = self.settings
         side = Side.LEFT
         if self.already_shown_on_side(page, side):
-            print(f'   - already_shown_on_side {page} {side}')
             self.modify_size(side)
         else:
-            print(f'   - else {page} {side}')
             self.manager.set_zoom(100)
             page.set_visibility(True)
             self.show_left = page
@@ -317,14 +316,14 @@ class MainViews():
         if side == Side.LEFT and page in self.list_views_right:
             self.list_views_right.remove(page)
             self.list_views_left.append(page)
-            page.move(self.left_container)
-            self.manager.move(page, side)            
+            self.manager.prepare_move(page, side)  
+            page.move(self.left_container)          
 
         elif side == Side.RIGHT and page in self.list_views_left:
             self.list_views_left.remove(page)
             self.list_views_right.append(page)
-            page.move(self.right_container)
-            self.manager.move(page, side)            
+            self.manager.prepare_move(page, side)   
+            page.move(self.right_container)         
         else:
             pass # impossible
         
@@ -342,25 +341,22 @@ class MainViews():
         else:
             pass # impossible
 
-        if not page_sibling:
-            page_sibling = self.help
-
-        if self.is_on_other(page_sibling, self.other(side)):
-            self.move_to_side(page_sibling, self.other(side))
-
         if self.already_shown_on_side(page, side):
             self.modify_size(side)
 
         elif self.is_on_other(page, side):
-            print(f'is_on_other {page} print {type(page)} to {side}')
             if side == Side.LEFT:                 
                 self.show_left  = page
                 if self.show_right == page:
-                    self.show_right = page_sibling
+                    if page_sibling:
+                        self.move_to_side(page_sibling, Side.RIGHT)
+                        self.show_right = page_sibling
             elif side == Side.RIGHT:
                 self.show_right = page
                 if self.show_left == page:
-                    self.show_left  = page_sibling
+                    if page_sibling:
+                        self.move_to_side(page_sibling, Side.LEFT)
+                        self.show_left = page_sibling
 
             self.move_to_side(page, side)
 
@@ -384,7 +380,7 @@ class MainViews():
                 
         self.update_views()
 
-    def show_customizer(self, side=Side.LEFT):
+    def show_customizer(self, side):
 
         self.show_left_or_right(self.customizer, side, self.editor, self.viewer)
 
@@ -393,7 +389,6 @@ class MainViews():
         if P__experimental:
             self.show_left_or_right(self.editor, side, self.customizer, self.viewer)
         else:
-            print(f'show_editor restricted to {side.LEFT} - activate `P__experimental` to enable switching')            
             self.show_left_or_right(self.editor, Side.LEFT, self.customizer, self.viewer)
         
     def show_viewer(self, side):
@@ -401,7 +396,6 @@ class MainViews():
         if P__experimental:
             self.show_left_or_right(self.viewer, side, self.editor, self.customizer)
         else:
-            print(f'show_viewer restricted to {side.RIGHT} - activate `P__experimental` to enable switching')
             self.show_left_or_right(self.viewer, Side.RIGHT, self.editor, self.customizer)
 
     def show_console(self, side):

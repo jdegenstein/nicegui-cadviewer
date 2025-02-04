@@ -1,4 +1,3 @@
-
 # [Include]                                      #| Description      
 from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
 from nicegui.events import KeyEventArguments     #| [docs](https://nicegui.readthedocs.io/en/latest/events.html)
@@ -34,13 +33,13 @@ class MainWindow(ui.element):
                 window_size = (1800, 900),
                 title       = "nice123d",
                 fullscreen  = False,
-                reload      = False,
+                # reload      = False
             )
         else:
             ui.run(
                 title       = "nice123d",
                 fullscreen  = False,
-                reload      = False,
+                # reload      = False
             )
                 
     @property
@@ -54,3 +53,4 @@ class MainWindow(ui.element):
         self.views.viewer.shutdown()
         self.views.editor.on_save()
         self.app.shutdown()
+

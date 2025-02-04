@@ -1,9 +1,10 @@
 """
-nicegui cadviewer
+nice123d - a ocp_standalone viewer with nicegui.io
 
-name: cadviewer.py
-by:   jdegenstein
-date: January 24, 2025
+name: nice123d/__main__.py
+by:   jdegenstein, felix@42sol.eu
+created: 2025-01-24
+
 
 desc:
 
@@ -17,7 +18,7 @@ Key Features:
 
 license:
 
-    Copyright 2025 jdegenstein
+    Copyright 2025 jdegenstein / felix@42sol
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -43,12 +44,7 @@ from main_window import MainWindow
 
 # [Variables]
 
-
-# TODO: consider separating this module and how best to organize it (if name == main, etc.)
-
 # [Functions]
-
-
 def main():
 
     # Startup
@@ -57,7 +53,7 @@ def main():
     # - register handlers
     app.native.window_args["resizable"] = Yes
     app.native.start_args["debug"] = Yes
-    app.native.settings["MATPLOTLIB"] = No
+    # app.native.settings["MATPLOTLIB"] = No #TODO: check why this generates an error on felix Win11 machine?
     # app.native.settings['ALLOW_DOWNLOADS'] = Yes # export "downloads" ?
 
     app.on_startup(win.startup)

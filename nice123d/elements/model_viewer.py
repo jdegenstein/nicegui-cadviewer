@@ -12,10 +12,10 @@ from .constants import *                          #| The application constants
 from backend.path_manager import PathManager      #| Managing file and directory handling for the application
 import subprocess                                 #| [docs](https://docs.python.org/3/library/subprocess.html)
 from ocp_vscode import *                          #| [docs](https://ocp_vscode.readthedocs.io/en/latest/)
-
+import time                                       #| [docs](https://docs.python.org/3/library/time.html)
 
 # [Variables]
-
+running = False
 
 # [Main Class]
 class ModelViewer(BaseView):
@@ -45,6 +45,13 @@ class ModelViewer(BaseView):
         """
         run ocp_vscode in a subprocess
         """
+        global running
+
+        if running:
+            self.shutdown()
+            time.sleep(5)
+        
+        running = True
         self.time_start('model_viewer')
         # spawn separate viewer process
         self.ocpcv_proc = subprocess.Popen(["python", "-m", "ocp_vscode", "--port", str(self.port)])
@@ -56,8 +63,12 @@ class ModelViewer(BaseView):
         """"
         kill the ocp_vscode process
         """
+        global running
         self.info(f'Model Viewer', f'shutdown {self.ocpcv_proc}', call_id='model_viewer')
-        self.ocpcv_proc.kill()
+
+        if running:
+            running = False
+            self.ocpcv_proc.kill()
         # ocpcv_proc.terminate() # TODO: investigate best cross-platform solution
 
     # [Event Handlers]

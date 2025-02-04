@@ -4,12 +4,12 @@ TODO: docs for this file
 
 # [Imports]                                      #| description or links
 from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
-from elements.base_view import BaseView #| Base class for all views
-from .constants import *                          #| The application constants
-from backend.path_manager import PathManager   #| Managing file and directory handling for the application
+from elements.base_button import BaseButton      #| Base class for all buttons
+from elements.base_view import BaseView          #| Base class for all views
+from .constants import *                         #| The application constants
+from backend.path_manager import PathManager     #| Managing file and directory handling for the application
 
 # [Variables]
-
 
 # [Main Class]
 class ViewManager():
@@ -20,7 +20,7 @@ class ViewManager():
 
     # [Constructor]
     def __init__(self, pages = None, add_zoom=False):
-        ui.colors(active='#00004f',accent='#004f4f', info='#555555')
+        ui.colors(active='#00004f',accent='#3874a0', info='#555555')
         self.pages = pages
         self.add_zoom = add_zoom
         # TODO: move default to a yaml file
@@ -74,7 +74,7 @@ class ViewManager():
         with ui.button_group() as bar:	
             self.left_button_bar = bar
             for page in self.pages:
-                print(page)
+                
                 if self.pages[page].is_left:
                     active = self.pages[page]
                     active.view = views.pop()
@@ -84,14 +84,13 @@ class ViewManager():
                     else: 
                         short_cut = active.short_cut
                     
-                    button = ui.button('', icon=active.icon, on_click=self.map_button_to_views[short_cut])
+                    button = BaseButton('', icon=active.icon, on_click=self.map_button_to_views[short_cut])
                     button.tooltip(f'{active.title} `{short_cut}`')
                     
                     self.pages[page].button_left = button
-                    print(f'active.title: {active.title} self.left_page: {page}')
+                    button.props('fab color=accent')
+                    # INFO: `inactive` is the color from the header background color                    
 
-                    if active.title == self.left_page:
-                        button.props('fab color=accent')
             if self.add_zoom:
                 z = ui.button('', icon='zoom_out_map', on_click=self.set_zoom_left).tooltip('Zoom left `Meta+0`')
                 z.props('fab color=info')
@@ -113,52 +112,29 @@ class ViewManager():
                     else: 
                         short_cut = active.short_cut
                     
-                    button = ui.button('', icon=active.icon, on_click=self.map_button_to_views[short_cut])
+                    button = BaseButton('', icon=active.icon, on_click=self.map_button_to_views[short_cut])
                     button.tooltip(f'{active.title} {short_cut}')
                     
+                    if self.pages[page].button_left:
+                        button.sibling_button = self.pages[page].button_left
+                        self.pages[page].button_left.sibling_button = button 
+
                     self.pages[page].button_right = button   
-                    print(f'active.title: {active.title} self.left_page: {page}')
                     
-                    if active.title == self.right_page:
-                        button.props('fab color=accent')
-        
+                    button.props('fab color=accent')
+                    # INFO: `inactive` is the color from the header background color 
             if self.add_zoom:
                 z = ui.button('', icon='zoom_out_map', on_click=self.set_zoom_right).tooltip('Zoom right `Meta+0`')
                 z.props('fab color=info')
 
         return self.right_button_bar
 
-    def highlight_button(self, button, side):
-        if type(button) is not ui.button:
-            return # TODO: raise exception
-        if type(side) is not Side:
-            return # TODO: raise exception
-        if side not in (Side.LEFT, Side.RIGHT):
-            return # TODO: raise exception
 
-        if side == Side.LEFT:        
-            if button != self.last_button_left:
-                button.props('fab color=active')
-                if self.last_button_left:
-                    self.last_button_left.props('fab color=default')
-            # else: nothing to do - keep same button active
-
-            self.last_button_left = button
-
-        else: # side == Side.RIGHT:        
-            if button != self.last_button_right:
-                button.props('fab color=active')
-                if self.last_button_right:
-                    self.last_button_right.props('fab color=default')
-            # else: nothing to do - keep same button active
-            self.last_button_right = button  
-
-    def move(self, page, side):
+    def prepare_move(self, page, side):
         page_info = None 
 
         # find the correct page
         for view_data in self.pages.values():
-            print(view_data)
             if view_data.view == page:
                 page_info = view_data
                 break
@@ -169,6 +145,35 @@ class ViewManager():
                 self.highlight_button(page_info.button_left, side)
             else:
                 self.highlight_button(page_info.button_right, side)
+
+    def highlight_button(self, button, side):
+        if type(button) is not BaseButton:
+            print(f'ERROR: highlight_button: button not of type BaseButton {button}')
+            return # TODO: raise exception
+        if type(side) is not Side:
+            print(f'ERROR: highlight_button: side not of type Side {side}')
+            return # TODO: raise exception
+        if side not in (Side.LEFT, Side.RIGHT):
+            print(f'ERROR: highlight_button: side not in (Side.LEFT, Side.RIGHT) {side}')
+            return # TODO: raise exception
+
+
+        if side == Side.LEFT:        
+            if button != self.last_button_left:
+                button.props('fab color=active')
+                if self.last_button_left:
+                    self.last_button_left.props('fab color=accent')
+            # else: nothing to do - keep same button active
+
+            self.last_button_left = button
+
+        else: # side == Side.RIGHT:        
+            if button != self.last_button_right:
+                button.props('fab color=active')
+                if self.last_button_right:
+                    self.last_button_right.props('fab color=accent')
+            # else: nothing to do - keep same button active
+            self.last_button_right = button  
 
     def show_gallery_left(self, event):
         print(f'show_gallery_left')

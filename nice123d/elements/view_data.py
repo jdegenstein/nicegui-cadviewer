@@ -39,14 +39,5 @@ class ViewData:
         self.button_right: Optional[ui.button] = None
 
     def __str__(self):
-        return f'''
-        title: {self.title}
-        icon: {self.icon}
-        is_left: {self.is_left}
-        is_right: {self.is_right}
-        short_cut: {self.short_cut}
-        view: {self.view}
-        button_left: {self.button_left}
-        button_right: {self.button_right}
-        '''
+        return f'''- title: {self.title}'''
 
