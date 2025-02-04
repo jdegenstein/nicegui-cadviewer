@@ -67,4 +67,5 @@ class PathManager():
 
 # [Main]
 if __name__ in ('__main__', '__mp_main__'):
+    print(f'running {__file__}')
     path = PathManager()

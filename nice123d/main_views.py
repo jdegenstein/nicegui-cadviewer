@@ -148,14 +148,15 @@ class MainViews():
 
         self.viewer.startup()
         self.manager.setup(self)
-        if P__experimental:
-            self.manager.pages['Meta+3'].button_left.on_click(None)
-            self.manager.pages['Meta+4'].button_right.on_click(None)
-        else:
-            self.manager.pages['Ctrl+3'].button_left.on_click(None)
-            self.manager.pages['Alt+3'].button_right.on_click(None)
         ui.keyboard(on_key=self.handle_key)
-
+        self.show_editor(Side.LEFT)
+        self.show_viewer(Side.RIGHT)
+        if P__experimental:
+            self.manager.last_button_left  = self.manager.pages['Meta+3'].button_left.props('fab color=active')
+            self.manager.last_button_right = self.manager.pages['Meta+4'].button_right.props('fab color=active')
+        else:
+            self.manager.last_button_left  = self.manager.pages['Ctrl+3'].button_left.props('fab color=active')
+            self.manager.last_button_right = self.manager.pages['Alt+3'].button_right.props('fab color=active')
 
     def splitter_value(self, main_splitter):
         size_splitter = ui.number('Value', format='%.0f', value=50, min=0, max=100, step=10)
@@ -515,6 +516,7 @@ else:
 if __name__ in ('__main__', '__mp_main__'):
     # This is for test - remove or modify later
     # Call setup function to create the UI
+    print(f'running {__file__}')
     path_manager = PathManager()
 
     views = MainViews(path_manager)    
