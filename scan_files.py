@@ -12,6 +12,7 @@ from rich import print  #| [docs](https://rich.readthedocs.io/en/latest/)
 from rich.pretty import pprint
 from pathlib import Path #| [docs](https://docs.python.org/3/library/pathlib.html)
 import hashlib        #| [docs](https://docs.python.org/3/library/hashlib.html)
+from uuid import uuid4 #| [docs](https://docs.python.org/3/library/uuid.html)
 
 # [Parameters]
 P__debug = False
@@ -22,7 +23,6 @@ P__black_list = [
     ".DS_Store",
     ".git",
     ".venv",
-    ".vscode",
     "__pycache__",	
     "nice123d.egg-info",
     "Z__archived",
@@ -75,6 +75,18 @@ def find_file_uuid(file_path: Path):
                 break
     return file_uuid
 
+def load_template():
+    readme_template = None
+    if Path("./_templates/README.template.md").exists():
+        with open("./_templates/README.template.md", 'r') as file:
+            readme_template = file.read()
+    return readme_template
+
+def render_readme_template(template: str, data: dict):
+    for key, value in data.items():
+        template = template.replace(f"{{{{key}}}}", value)
+    return template
+
 def scan_files(path: Path, readme_template = None):
     file_counter = 0
     directory_counter = 0
@@ -82,6 +94,8 @@ def scan_files(path: Path, readme_template = None):
             'files': {}, 
             'file-ids': {},
             'total_files': 0, 'total_directories': 0}
+
+    readme_data = {'folder': 'todo', 'uuid': 'todo', 'description': 'TODO: description', 'file_list': 'TODO: file_list'}
 
     for file in path.rglob("**"):
         is_blacklisted = False
@@ -106,14 +120,29 @@ def scan_files(path: Path, readme_template = None):
             else:
                 print(f"[yellow]Warning:[/yellow] No UUID found in {file}")
         elif file.is_dir():
+            if readme_template:
+                readme = file / "README.md"
+                if not readme.exists():
+                    readme_data['folder'] = str(file)
+                    readme_data['uuid'] = str(uuid4())
+                    readme_content = render_readme_template(readme_template, readme_data)
+                    with open(readme, 'w') as file:
+                        file.write(readme_content)
+                else:
+                    print(f"[blue]Info:[/blue] {readme} already exists!")
+                    
             directory_counter += 1
             data['directories'][f'd-{directory_counter:02}'] = f'{file}'
 
     data['total_files'] = file_counter
     data['total_directories'] = directory_counter
     return data
-        
-if __name__ == "__main__":
-    results = scan_files(Path("."))
-    if P__report:
-        pprint(results)
+
+P__run = True
+if P__run:    
+    if __name__ in {"__main__", "__mp_main__"}:
+        readme_template = load_template()
+
+        results = scan_files(Path("."), readme_template)
+        if P__report:
+            pprint(results)

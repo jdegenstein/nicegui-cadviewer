@@ -1,4 +1,14 @@
+<!--
+file:         .vscode/SETUP.md
+file-id:      7a35a93b-b908-4263-9053-4f1451dfd3b1
+project:      nice123d
+project-id:   e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
 
+TODO: update content of this file.
+
+description:  This file contains the folder documentation. |
+    The folder is part of the `nice123d` project.
+-->
 # Setup for usage
 
 ---

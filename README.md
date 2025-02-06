@@ -8,11 +8,15 @@ project-id:   e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
 description:  This file contains the main information for the `nice123d` project.
 
 -->
-# nice123d
+# README: nice123d
 A nicegui-based CAD editor and viewer for OCP-based projects like build123d.
 
 * Thanks especially to the [ocp_vscode](https://github.com/bernhard-42/vscode-ocp-cad-viewer) project
 * Also thanks to the [nicegui](https://github.com/zauberzeug/nicegui) project
+
+## License
+
+[Apache Licensed](./LICENSE)
 
 ## Installation
 
@@ -32,3 +36,7 @@ python -m nice123d
 
 Example screenshot:
 ![image](https://github.com/user-attachments/assets/9f03598b-0f60-462a-a2b0-d9211ab0911d)
+
+# Content
+
+TODO: list files
