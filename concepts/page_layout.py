@@ -17,4 +17,4 @@ def page_layout():
 
 ui.link('show page with fancy layout', page_layout)
 
-ui.run()
+# ui.run()

@@ -523,30 +523,3 @@ else:
     } 
     left_buttons  = ['Ctrl+1', 'Ctrl+2', 'Ctrl+3', 'Ctrl+4', 'Ctrl+5']
     right_buttons = ['Alt+1',  'Alt+2',  'Alt+3',  'Alt+4', 'Alt+5']
-
-# [Main]
-if __name__ in ('__main__', '__mp_main__'):
-    # This is for test - remove or modify later
-    # Call setup function to create the UI
-    print(f'running {__file__}')
-    path_manager = PathManager()
-
-    views = MainViews(path_manager)    
-    views.setup()
-
-
-    # Run the NiceGUI app
-    if P__native_window:
-        ui.run(
-            native      = P__native_window,
-            window_size = (1800, 900),
-            title       = "nice123d",
-            fullscreen  = False,
-            reload      = False,
-        )
-    else:
-        ui.run(
-            title       = "nice123d",
-            fullscreen  = False,
-            reload      = False,
-        )

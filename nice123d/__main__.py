@@ -67,20 +67,14 @@ def main():
 
 
 # [Main]
-if __name__ in ("__main__", "__mp_main__"):
+if __name__ in {"__main__", "__mp_main__"}:
     main()
     # Run the NiceGUI app
-    if P__native_window:
-        ui.run(
-            native      = P__native_window,
-            window_size = (1800, 900),
-            title       = "nice123d",
-            fullscreen  = False,
-            # reload      = False
-        )
-    else:
-        ui.run(
-            title       = "nice123d",
-            fullscreen  = False,
-            # reload      = False
-        )
+    ui.run(
+        native      = True,
+        window_size = (1800, 900),
+        title       = "nice123d",
+        fullscreen  = False,
+        reload      = False
+        # https://nicegui.io/documentation#package_for_installation
+    )

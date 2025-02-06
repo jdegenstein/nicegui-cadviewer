@@ -52,4 +52,4 @@ image_container = ui.row().classes('full flex items-center')
 show(200)
 
 print('running [bold blue]gallery.py[/bold blue]!')
-ui.run(native=True,title='Gallery', favicon='📸')	
+# ui.run(native=True,title='Gallery', favicon='📸')	

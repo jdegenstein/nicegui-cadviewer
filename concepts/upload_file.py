@@ -10,4 +10,4 @@ def open_file_dialog():
 
 ui.button('Load File', on_click=open_file_dialog)
 
-ui.run()
+# ui.run()

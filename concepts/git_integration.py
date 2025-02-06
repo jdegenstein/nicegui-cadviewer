@@ -114,4 +114,4 @@ with ui.column().classes("w-full h-full"):
 
 
 # Run the app
-ui.run()
+# ui.run()

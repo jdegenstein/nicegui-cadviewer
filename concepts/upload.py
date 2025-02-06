@@ -13,4 +13,4 @@ def handle_upload(e: events.UploadEventArguments):
 
 ui.upload(on_upload=handle_upload).props('accept=.md').classes('max-w-full')
 
-ui.run()
+# ui.run()

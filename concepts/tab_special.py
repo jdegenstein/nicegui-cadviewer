@@ -106,4 +106,4 @@ with ui.splitter().classes('w-full h-full items-stretch border') as main_splitte
             with ui.card().classes('w-full h-full') as page_help:
                 ui.label('Help.').classes('w-full h-full')
 # Run the NiceGUI app
-ui.run()
+# ui.run()

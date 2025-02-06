@@ -7,4 +7,4 @@ async def choose_file():
 
 ui.button('choose file', on_click=choose_file)
 
-ui.run(native=True)
+# ui.run(native=True)

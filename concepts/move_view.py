@@ -29,4 +29,4 @@ def move_to_left():
 ui.button("Move to right", on_click=move_to_right)
 ui.button("Move to left", on_click=move_to_left)
 
-ui.run()
+# ui.run()
