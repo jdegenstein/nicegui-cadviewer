@@ -6,8 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "nicegui-cadviewer"
 version = "0.0.2"
 dependencies = [
-  "build123d==0.8.0",
-  "cadquery-ocp<7.8",
+  "build123d>=0.9.0",
   "ocp_vscode",
   "nicegui",
   "pywebview",
