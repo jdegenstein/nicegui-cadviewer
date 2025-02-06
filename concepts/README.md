@@ -1,5 +1,5 @@
 <!--
-file:         tests/README.md
+file:         concepts/README.md
 file-id:      3dc67a08-ca7b-4568-90af-9ca3e0dbd6dc
 project:      nice123d
 project-id:   e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
@@ -8,7 +8,7 @@ description:  This file contains the folder documentation. |
     The folder is part of the `nice123d` project.
 -->
 
-# README tests:
+# README concepts:
 
 TODO: description
 

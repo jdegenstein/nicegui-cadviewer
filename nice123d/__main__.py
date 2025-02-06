@@ -69,3 +69,18 @@ def main():
 # [Main]
 if __name__ in ("__main__", "__mp_main__"):
     main()
+    # Run the NiceGUI app
+    if P__native_window:
+        ui.run(
+            native      = P__native_window,
+            window_size = (1800, 900),
+            title       = "nice123d",
+            fullscreen  = False,
+            # reload      = False
+        )
+    else:
+        ui.run(
+            title       = "nice123d",
+            fullscreen  = False,
+            # reload      = False
+        )
