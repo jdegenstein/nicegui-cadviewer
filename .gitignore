@@ -1,3 +1,9 @@
+# file:         .gitignore
+# file-id:      2f3a6a44-d3ce-4b9d-8377-492c0a538b48
+# project:      nice123d
+# project-id:   e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+# description:  This file contains the list of files and directories that should be ignored by git.
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

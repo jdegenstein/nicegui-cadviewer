@@ -2,7 +2,7 @@
 ConsoleView -> BaseView -> ui.element
 
 file:           nice123d/elements/consol_view.py
-file-id:        354d94a2-d095-4a98-8a81-bbf4af27d20a
+file-id:        6a848c30-083d-4343-a323-3325552dff86
 project:        nice123d
 project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
 author:         felix@42sol.eu

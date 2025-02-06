@@ -1,3 +1,13 @@
+"""
+file: tests/*/gallery.py
+file-id: efecaa60-c9ab-4bf1-a2d1-6de8ca39bec2
+project:  nicegui
+project-id: 56fd25a2-bb47-4f15-9f36-ca712d10743c
+
+description: | 
+    Display a gallery of images from the folder `_gallery`.
+    Also generate thumbnails of 100px, 200px, and 400px.
+"""
 from nicegui import ui
 from nicegui import app
 from rich import print
@@ -5,7 +15,7 @@ from pathlib import Path
 import PIL
 
 ui.label('Gallery').classes('h1')
-folder = Path(__file__).parent / 'gallery'
+folder = Path(__file__).parent / '_gallery'
 app.add_static_files("/temp", folder)
 files = [f.name for f in folder.glob('*.png')]
 

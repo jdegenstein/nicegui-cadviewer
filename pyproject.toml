@@ -1,3 +1,8 @@
+file = "pyproject.toml"
+file-id = "d94687d2-2b13-4605-abee-631465911c30"
+project = "nice123d"
+project-id = "e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a"
+
 [build-system]
 requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
@@ -10,6 +15,8 @@ dependencies = [
   "ocp_vscode",
   "nicegui",
   "pywebview",
+  "rich",
+  "rich.pretty",
 ]
 description = "A nicegui-based CAD editor and viewer for OCP-based projects like build123d"
 
