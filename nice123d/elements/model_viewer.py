@@ -1,8 +1,14 @@
 """
-# Model viewer element for nice123d.
+ModelViewer -> BaseView -> ui.element
 
-This module provides a model viewer based on `OCP_vscode` for nice123d.
+file:           nice123d/elements/model_viewer.py
+file-id:        2fd0a90c-d9db-497c-bffc-d2a249572601
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         jdegenstein, felix@42sol.eu
 
+description: |
+    This class implements the model viewer - using OCP_vscode for viewing the models.
 """
 
 # [Imports]                                       #| description or links

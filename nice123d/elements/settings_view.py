@@ -1,5 +1,15 @@
 """
-TODO: docs for this file
+SettingsView -> BaseView -> ui.element
+
+file:           nice123d/elements/settings_view.py
+file-id:        0561e45d-2fc2-41ed-b5b2-b07db7977885
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         felix@42sol.eu
+
+description: |
+    This class implements the application settings editor.
+    It is a place to view all the application settings in the applications `settings` directory.
 """
 
 # [Imports]                                      #| description or links

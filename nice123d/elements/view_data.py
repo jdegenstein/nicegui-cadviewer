@@ -1,7 +1,15 @@
 """
-TODO: docs for this file
-"""
+ViewData
 
+file:           nice123d/elements/view_data.py
+file-id:        14b7cc70-52af-4828-8e13-9ac9655d7e88
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         felix@42sol.eu
+
+description: |
+    This class stores the data for all views.
+"""
 # [Imports]
 from nicegui import ui
 from typing import Callable, Optional, Tuple

@@ -1,5 +1,15 @@
 """
-TODO: docs for this file
+BaseButton -> ui.button
+
+file:           nice123d/elements/base_button.py
+file-id:        f87748e4-0de3-4a5e-a28c-f31abc2cf48b
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         felix@42sol.eu
+
+description: |
+    This class is used for a button controlling the visibility or zoom of a connected view of the application.
+    It is able to move the view from one side to the other.
 """
 
 # [Imports]                                      #| description or links 

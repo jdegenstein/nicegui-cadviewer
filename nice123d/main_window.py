@@ -1,3 +1,16 @@
+"""
+MainWindow
+
+file:           nice123d/main_window.py
+file-id:        964fad81-110b-4d8d-a034-9c9a539415b5
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         jdegenstein, felix@42sol.eu
+
+description: |
+    This class implements the main window of the application.
+"""
+
 # [Include]                                      #| Description      
 from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
 from nicegui.events import KeyEventArguments     #| [docs](https://nicegui.readthedocs.io/en/latest/events.html)

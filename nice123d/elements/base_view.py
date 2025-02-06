@@ -1,7 +1,15 @@
 """
-TODO: docs for this file
-"""
+BaseView
 
+file:           nice123d/elements/base_view.py
+file-id:        7385bbca-9dc9-424b-af9d-43bffd84154b
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         felix@42sol.eu
+
+description: |
+    This class is used for a base view of the application on a specific panel.
+"""
 # [Imports]                                      #| description or links 
 from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
 from typing import Optional                      #| [docs](https://docs.python.org/3/library/typing.html)

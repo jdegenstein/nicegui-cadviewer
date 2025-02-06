@@ -1,16 +1,19 @@
 """
 nice123d - a ocp_standalone viewer with nicegui.io
 
-name: nice123d/__main__.py
-by:   jdegenstein, felix@42sol.eu
+file:           nice123d/__main__.py
+file-id:        56f65297-932d-40d3-9c21-4c4b54a5f8e8
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         jdegenstein, felix@42sol.eu
+
+
 created: 2025-01-24
 
-
-desc:
-
-This module creates a graphical window with a text editor and CAD viewer (based on ocp_vscode). 
-The graphical user interface is based on nicegui and spawns the necessary subprocess and allows
-for re-running the user-supplied script and displaying the results.
+desc: |
+    This module creates a graphical window with a text editor and CAD viewer (based on ocp_vscode). 
+    The graphical user interface is based on nicegui and spawns the necessary subprocess and allows
+    for re-running the user-supplied script and displaying the results.
 
 Key Features:
   - Has a run button for executing user code

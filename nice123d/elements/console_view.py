@@ -1,5 +1,15 @@
 """
-TODO: docs for this file
+ConsoleView -> BaseView -> ui.element
+
+file:           nice123d/elements/consol_view.py
+file-id:        354d94a2-d095-4a98-8a81-bbf4af27d20a
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         felix@42sol.eu
+
+description: |
+    This class implements the project console view.
+    It collects all the log messages from the different views.
 """
 
 # [Imports]                                      #| description or links

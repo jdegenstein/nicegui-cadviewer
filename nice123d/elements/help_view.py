@@ -1,5 +1,15 @@
 """
-TODO: docs for this file
+HelpViewer -> BaseView -> ui.element
+
+file:           nice123d/elements/help_viewer.py
+file-id:        adc949b8-0f6a-4cc5-925b-a6a68b64805d
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         felix@42sol.eu
+
+description: |
+    This class implements the project help view.
+    It is a place to view all the articles in the applications `help` directory.
 """
 
 # [Imports]                                      #| description or links

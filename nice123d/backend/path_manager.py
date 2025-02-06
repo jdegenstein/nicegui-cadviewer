@@ -1,7 +1,17 @@
 """
-TODO: docs for this file
-"""
+PathManager -> BaseView -> ui.element
+ +-> [n] Path
 
+file:           nice123d/elements/note_viewer.py
+file-id:        af8c5a12-e5df-46f5-9edd-2c88449ae6d7
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         felix@42sol.eu
+
+description: |
+    This class implements the path and file objects for the application.
+
+"""
 # [Imports]                                      #| description or links 
 from pathlib import Path                         #| [docs](https://docs.python.org/3/library/pathlib.html)
 import os                                        #| [docs](https://docs.python.org/3/library/os.html)
@@ -15,9 +25,9 @@ class PathManager():
     """
 
     # [Variables]
-    settings_path = Path(__file__).parent / ".." / ".." / './settings'
-    models_path = Path(__file__).parent / ".." / ".." / 'models'
-    help_path = Path(__file__).parent / ".." / ".." / './help'
+    settings_path = Path(__file__).parent / ".." / ".." / './_settings'
+    models_path = Path(__file__).parent / ".." / ".." / '_models'
+    help_path = Path(__file__).parent / ".." / ".." / './_help'
     code_file = models_path / "basic.py"
     new_file = models_path / "new.py"
     

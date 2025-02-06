@@ -1,5 +1,15 @@
 """
-TODO: docs for this file
+CustomizerView -> BaseView -> ui.element
+
+file:           nice123d/elements/customizer_view.py
+file-id:        66d51c4d-8ff6-46ae-960f-ed21dded9146
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         felix@42sol.eu
+
+description: |
+    This class implements the customizer view - used for modifying the model parameters.
+    It connects to the code editor and the model viewer.
 """
 
 # [Imports]                                      #| description or links

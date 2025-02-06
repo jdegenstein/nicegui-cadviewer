@@ -1,3 +1,15 @@
+"""
+MainView
+
+file:           nice123d/main_view.py
+file-id:        200fe85c-b034-4465-8d72-166d94281441
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         felix@42sol.eu
+
+description: |
+    This class implements the main view of the application.
+"""
 
 # [Imports]                                                #| description or links
 from nicegui import ui                                     #| [docs](https://nicegui.readthedocs.io/en/latest/)   

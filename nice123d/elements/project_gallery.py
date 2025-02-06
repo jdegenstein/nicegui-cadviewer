@@ -1,3 +1,16 @@
+"""
+ProjectGallery -> BaseView -> ui.element
+
+file:           nice123d/elements/project_gallery.py
+file-id:        960076e5-ce22-4158-b494-9ed3d2286b02
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         felix@42sol.eu
+
+description: |
+    This class implements the project gallery view.
+    It is a place to view all the projects in the applications `model` directory.
+"""
 
 # [Imports]                                      #| description or links
 from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   

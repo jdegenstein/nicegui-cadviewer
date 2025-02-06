@@ -1,5 +1,14 @@
 """
-TODO: docs for this file
+ViewManager
+
+file:           nice123d/elements/view_manager.py
+file-id:        9980bdb8-716d-40b8-884c-b09c71838447
+project:        nice123d
+project-id:     e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+author:         felix@42sol.eu
+
+description: |
+    This class is used for managing the views of the application.
 """
 
 # [Imports]                                      #| description or links
