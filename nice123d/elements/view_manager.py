@@ -14,6 +14,7 @@ description: |
 # [Imports]                                      #| description or links
 from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
 from elements.base_button import BaseButton      #| Base class for all buttons
+from elements.base_button_bar import BaseButtonBar #| Base class for all button bars
 from elements.base_view import BaseView          #| Base class for all views
 from .constants import *                         #| The application constants
 from backend.path_manager import PathManager     #| Managing file and directory handling for the application
@@ -24,25 +25,31 @@ from backend.path_manager import PathManager     #| Managing file and directory 
 class ViewManager():
 
     # [Variables]
-    last_button_left  = None
+    last_button_left  = None # TODO: move this to the button bar
     last_button_right = None
+
+    ctrl = "Ctrl"
+    alt = "Alt"
+    all_views = {}
 
     # [Constructor]
     def __init__(self, pages = None, add_zoom=False):
+        if platform.system() == 'MacOS':
+            self.ctrl = "Cmd"
+
         ui.colors(active='#00004f',accent='#3874a0', info='#555555')
-        self.pages = pages
+        self.pages = pages  # TODO: this member needs to be removed ...
         self.add_zoom = add_zoom
+        self.ctrl_bar = BaseButtonBar('looks_one')
+        self.alt_bar = BaseButtonBar('looks_two', sibling_button_bar=self.ctrl_bar)
+        self.ctrl_bar.sibling_button_bar = self.alt_bar
+        
         # TODO: move default to a yaml file
 
-        if P__experimental:
-            # TODO: needs to also change th g__views
-            self.left_page   = 'Meta+3' # editor
-            self.right_page  = 'Meta+4' # viewer
-        else:
-            self.left_page   = 'Ctrl+3' # editor, restricted to left
-            self.right_page  = 'Alt+3'  # viewer, restricted to right
-
         self.views = None 
+        self.list_views = {Side.LEFT: [], Side.RIGHT: []} # NEW: manage the views positions (left or right) in a list
+
+        # TOOD: 2025-02-07 integrate this in add_new_view ... use partials for left and right
 
         if P__experimental:
             self.map_button_to_views = {
@@ -77,6 +84,47 @@ class ViewManager():
         self.views = views
         #self.pages[]
 
+    def add_new_view( self, view : BaseView, side : Side, text : str, icon : str):
+        button_left = None
+        button_right = None
+        if side in [Side.LEFT, Side.BOTH]:        
+            index = len(self.ctrl_bar._buttons)+1
+            short_cut_left = f'{self.ctrl}+{index}'
+            tooltip_left = f'{text} `{short_cut_left}`'
+            print(f'add_new_view left: {text} {short_cut_left}')
+            
+            # TODO: map_button_to_views needs to be replaced with a function passed to this method and a partial depending on the side
+
+            button_left = BaseButton('', icon=icon, on_click=self.map_button_to_views[short_cut_left])
+            button_left.tooltip(tooltip_left)
+            button_left.view = view
+            self.ctrl_bar.add(button_left, view.title)
+            
+
+        if side in [Side.RIGHT, Side.BOTH]:
+            index = len(self.alt_bar._buttons)+1
+            short_cut_right = f'{self.alt}+{index}'
+            tooltip_right = f'{text} `{short_cut_right}`'
+            print(f'add_new_view right: {text} {short_cut_right}')
+            
+            # TODO: map_button_to_views needs to be replaced with a function passed to this method and a partial depending on the side
+            
+            button_right = BaseButton('', icon=icon, on_click=self.map_button_to_views[short_cut_right])
+            button_right.tooltip(tooltip_right)
+            button_right.view = view
+            self.alt_bar.add(button_right, view.title)
+
+        if button_left and button_right:
+            button_left.sibling_button = button_right
+            button_right.sibling_button = button_left
+
+        self.all_views[text] = view
+        if side == Side.RIGHT:
+            self.list_views[Side.RIGHT].append(view)
+        else:
+            self.list_views[Side.LEFT].append(view)
+
+    # TODO: remove functions from here ...
     def setup_left_button_bar(self, views : list):
         views.reverse()
 
@@ -106,6 +154,7 @@ class ViewManager():
 
         return self.left_button_bar
 
+    # TODO: remove functions from here ...
     def setup_right_button_bar(self, views : list):
         views.reverse()
         
@@ -148,13 +197,6 @@ class ViewManager():
                 page_info = view_data
                 break
 
-        # if found highlight the buttons
-        if page_info is not None:
-            if side == Side.LEFT:
-                self.highlight_button(page_info.button_left, side)
-            else:
-                self.highlight_button(page_info.button_right, side)
-
     def highlight_button(self, button, side):
         if type(button) is not BaseButton:
             print(f'ERROR: highlight_button: button not of type BaseButton {button}')
@@ -187,83 +229,65 @@ class ViewManager():
     def show_gallery_left(self, event):
         print(f'show_gallery_left')
         self.views.show_gallery()
-        self.highlight_button(self.pages["Ctrl+1"].button_left, side=Side.LEFT)
+        self.ctrl_bar.set_active_button(self.views.gallery.title)
             
 
     def show_notes_right(self, event):
         print(f'show_notes_right')
         self.views.show_notes()
-        self.highlight_button(self.pages["Alt+1"].button_right, side=Side.RIGHT)
+        self.alt_bar.set_active_button(self.views.notes.title)
 
     def show_customizer_left(self, event):
         print(f'show_customizer_left')
         self.views.show_customizer(Side.LEFT)
-        self.highlight_button(self.pages["Meta+2"].button_left, side=Side.LEFT)
-
+        self.ctrl_bar.set_active_button(self.views.cutomizer.title)
+        
     def show_customizer_right(self, event):
         print(f'show_customizer_right')
         self.views.show_customizer(Side.RIGHT)
-        self.highlight_button(self.pages["Meta+2"].button_right, side=Side.RIGHT)
+        self.alt_bar.set_active_button(self.views.cutomizer.title)
 
     def show_editor_left(self, event):
         print(f'show_editor_left')
         self.views.show_editor(Side.LEFT)
-        if P__experimental:
-            self.highlight_button(self.pages["Meta+3"].button_left, side=Side.LEFT)
-        else:
-            self.highlight_button(self.pages["Ctrl+3"].button_left, side=Side.LEFT)
+        self.ctrl_bar.set_active_button(self.views.editor.title)
 
     def show_editor_right(self, event):
         print(f'show_editor_right')
         self.views.show_editor(Side.RIGHT)
-        self.highlight_button(self.pages["Meta+3"].button_right, side=Side.RIGHT)
+        self.alt_bar.set_active_button(self.views.editor.title)
 
     def show_viewer_left(self, event):
         print(f'show_viewer_left')
         self.views.show_viewer(Side.LEFT)
-        self.highlight_button(self.pages["Meta+4"].button_left, side=Side.LEFT)
+        self.ctrl_bar.set_active_button(self.views.viewer.title)
     
     def show_viewer_right(self, event):
         print(f'show_viewer_right')
         self.views.show_viewer(Side.RIGHT)
-        if P__experimental:
-            self.highlight_button(self.pages["Meta+4"].button_right, side=Side.RIGHT)
-        else:
-            self.highlight_button(self.pages["Alt+3"].button_right, side=Side.RIGHT)
+        self.alt_bar.set_active_button(self.views.viewer.title)
 
     def show_console_left(self, event):
         print(f'show_console_left')
         self.views.show_console(Side.LEFT)
-        if P__experimental:
-            self.highlight_button(self.pages["Meta+5"].button_left, side=Side.LEFT)
-        else:
-            self.highlight_button(self.pages["Meta+4"].button_left, side=Side.LEFT)
+        self.ctrl_bar.set_active_button(self.views.console.title)
 
     def show_console_right(self, event):
         print(f'show_console_right')
         self.views.show_console(Side.RIGHT)
-        if P__experimental:
-            self.highlight_button(self.pages["Meta+5"].button_right, side=Side.RIGHT)
-        else:
-            self.highlight_button(self.pages["Meta+4"].button_right, side=Side.RIGHT)
+        self.alt_bar.set_active_button(self.views.console.title)
 
 
     def show_settings_left(self, event):
         print(f'show_settings_left')
         self.views.show_settings()
-        if P__experimental:
-            self.highlight_button(self.pages["Ctrl+6"].button_left, side=Side.LEFT)
-        else:
-            self.highlight_button(self.pages["Ctrl+5"].button_left, side=Side.LEFT)
+        self.ctrl_bar.set_active_button(self.views.settings.title)
 
 
     def show_help_right(self, event):
         print(f'show_help_right')
         self.views.show_help()
-        if P__experimental:
-            self.highlight_button(self.pages["Alt+6"].button_right, side=Side.RIGHT)
-        else:
-            self.highlight_button(self.pages["Alt+5"].button_right, side=Side.RIGHT)
+        self.alt_bar.set_active_button(self.views.help.title)
 
     def set_zoom(self, value):
         self.size_splitter.value = value        

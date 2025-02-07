@@ -21,7 +21,7 @@ from backend.path_manager import PathManager     #| Managing file and directory 
 
 # [Main Class]
 class BaseView(ui.element):
-    
+    view_id = 0
     # [Variables]
     logger_available = False    # Whether the logger is available
     main = None                 # The main ui element
@@ -29,7 +29,9 @@ class BaseView(ui.element):
     # [Constructor]
     def __init__(self, path_manager=None, **kwargs):
         super().__init__(**kwargs)
-
+        BaseView.view_id += 1
+        self.title = f'view_{BaseView.view_id}'
+        
         # Type check the path_manager
         if path_manager is not None and type(path_manager) is not PathManager:
             raise TypeError('The path_manager must be of type PathManager')

@@ -37,6 +37,7 @@ class MainWindow(ui.element):
 
     def run(self):
         self.views.setup()
+        self.views.init_views()
 
 
         

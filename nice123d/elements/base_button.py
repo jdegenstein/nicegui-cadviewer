@@ -26,11 +26,19 @@ class BaseButton(ui.button):
         self._sibling_button = sibling_button
         self._view = view
         # encapsulate the on_click function
-        
+        self._parent = None
         self._on_click = on_click
-
+        self._active = False
         super().__init__(text, on_click=self.toggle_on_click, **kwargs)
         super().set_icon(icon)
+
+    @property
+    def parent(self):
+        return self._parent
+    
+    @parent.setter
+    def parent(self, value):        
+        self._parent = value
 
     @property
     def sibling_button(self):
@@ -48,9 +56,29 @@ class BaseButton(ui.button):
     def view(self, value):
         self._view = value
 
+    @property
+    def active(self):
+        return self._active
+
+    @active.setter
+    def active(self, value: bool):
+        self._active = value
+        if value:
+            self.props('fab color=active')
+        else:
+            self.props('fab color=accent')
+
     def toggle_on_click(self, event=None):
+        print(f'toggle_on_click {self.parent}')
+        if hasattr( self._parent, 'last_button'):
+            object = self._parent.last_button
+            if object is not None:
+                object.active = False
+            self._parent.last_button = self
+
         if self._sibling_button is not None:
-            self._sibling_button.props('fab color=accent')
-        self.props('fab color=active')
+            self._sibling_button.active = False
+
+        self.active = True
         self._on_click(event)
     

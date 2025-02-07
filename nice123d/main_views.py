@@ -14,6 +14,7 @@ description: |
 # [Imports]                                                #| description or links
 from nicegui import ui                                     #| [docs](https://nicegui.readthedocs.io/en/latest/)   
 from nicegui import events  
+from elements.base_button_bar import BaseButtonBar         #| [docs](https://nicegui.readthedocs.io/en/latest/elements.html#buttonbar)
 from elements.project_gallery import ProjectGallery        #| 
 from elements.note_viewer     import NoteViewer            #| 
 from elements.customizer_view import CustomizerView        #| 
@@ -46,11 +47,11 @@ class MainViews():
     help       = None
 
     # - Management
-    views_left  = None
-    views_right = None
+    views_left  = None # TODO Move to view manager
+    views_right = None # TODO Move to view manager
     
-    left_views      = []
-    right_views     = []
+    left_views      = [] # TODO Move to view manager
+    right_views     = [] # TODO Move to view manager
 
     # [Constructor]
     def __init__(self, path_manager):
@@ -58,11 +59,30 @@ class MainViews():
         
         if type(path_manager) is not PathManager:
             raise TypeError("The path_manager must be an instance of PathManager.")
-        
-        self.manager = ViewManager(g__views, P__experimental)
-
         self.path_manager = path_manager
 
+        self.manager = ViewManager(g__views, P__experimental)
+        
+        self.gallery    = ProjectGallery(path_manager)
+        self.customizer = CustomizerView(path_manager)  
+        self.editor     = CodeEditor(path_manager)
+        self.settings   = SettingsView(path_manager)
+        self.notes      = NoteViewer(path_manager)
+        self.viewer     = ModelViewer()
+        self.console    = ConsoleView()
+        self.help       = HelpView(path_manager)
+
+        self.manager.add_new_view(self.gallery,      Side.LEFT,   'Project Gallery',  'folder')
+        self.manager.add_new_view(self.notes,        Side.RIGHT,  'Notes',            'info')
+        self.manager.add_new_view(self.customizer,   Side.BOTH,   'Customizer',       'plumbing')
+        self.manager.add_new_view(self.editor,       Side.BOTH,   'Code Editor',      'code')
+        self.manager.add_new_view(self.viewer,       Side.BOTH,   'Model Viewer',     'view_in_ar')
+        self.manager.add_new_view(self.console,      Side.BOTH,   'Console',          'article')
+        self.manager.add_new_view(self.settings,     Side.LEFT,   'Settings',         'settings')
+        self.manager.add_new_view(self.help,         Side.RIGHT,  'Help',             'help')
+
+        
+        # TODO: move the following lines to manager
         self.list_views  = [self.gallery, self.customizer, self.editor, self.viewer, self.settings, self.notes, self.help]
         self.show_left   = None
         self.show_right  = None
@@ -76,11 +96,12 @@ class MainViews():
             with main_splitter.before:
                 with ui.column().classes('w-full h-full items-stretch') as container:
                     self.left_container = container
-                    self.gallery    = ProjectGallery(path_manager)
-                    self.customizer = CustomizerView(path_manager)  
-                    self.editor     = CodeEditor(path_manager)
-                    self.settings   = SettingsView(path_manager)
+                    self.gallery.move(container)
+                    self.customizer.move(container)  
+                    self.editor.move(container)
+                    self.settings.move(container)
 
+                    #  TODO: move this to view_manager ...
                     self.left_views = [self.gallery, self.customizer, self.editor, self.settings]
 
                     for view in self.left_views:
@@ -91,11 +112,14 @@ class MainViews():
             with main_splitter.after:
                 with ui.column().classes('w-full h-full items-stretch') as container:
                     self.right_container = container
-                    self.notes    = NoteViewer(path_manager)
-                    self.viewer   = ModelViewer()
-                    self.console  = ConsoleView()
-                    self.help     = HelpView(path_manager)
 
+                    self.notes.move(container)
+                    self.viewer.move(container)
+                    self.console.move(container)
+                    self.help.move(container)
+
+
+                    #  TODO: move this to view_manager ...
                     self.right_views = [self.notes, self.viewer, self.console, self.help]
 
                     for view in self.right_views:
@@ -146,29 +170,34 @@ class MainViews():
                     .props('background-color: #d7e3f4') \
                     .props('dense')
             
-        with ui.header(elevated=True).style('background-color: #3874c8').classes('items-center justify-between'):
-            self.menu_button = ui.button(on_click=self.toggle_drawer, icon='close').props('flat color=white')
+        with ui.header(elevated=True).style('background-color: #3874c8').classes('items-center justify-between') as header:
+            with ui.row() as row:
+                self.menu_button = ui.button(on_click=self.toggle_drawer, icon='close').props('flat color=white')
+                
+                self.manager.ctrl_bar.move(row)
+                ui.space()
+                # TODO: use path_manager
+                ui.label('model / path / file name').classes('text-xl')
+                ui.space()
+                self.splitter_value(main_splitter)
             
-            self.ctrl_bar = self.manager.setup_left_button_bar(left_buttons)
-            ui.space()
-            # TODO: use path_manager
-            ui.label('model / path / file name').classes('text-xl')
-            ui.space()
-            self.splitter_value(main_splitter)
-            
-            self.alt_bar = self.manager.setup_right_button_bar(right_buttons)
+                self.manager.alt_bar.move(row)
+            row.update()
+            self.manager.ctrl_bar.create()
+            self.manager.alt_bar.create()
 
+
+    def init_views(self):
+        #TODO: this needs to be defined in the Settings (nice123d.yaml)
         self.viewer.startup()
         self.manager.setup(self)
         ui.keyboard(on_key=self.handle_key)
+
+        # TODO: improve this we need to have a way to activate the buttons         
         self.show_editor(Side.LEFT)
         self.show_viewer(Side.RIGHT)
-        if P__experimental:
-            self.manager.last_button_left  = self.manager.pages['Meta+3'].button_left.props('fab color=active')
-            self.manager.last_button_right = self.manager.pages['Meta+4'].button_right.props('fab color=active')
-        else:
-            self.manager.last_button_left  = self.manager.pages['Ctrl+3'].button_left.props('fab color=active')
-            self.manager.last_button_right = self.manager.pages['Alt+3'].button_right.props('fab color=active')
+        self.manager.ctrl_bar.set_active_button(self.editor.title)
+        self.manager.alt_bar.set_active_button(self.viewer.title)
 
     def splitter_value(self, main_splitter):
         size_splitter = ui.number('Value', format='%.0f', value=50, min=0, max=100, step=10)
@@ -182,6 +211,7 @@ class MainViews():
 
                 
     def setup_views(self):
+
         self.list_views = [self.gallery, self.customizer, self.editor, self.viewer, self.console, self.settings, self.notes, self.help]
         self.show_left = self.gallery
         self.show_right = self.notes
@@ -362,12 +392,14 @@ class MainViews():
                 self.show_left  = page
                 if self.show_right == page:
                     if page_sibling:
+                        self.manager.alt_bar.set_active_button(page_sibling.title)
                         self.move_to_side(page_sibling, Side.RIGHT)
                         self.show_right = page_sibling
             elif side == Side.RIGHT:
                 self.show_right = page
                 if self.show_left == page:
                     if page_sibling:
+                        self.manager.ctrl_bar.set_active_button(page_sibling.title)
                         self.move_to_side(page_sibling, Side.LEFT)
                         self.show_left = page_sibling
 
