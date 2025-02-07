@@ -476,6 +476,7 @@ class MainViews():
             elif e.key.name == "t":
                 self.editor.on_new()
             elif e.key.name == "1":
+                # TODO: change the short cuts based on the new setup (auto generated button bar in main_views.py)
                 self.manager.show_gallery_left(e)
             elif e.key.name == "2":
                 self.manager.show_customizer_left(e)

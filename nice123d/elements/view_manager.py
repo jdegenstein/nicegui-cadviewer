@@ -240,12 +240,12 @@ class ViewManager():
     def show_customizer_left(self, event):
         print(f'show_customizer_left')
         self.views.show_customizer(Side.LEFT)
-        self.ctrl_bar.set_active_button(self.views.cutomizer.title)
+        self.ctrl_bar.set_active_button(self.views.customizer.title)
         
     def show_customizer_right(self, event):
         print(f'show_customizer_right')
         self.views.show_customizer(Side.RIGHT)
-        self.alt_bar.set_active_button(self.views.cutomizer.title)
+        self.alt_bar.set_active_button(self.views.customizer.title)
 
     def show_editor_left(self, event):
         print(f'show_editor_left')
