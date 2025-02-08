@@ -1,0 +1,10 @@
+_file:         _settings/customizer.yaml
+_file-id:      ad0ee643-4668-485e-8228-97f9a07e7e3c
+_project:      nice123d
+_project-id:   e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+_using: jinja2
+_description:  This file contains all customizer parameters. |
+    .
+    
+show: true
+ 

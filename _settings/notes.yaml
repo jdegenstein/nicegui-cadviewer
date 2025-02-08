@@ -1,0 +1,10 @@
+_file:         _settings/notes.yaml
+_file-id:      0b4549b0-069b-49ef-8282-737aca8f2809
+_project:      nice123d
+_project-id:   e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+_using: jinja2
+_description:  This file contains all project notes viewer parameters. |
+    .
+    
+show: true
+ 

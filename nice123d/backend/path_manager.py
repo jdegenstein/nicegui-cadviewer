@@ -27,6 +27,7 @@ class PathManager():
     # [Variables]
     settings_path = Path(__file__).parent / ".." / ".." / './_settings'
     models_path = Path(__file__).parent / ".." / ".." / '_models'
+    template_path = Path(__file__).parent / ".." / ".." / '_templates'
     help_path = Path(__file__).parent / ".." / ".." / './_help'
     code_file = models_path / "basic.py"
     new_file = models_path / "new.py"

@@ -1,0 +1,10 @@
+_file:         _settings/gallery.yaml
+_file-id:      be049d13-8077-4ab4-991e-fa67c0d6bfbf
+_project:      nice123d
+_project-id:   e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+_using: jinja2
+_description:  This file contains all project gallery parameters. |
+    .
+    
+show: true
+ 

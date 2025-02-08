@@ -39,7 +39,7 @@ logging.basicConfig(
 logger = logging.getLogger("SettingsEditor")
 
 
-class SettingsEditor(BaseView):
+class SettingsEditor(ui.card):
     """A NiceGUI-based editor to load and display multiple YAML files."""
 
     def __init__(self, file_paths: List[Path], log_element: ui.log) -> None:

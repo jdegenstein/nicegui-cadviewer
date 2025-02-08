@@ -18,6 +18,7 @@ dependencies = [
   "pywebview",
   "rich",
   "jinja2",
+  "copier",
 ]
 description = "A nicegui-based CAD editor and viewer for OCP-based projects like build123d"
 
