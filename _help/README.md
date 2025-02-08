@@ -1,6 +1,6 @@
 <!--
 file:         _help/README.md
-file-id:      dc416333-3031-4bc2-af9b-8e23e9780e0c
+file-id:      TODO: uuid
 project:      nice123d
 project-id:   e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
 using: jinja2
@@ -10,7 +10,8 @@ description:  This file contains the folder documentation. |
 
 # README _help:
 
-TODO: description
+The applications documentation organized to topic folders prefixed with `\digit{2}__`.
+And the documentations files prefixed with `[A-Z]__`.
 
 # Contents
 
