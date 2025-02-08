@@ -1,0 +1,19 @@
+file:         _settings/README.md
+file-id:      TODO: uuid
+project:      nice123d
+project-id:   e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
+using: jinja2
+description:  This file contains application parameters. |
+    The file contains all setting of the `nice123d` main application.
+
+user_interface:
+  language: en.EN
+  default_theme: light
+  auto_execute_code_on_save: Yes
+folders:
+  models: "_models"
+  templates: "_templates"
+  settings: "_settings"
+  export: "_exports"
+  help: "_help"
+  virtual_environment: ".venv"
