@@ -143,6 +143,6 @@ if P__run:
     if __name__ in {"__main__", "__mp_main__"}:
         readme_template = load_template()
 
-        results = scan_files(Path("."), readme_template)
+        results = scan_files(Path(__file__).parent.parent, readme_template)
         if P__report:
             pprint(results)

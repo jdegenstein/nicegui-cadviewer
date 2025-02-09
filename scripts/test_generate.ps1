@@ -1,0 +1,1 @@
+python ./generate.py ./test/ ./test_out
