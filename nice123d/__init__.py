@@ -13,3 +13,5 @@ description: |
 
 # [Imports]
 from .elements.code_editor import CodeEditor
+from .backend.parameter_group import ParameterGroup
+from .backend.parameters import IntParameter

@@ -12,6 +12,10 @@ description: |
     This script can generate dataclasses from yaml files.  It is used to generate the settings data classes.
     call hint:
         python scripts/generate_code.py {input_folder} {output_folder}
+        
+    TODO: extend generator to use the `help:` string in the output file.
+    TODO: use the `type` in the yaml file to generate the correct type in the dataclass.
+    TODO: add UI information depending on type and keyname.
 """
 
 import yaml

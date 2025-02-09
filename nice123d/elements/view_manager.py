@@ -145,7 +145,7 @@ class ViewManager():
                     button.tooltip(f'{active.title} `{short_cut}`')
                     
                     self.pages[page].button_left = button
-                    button.props('fab color=accent')
+                    button.props('fab color=default')
                     # INFO: `inactive` is the color from the header background color                    
 
             if self.add_zoom:
@@ -179,7 +179,7 @@ class ViewManager():
 
                     self.pages[page].button_right = button   
                     
-                    button.props('fab color=accent')
+                    button.props('fab color=default')
                     # INFO: `inactive` is the color from the header background color 
             if self.add_zoom:
                 z = ui.button('', icon='zoom_out_map', on_click=self.set_zoom_right).tooltip('Zoom right `Meta+0`')
@@ -213,7 +213,7 @@ class ViewManager():
             if button != self.last_button_left:
                 button.props('fab color=active')
                 if self.last_button_left:
-                    self.last_button_left.props('fab color=accent')
+                    self.last_button_left.props('fab color=default')
             # else: nothing to do - keep same button active
 
             self.last_button_left = button
@@ -222,7 +222,7 @@ class ViewManager():
             if button != self.last_button_right:
                 button.props('fab color=active')
                 if self.last_button_right:
-                    self.last_button_right.props('fab color=accent')
+                    self.last_button_right.props('fab color=default')
             # else: nothing to do - keep same button active
             self.last_button_right = button  
 

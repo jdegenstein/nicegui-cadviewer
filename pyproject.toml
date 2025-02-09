@@ -19,6 +19,7 @@ dependencies = [
   "rich",
   "jinja2",
   "copier",
+  "pytest",
 ]
 description = "A nicegui-based CAD editor and viewer for OCP-based projects like build123d"
 

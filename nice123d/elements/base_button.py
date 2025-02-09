@@ -66,7 +66,7 @@ class BaseButton(ui.button):
         if value:
             self.props('fab color=active')
         else:
-            self.props('fab color=accent')
+            self.props('fab color=default')
 
     def toggle_on_click(self, event=None):
         print(f'toggle_on_click {self.parent}')
