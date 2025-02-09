@@ -2,7 +2,7 @@ from nicegui import ui
 ui.add_css('''
     .nicegui-content {
         padding: 0;
-        height: 640px;
+        height:  640px;
     }
     .nicegui-scroll-area {
         height: 100%;

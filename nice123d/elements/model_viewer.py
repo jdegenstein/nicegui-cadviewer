@@ -41,11 +41,11 @@ class ModelViewer(BaseView):
             self.ocpcv = (
                             ui.element("iframe")
                             .props(f'src="http://{ip_address}:{port}/viewer"')
-                            .classes("w-full  h-[calc(100vh-5rem)]") # h-[calc(100vh-5rem)]
+                            .classes("mt-2 w-[calc(100vh)] h-[calc(100vh)]") # h-[calc(100vh-5rem)]
                             #.style('width: 100%; height: 100%;')
                             
                         )
-        self.info('ModelViewer', f'init src="http://{ip_address}:{port}/viewer"', call_id='model_viewer')
+            self.info('ModelViewer', f'init src="http://{ip_address}:{port}/viewer"', call_id='model_viewer')
         self.main = self.ocpcv
 
     # [API]

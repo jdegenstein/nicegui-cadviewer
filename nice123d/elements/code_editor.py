@@ -44,7 +44,7 @@ class CodeEditor(BaseView):
         self.new_file        = self.paths.new_file
         
         with self:
-            with ui.scroll_area().classes('w-full h-full'):
+            with ui.scroll_area().classes('mt-auto w-full h-[calc(100vh-5rem)]'):
                 # Setup editor
                 self.editor = ui.codemirror(language='python', theme='dracula')
                 self.editor.classes('w-full h-full')

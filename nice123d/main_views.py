@@ -104,9 +104,10 @@ class MainViews():
                     #  TODO: move this to view_manager ...
                     self.left_views = [self.gallery, self.customizer, self.editor, self.settings]
 
-                    for view in self.left_views:
-                        view.classes('w-full h-full')
-                        view.set_visibility(False)
+                    # TODO: the folowing block might generate the 50% issue
+                    #for view in self.left_views:
+                    #    view.classes('w-full h-full')
+                    #    view.set_visibility(False)
 
 
             with main_splitter.after:
@@ -122,9 +123,10 @@ class MainViews():
                     #  TODO: move this to view_manager ...
                     self.right_views = [self.notes, self.viewer, self.console, self.help]
 
-                    for view in self.right_views:
-                        view.classes('w-full h-full')
-                        view.set_visibility(False)
+                    # TODO: this following is not necessary, and might generate issues with the view --- 2025-02-09
+                    #for view in self.right_views:
+                    #    view.classes('w-full h-full')
+                    #    view.set_visibility(False)
 
             with main_splitter.separator:
                 if P__use_splitter_buttons:

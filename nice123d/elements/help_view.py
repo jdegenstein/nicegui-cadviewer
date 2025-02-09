@@ -34,11 +34,10 @@ class HelpView(BaseView):
         super().__init__(path_manager, **kwargs)
         self.help_path = self.paths.help
         with self:
-            with ui.column() as main:
-                with ui.row():
-                    ui.label("Help View")
-                    ui.input(placeholder="Search")
-                    ui.button("Load Help")
+            with ui.row() as main:
+                ui.label("Help View")
+                ui.input(placeholder="Search")
+                ui.button("Load Help")
         self.main = main
     
     # [API]

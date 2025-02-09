@@ -72,6 +72,7 @@ if __name__ in {"__main__", "__mp_main__"}:
     .nicegui-content {
         padding: 0;
         height: 640px;
+        overflow-y: hidden;
     }
     .nicegui-scroll-area {
         height: 100%;
@@ -83,6 +84,16 @@ if __name__ in {"__main__", "__mp_main__"}:
         
         height: 640px
     }
+
+    ''')
+    
+    # Add CSS to disable scrolling
+    ui.add_head_html('''
+    <style>
+    body {
+        overflow: hidden;
+    }
+    </style>
     ''')
     main()
     # Run the NiceGUI app
