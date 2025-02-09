@@ -21,6 +21,7 @@ from backend.parameter_group import *            #| The application parameter gr
 
 # [Variables]
 # TODO: consider separate editor execution thread from nicegui thread
+# TODO: the scroll bar is not working ! we need to fix it.
 
 
 # [Main Class]
@@ -37,12 +38,13 @@ class CodeEditor(BaseView):
         """Initialize the Python editor component."""
         super().__init__(path_manager, **kwargs)
         
+        # TODO: use paths directly and not split it to extra members
         self.model_path      = self.paths.models_path
         self.code_file       = self.paths.code_file
         self.new_file        = self.paths.new_file
         
         with self:
-            with ui.row().classes('w-full h-full'):
+            with ui.scroll_area().classes('w-full h-full'):
                 # Setup editor
                 self.editor = ui.codemirror(language='python', theme='dracula')
                 self.editor.classes('w-full h-full')

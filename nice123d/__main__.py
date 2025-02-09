@@ -68,13 +68,32 @@ def main():
 
 # [Main]
 if __name__ in {"__main__", "__mp_main__"}:
+    ui.add_css('''
+    .nicegui-content {
+        padding: 0;
+        height: 640px;
+    }
+    .nicegui-scroll-area {
+        height: 100%;
+    }
+    .nicegui-codemirror {
+        height: 100%;
+    }    
+    .iframe {
+        
+        height: 640px
+    }
+    ''')
     main()
     # Run the NiceGUI app
-    ui.run(
-        native      = True,
-        window_size = (1800, 900),
-        title       = "nice123d",
-        fullscreen  = False,
-        reload      = False
-        # https://nicegui.io/documentation#package_for_installation
-    )
+    if 0:
+        ui.run()
+    else:
+        ui.run(
+            native      = True,
+            window_size = (1280, 800),
+            title       = "nice123d",
+            fullscreen  = False,
+            reload      = False
+            # https://nicegui.io/documentation#package_for_installation
+        )
