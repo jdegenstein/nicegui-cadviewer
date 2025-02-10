@@ -15,3 +15,7 @@ Main package / application folder.
 # Contents
 
 TODO: file_list
+
+## NOTES:
+
+uv pip install --config-settings editable_mode=strict -e 

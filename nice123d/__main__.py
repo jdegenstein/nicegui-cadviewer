@@ -41,7 +41,7 @@ license:
 from elements.constants import *
 from nicegui import app, ui
 from pathlib import Path
-from nice123d.main_window import MainWindow
+from .main_window import MainWindow
 
 # [Constants]
 
@@ -71,7 +71,7 @@ if __name__ in {"__main__", "__mp_main__"}:
     ui.add_css('''
     .nicegui-content {
         padding: 0;
-        height: 640px;
+        height: 800px;
         overflow-y: hidden;
     }
     .nicegui-scroll-area {
@@ -79,12 +79,11 @@ if __name__ in {"__main__", "__mp_main__"}:
     }
     .nicegui-codemirror {
         height: 100%;
-    }    
-    .iframe {
-        
-        height: 640px
     }
-
+    .iframe {
+        width: 100%;
+        height: 100%;
+    }
     ''')
     
     # Add CSS to disable scrolling
@@ -97,14 +96,11 @@ if __name__ in {"__main__", "__mp_main__"}:
     ''')
     main()
     # Run the NiceGUI app
-    if 0:
-        ui.run()
-    else:
-        ui.run(
-            native      = True,
-            window_size = (1280, 800),
-            title       = "nice123d",
-            fullscreen  = False,
-            reload      = False
-            # https://nicegui.io/documentation#package_for_installation
-        )
+    ui.run(
+        native      = True,
+        window_size = (1280, 800),
+        title       = "nice123d",
+        fullscreen  = False,
+        reload      = False
+        # https://nicegui.io/documentation#package_for_installation
+    )

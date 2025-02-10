@@ -30,4 +30,3 @@ except e:
     print(f"{e=}")
     
 show(main, inner)
-
