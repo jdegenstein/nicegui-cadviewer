@@ -33,6 +33,7 @@ from elements.constants import *
 
 # [Variable]
 
+
 # [Main Class]
 class MainViews():
     # [Variables]

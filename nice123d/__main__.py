@@ -65,9 +65,9 @@ def main():
     # Execution
     win.run()
 
-
 # [Main]
 if __name__ in {"__main__", "__mp_main__"}:
+
     ui.add_css('''
     .nicegui-content {
         padding: 0;
@@ -94,6 +94,13 @@ if __name__ in {"__main__", "__mp_main__"}:
     }
     </style>
     ''')
+    
+    def on_resize(width: int, height: int):
+        ui.notify(f"Window resized: {width}x{height}")
+
+    ui.on("resize", lambda e: on_resize(e.args["width"], e.args["height"]))
+    
+    
     main()
     # Run the NiceGUI app
     ui.run(

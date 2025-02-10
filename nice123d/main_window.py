@@ -25,6 +25,19 @@ ui.add_css('''
     }
 ''')
 
+
+from datetime import datetime
+from nicegui import app
+dt = datetime.now()
+
+def handle_connection():
+    global dt
+    dt = datetime.now()
+    ui.notify(f"Connected at {dt}")
+    
+app.on_connect(handle_connection)
+
+# [Main Class]
 class MainWindow(ui.element):
     
     def __init__(self, app):
@@ -33,13 +46,12 @@ class MainWindow(ui.element):
         self.height= 900
         self.title="nice123d"
         self.path_manager = PathManager()
+
         self.views = MainViews(self.path_manager)    
 
     def run(self):
         self.views.setup()
         self.views.init_views()
-
-
         
                 
     @property
@@ -48,6 +60,10 @@ class MainWindow(ui.element):
 
     def startup(self):
         self.views.viewer.startup()
+        # Delay execution to ensure the client is fully initialized
+        
+
+
 
     def on_close_window(self, event):
         self.views.viewer.shutdown()

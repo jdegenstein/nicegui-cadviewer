@@ -1,5 +1,8 @@
 from nicegui import ui      # [docs](https://nicegui.readthedocs.io/en/latest/)   
 
+# [Functions]
+
+# [Main]
 @ui.page('/page_layout')
 def page_layout():
     ui.label('CONTENT')
