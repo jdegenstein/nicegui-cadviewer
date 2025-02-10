@@ -41,7 +41,7 @@ license:
 from elements.constants import *
 from nicegui import app, ui
 from pathlib import Path
-from main_window import MainWindow
+from nice123d.main_window import MainWindow
 
 # [Constants]
 
