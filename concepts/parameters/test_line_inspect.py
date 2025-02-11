@@ -1,5 +1,6 @@
 import ast
-from math import sqrt
+import operator as op
+from math import sqrt, sin, cos, tan, log, exp
 
 """
     description:    This script is used to inspect the parameter definitions | 
@@ -16,19 +17,66 @@ m = 42
 # This will be the input from from the model's script file
 parameter_definitions = [
     'a = IntegerParameter("one", calc=int(m/2))',
-    "b = IntegerParameter('two', calc=int(sqrt(a)))",
+    "b = IntegerParameter('two', calc=sqrt(a*2))",
     'IntegerParameter(name="three", calc=a+b, description="This is the third parameter")',
     'IntegerParameter("four", value=4, description="This is the fourth parameter")',
-    'StringParameter("five", value="hello", calc=f"alpha({a})", help="This is the help")',
+    'StringParameter("five", value="alpha", help="This is the help")',
 ]
 
 g__variables = {}
 
+# Supported operators and functions
+SAFE_OPERATORS = {
+    ast.Add: op.add,
+    ast.Sub: op.sub,
+    ast.Mult: op.mul,
+    ast.Div: op.truediv,
+    ast.Pow: op.pow,
+    ast.BitXor: op.xor,
+    ast.USub: op.neg,
+    'sqrt': sqrt,
+    'sin': sin,
+    'cos': cos,
+    'tan': tan,
+    'log': log,
+    'exp': exp,
+    'int': int,
+    'float': float,
+    'str': str,
+}
+
+def safe_eval(node, variables):
+    """Safely evaluate an AST node."""
+    if isinstance(node, ast.Num):  # <number>
+        return node.n
+    elif isinstance(node, ast.Str):  # <string>
+        return node.s
+    elif isinstance(node, ast.Name):
+        if node.id in variables:
+            return variables[node.id]
+        elif node.id in SAFE_OPERATORS:
+            return SAFE_OPERATORS[node.id]
+        else:
+            raise ValueError(f"Use of undefined variable or function '{node.id}'")
+    elif isinstance(node, ast.BinOp):  # <left> <operator> <right>
+        left = safe_eval(node.left, variables)
+        right = safe_eval(node.right, variables)
+        return SAFE_OPERATORS[type(node.op)](left, right)
+    elif isinstance(node, ast.UnaryOp):  # <operator> <operand> e.g., -1
+        operand = safe_eval(node.operand, variables)
+        return SAFE_OPERATORS[type(node.op)](operand)
+    elif isinstance(node, ast.Call):  # function call
+        func = safe_eval(node.func, variables)
+        args = [safe_eval(arg, variables) for arg in node.args]
+        return func(*args)
+    else:
+        raise TypeError(node)
+
 def evaluate_expression(expr):
     """Evaluate an expression using the globals() and g__variables dictionaries."""
     merged_globals = {**globals(), **g__variables}
-    code = compile(expr, '<string>', 'eval')
-    result = eval(code, {}, merged_globals)
+    node = ast.parse(expr, mode='eval').body
+    result = safe_eval(node, merged_globals)
     print(f'>>>> Expression: {expr}, Result: {result}')
     return result
 
@@ -93,7 +141,9 @@ def do_inspect(code):
             # process type check from classname and value
             if classname == 'IntegerParameter':
                 if not isinstance(value, int):
-                    raise ValueError(f'Value {value} is not an integer')
+                    value = int(value)
+                    if not isinstance(value, int):
+                        raise ValueError(f'Value {value} is not an integer')
             elif classname == 'StringParameter':
                 if not isinstance(value, str):
                     raise ValueError(f'Value {value} is not a string')
