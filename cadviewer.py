@@ -40,7 +40,7 @@ import subprocess
 app.native.window_args["resizable"] = True
 app.native.start_args["debug"] = True
 # app.native.settings['ALLOW_DOWNLOADS'] = True # export "downloads" ?
-app.native.settings["MATPLOTLIB"] = False
+# app.native.settings["MATPLOTLIB"] = False
 
 editor_fontsize = 18
 # TODO: consider separate editor execution thread from nicegui thread
