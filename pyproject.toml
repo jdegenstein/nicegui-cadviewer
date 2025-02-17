@@ -3,8 +3,8 @@ requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "nicegui-cadviewer"
-version = "0.0.1"
+name = "nice123d"
+version = "0.0.2"
 dependencies = [
   "build123d",
   "ocp_vscode",
@@ -13,4 +13,5 @@ dependencies = [
 ]
 description = "A nicegui-based CAD editor and viewer for OCP-based projects like build123d"
 
-# [tool.setuptools.packages.find]
+[tool.setuptools.packages.find]
+where = ["src"]
