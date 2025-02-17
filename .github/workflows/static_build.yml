@@ -27,10 +27,23 @@ jobs:
           curl -L -O https://github.com/astral-sh/python-build-standalone/releases/download/20250212/cpython-3.12.9+20250212-x86_64-pc-windows-msvc-install_only_stripped.tar.gz
           mkdir python_local
           tar -xzf cpython-3.12.9+20250212-x86_64-pc-windows-msvc-install_only_stripped.tar.gz -C python_local
-          ls -lRa 
+
           python_local/python/python.exe -m pip install uv
-          python_local/python/python.exe -m uv install .
+          python_local/python/python.exe -m uv pip install .
+
+          touch python_local/nice123d.bat
+          echo "call python\python.exe -m cadviewer" > python_local/nice123d.bat
+
+          go version
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nice123d-${{ matrix.os }}
+          path: ./python_local
+
           
+      # ls -lRa           
       # - name: Install the latest version of uv
       #   uses: astral-sh/setup-uv@v5
       #   with:
