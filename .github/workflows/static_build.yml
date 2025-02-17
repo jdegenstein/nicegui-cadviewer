@@ -21,12 +21,22 @@ jobs:
     steps:
       - name: Check out nice123d from github repo
         uses: actions/checkout@v4
-      - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install nice123d from local folder
-        run: uv pip install .
-      - name: Enumerate venv dir
-        shell: bash --login {0}
-        run: ls -lRa
+      - name: Download correct python-build-standalone
+        shell: bash -l {0}
+        run: |
+          curl -L -O https://github.com/astral-sh/python-build-standalone/releases/download/20250212/cpython-3.12.9+20250212-x86_64-pc-windows-msvc-install_only_stripped.tar.gz
+          mkdir python_local
+          tar -xzf cpython-3.12.9+20250212-x86_64-pc-windows-msvc-install_only_stripped.tar.gz -C python_local
+          ls -lRa 
+          python_local/python.exe -m pip install uv
+          python_local/python.exe -m uv install .
+          
+      # - name: Install the latest version of uv
+      #   uses: astral-sh/setup-uv@v5
+      #   with:
+      #     python-version: ${{ matrix.python-version }}
+      # - name: Install nice123d from local folder
+      #   run: uv pip install .
+      # - name: Enumerate venv dir
+      #   shell: bash --login {0}
+      #   run: ls -lRa
