@@ -26,4 +26,4 @@ jobs:
         run: uv pip install .
       - name: Enumerate venv dir
         shell: bash --login {0}
-        run: ls -lR
+        run: ls -lRa
