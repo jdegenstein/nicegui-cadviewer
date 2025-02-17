@@ -25,23 +25,23 @@ jobs:
 
       - name: (linux) Download correct python-build-standalone
         if: runner.os == 'Linux'
-        shell: bash -l {0}
         run: |
           curl -L -O https://github.com/astral-sh/python-build-standalone/releases/download/20250212/cpython-3.12.9+20250212-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz
           mkdir python_local
           tar -xzf cpython-3.12.9+20250212-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz -C python_local
-
+          pwd
+          ls -lRa
           python_local/python/python -m pip install uv
           python_local/python/python -m uv pip install .
           
       - name: (mac14) Download correct python-build-standalone
         if: matrix.os == 'macos-14'
-        shell: bash -l {0}
         run: |
           curl -L -O https://github.com/astral-sh/python-build-standalone/releases/download/20250212/cpython-3.12.9+20250212-aarch64-apple-darwin-install_only_stripped.tar.gz
           mkdir python_local
           tar -xzf cpython-3.12.9+20250212-aarch64-apple-darwin-install_only_stripped.tar.gz -C python_local
-
+          pwd
+          ls -lRa
           python_local/python/python -m pip install uv
           python_local/python/python -m uv pip install .
           
@@ -58,7 +58,6 @@ jobs:
 
       - name: (linux) Build launcher with go
         if: runner.os == 'Linux'
-        shell: bash -l {0}
         run: |
           go version
           cd tools/nice123d_run
@@ -68,7 +67,6 @@ jobs:
 
       - name: (mac14) Build launcher with go
         if: matrix.os == 'macos-14'
-        shell: bash -l {0}
         run: |
           go version
           cd tools/nice123d_run
