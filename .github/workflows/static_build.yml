@@ -32,7 +32,7 @@ jobs:
           python_local/python/python.exe -m uv pip install .
 
           touch python_local/nice123d.bat
-          echo "call python\python.exe -m cadviewer" > python_local/nice123d.bat
+          echo "call python\python.exe -m nice123d" > python_local/nice123d.bat
       - name: Build launcher with go
         shell: bash -l {0}
         run: |
