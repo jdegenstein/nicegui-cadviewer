@@ -31,8 +31,8 @@ jobs:
           tar -xzf cpython-3.12.9+20250212-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz -C python_local
           pwd
           ls -lRa
-          python_local/python/python -m pip install uv
-          python_local/python/python -m uv pip install .
+          python_local/python/bin/python -m pip install uv
+          python_local/python/bin/python -m uv pip install .
           
       - name: (mac14) Download correct python-build-standalone
         if: matrix.os == 'macos-14'
@@ -42,8 +42,8 @@ jobs:
           tar -xzf cpython-3.12.9+20250212-aarch64-apple-darwin-install_only_stripped.tar.gz -C python_local
           pwd
           ls -lRa
-          python_local/python/python -m pip install uv
-          python_local/python/python -m uv pip install .
+          python_local/python/bin/python -m pip install uv
+          python_local/python/bin/python -m uv pip install .
           
       - name: (win) Download correct python-build-standalone
         if: runner.os == 'Windows'
