@@ -37,6 +37,7 @@ jobs:
       - name: (mac14) Download correct python-build-standalone
         if: matrix.os == 'macos-14'
         run: |
+          brew install go
           curl -L -O https://github.com/astral-sh/python-build-standalone/releases/download/20250212/cpython-3.12.9+20250212-aarch64-apple-darwin-install_only_stripped.tar.gz
           mkdir python_local
           tar -xzf cpython-3.12.9+20250212-aarch64-apple-darwin-install_only_stripped.tar.gz -C python_local
