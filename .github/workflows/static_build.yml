@@ -1,0 +1,26 @@
+name: static_build
+# this workflow is designed to:
+# 1. create a static redistributable "build" of nice123d
+# 2. create an OS specific launcher executable as an obvious entry point
+
+on: [workflow_dispatch]
+jobs:
+
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12"]
+        os: [windows-latest]
+        # os: [macos-13, macos-14, ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out nice123d from github repo
+      - uses: actions/checkout@v4
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install nice123d from local folder
+      - run: uv pip install .
