@@ -4,8 +4,11 @@ name: static_build
 # 2. create an OS specific launcher executable as an obvious entry point
 
 on: [workflow_dispatch]
-jobs:
 
+env:
+  UV_INSTALL_DIR: uv
+  
+jobs:
   builds:
     strategy:
       fail-fast: false
