@@ -33,8 +33,13 @@ jobs:
 
           touch python_local/nice123d.bat
           echo "call python\python.exe -m cadviewer" > python_local/nice123d.bat
-
+      - name: Build launcher with go
+        shell: bash -l {0}
+        run: |
           go version
+          cd tools/nice123d_run
+          ./build.bat
+          cp nice123d_run.exe ../../python_local/
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
