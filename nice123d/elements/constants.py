@@ -41,6 +41,6 @@ both = True, True
 none = False, False
 
 # [Parameters]
-P__experimental = Yes # or No
-P__native_window = Yes
+P__experimental = No # or Yes
+P__experimental_splitter = No
 P__use_splitter_buttons = No

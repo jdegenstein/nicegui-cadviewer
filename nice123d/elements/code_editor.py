@@ -13,12 +13,14 @@ description: |
 
 # [Imports]                                      #| description or links
 from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
-from nicegui import events
+from nicegui import app, events
 from elements.base_view import BaseView          #| Base class for all views
 from .constants import *                         #| The application constants
-
+from pathlib import Path                         #| Path handling
 # [Variables]
 # TODO: consider separate editor execution thread from nicegui thread
+
+# [Functions]
 
 
 # [Main Class]
@@ -43,7 +45,7 @@ class CodeEditor(BaseView):
         with self:
             with ui.scroll_area().classes('mt-auto w-full h-[calc(100vh-5rem)]'):
                 # Setup editor
-                self.editor = ui.codemirror(language='python', theme='dracula')
+                self.editor = ui.codemirror(language='python', theme='light')
                 self.editor.classes('w-full h-full')
 
         # TODO: check if this is the right place for this
@@ -87,22 +89,19 @@ class CodeEditor(BaseView):
             f.write(content)
         self.info('file', 'saved successfully', call_id='on_save')
 
-    def on_load(self):
+    async def on_load(self):
         """Load code from a file into the editor."""
         # TODO: add test/load file
         self.time_start('on_load')
-
-        def handle_upload(e: events.UploadEventArguments):
-            text = e.content.read().decode('utf-8')
-            self.editor.value = text
-            self.file.value = e.name 
-            
-            upload_bar.delete()
-            
-        upload_bar = ui.upload(auto_upload=True, on_upload=handle_upload).props('accept=.py').classes('max-w-full')        
-        # TODO: ^ for now we need a second click to upload the file
         
-        self.info('file', 'loaded successfully', call_id='on_load')
+        files = await app.native.main_window.create_file_dialog(allow_multiple=False)
+        for file in files:
+            ui.notify(file)
+            self.paths.code_file = Path(file)
+            with self.paths.code_file.open('r') as f:
+                self.editor.value = f.read()
+            self.info('file', 'loaded successfully', call_id='on_load')
+        
         
     def on_new(self):
         """Clear the editor."""

@@ -61,12 +61,17 @@ class MainViews():
         self.viewer     = ModelViewer()
         self.console    = ConsoleView()
 
-        self.manager.add_new_view(self.editor,       Side.BOTH,   'Code Editor',      'code')
-        self.manager.add_new_view(self.viewer,       Side.BOTH,   'Model Viewer',     'view_in_ar')
-        self.manager.add_new_view(self.console,      Side.BOTH,   'Console',          'article')
-        self.manager.add_new_view(self.settings,     Side.LEFT,   'Settings',         'settings')
+        if P__experimental:
+            self.manager.add_new_view(self.editor,       Side.BOTH,   'Code Editor',      'code')
+            self.manager.add_new_view(self.viewer,       Side.BOTH,   'Model Viewer',     'view_in_ar')
+            self.manager.add_new_view(self.console,      Side.BOTH,   'Console',          'article')
+            self.manager.add_new_view(self.settings,     Side.LEFT,   'Settings',         'settings')
+        else: 
+            self.manager.add_new_view(self.editor,       Side.LEFT,   'Code Editor',      'code')
+            self.manager.add_new_view(self.viewer,       Side.RIGHT,  'Model Viewer',     'view_in_ar')
+            self.manager.add_new_view(self.console,      Side.BOTH,   'Console',          'article')
+            
 
-        
         # TODO: move the following lines to manager
         self.list_views  = [self.editor, self.viewer, self.console, self.settings]
         self.show_left   = None
@@ -150,7 +155,10 @@ class MainViews():
                 self.manager.ctrl_bar.move(row)
                 ui.space()
                 # TODO: use path_manager
-                ui.label('model / path / file name').classes('text-xl')
+                file_path = ui.label('model / path / file name').classes('text-xl')
+                
+                self.path_manager.set_code_file_label(file_path)
+                self.path_manager.code_file = (self.path_manager.models_path / "basic.py" ).resolve()
                 ui.space()
                 self.splitter_value(main_splitter)
             
@@ -175,7 +183,7 @@ class MainViews():
     def splitter_value(self, main_splitter):
         size_splitter = ui.number('Value', format='%.0f', value=50, min=0, max=100, step=10)
         size_splitter.bind_value(main_splitter)  
-        if P__experimental:
+        if P__experimental_splitter:
             size_splitter.set_visibility(Yes)
         else:
             size_splitter.set_visibility(No)
@@ -409,8 +417,7 @@ class MainViews():
             elif e.key.name == "3":
                 if P__experimental:
                     self.manager.show_console_left(e)
-                else:
-                    self.manager.show_settings_left(e)
+
             elif e.key.name == "4":
                 if P__experimental:
                     self.manager.show_settings_left(e)
@@ -453,8 +460,7 @@ else:
                     # use `Alt` for views that are used on the right side
         'Ctrl+1':    ViewData('Editor',     'code',       left,  "Ctrl+1"),
         'Alt+1' :    ViewData('Notes',      'info',       right, "Alt+1"),
-        'Meta+2':    ViewData('Console',    'article',    both,  "Meta+2"),
-        'Ctrl+3':    ViewData('Settings',   'settings',   left,  "Ctrl+3"),   
+        'Meta+2':    ViewData('Console',    'article',    both,  "Alt+2"),
     } 
-    left_buttons  = ['Ctrl+1', 'Meta+2', 'Ctrl+3']
+    left_buttons  = ['Ctrl+1', 'Meta+2']
     right_buttons = ['Alt+1',  'Meta+2']

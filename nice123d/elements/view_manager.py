@@ -65,7 +65,6 @@ class ViewManager():
             self.map_button_to_views = {
                 'Ctrl+1': self.show_editor_left,
                 'Ctrl+2': self.show_console_left,
-                'Ctrl+3': self.show_settings_left,
                 'Alt+1':  self.show_viewer_right,
                 'Alt+2':  self.show_console_right,
             }

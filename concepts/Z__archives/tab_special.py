@@ -61,6 +61,7 @@ with ui.header(elevated=True).style('background-color: #3874c8').classes('items-
         
         ui.space()
         ui.label('model / path / file name').classes('text-xl')
+        ui.label.bind_text_from(self.code_file)
         ui.space()
 
         with ui.button_group():

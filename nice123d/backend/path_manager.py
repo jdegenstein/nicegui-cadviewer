@@ -13,6 +13,7 @@ description: |
 
 """
 # [Imports]                                      #| description or links 
+from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)
 from pathlib import Path                         #| [docs](https://docs.python.org/3/library/pathlib.html)
 import os                                        #| [docs](https://docs.python.org/3/library/os.html)
 
@@ -27,11 +28,12 @@ class PathManager():
     # [Variables]
     settings_path = Path(__file__).parent / ".." / ".." / './_settings'
     models_path = Path(__file__).parent / ".." / ".." / '_models'
-    code_file = models_path / "basic.py"
+    _code_file = models_path / "basic.py"
     new_file = models_path / "new.py"
     
     # [Constructor]
     def __init__(self, settings_path=None, models_path=None):
+        self.ui_code_file = None 
         if settings_path and Path(settings_path).exists():
             self.settings_path = settings_path
         else:
@@ -42,6 +44,9 @@ class PathManager():
         else:
             print(f'[ERROR] User defined models path does not exist using {self.models_path}')
 
+    def set_code_file_label(self, file_path):
+        self.ui_code_file = file_path
+
     # [API]
     @property
     def settings(self):
@@ -50,6 +55,18 @@ class PathManager():
     @property
     def models(self):
         return self.models_path
+    
+    @property
+    def code_file(self):
+        return self._code_file
+    
+    @code_file.setter
+    def code_file(self, file_path):
+        self._code_file = file_path
+        if self.ui_code_file:
+            self.ui_code_file.text = str( file_path ).replace( '\\', '/' ).replace('/', ' / ')
+            print(f'[INFO] Code file set to {self._code_file}')
+            self.ui_code_file.update()
 
 
     # TODO: add logger to the path manager
