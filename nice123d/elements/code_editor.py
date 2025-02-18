@@ -16,12 +16,9 @@ from nicegui import ui                           #| [docs](https://nicegui.readt
 from nicegui import events
 from elements.base_view import BaseView          #| Base class for all views
 from .constants import *                         #| The application constants
-from backend.parameters import *                 #| The application parameters
-from backend.parameter_group import *            #| The application parameter groups
 
 # [Variables]
 # TODO: consider separate editor execution thread from nicegui thread
-# TODO: the scroll bar is not working ! we need to fix it.
 
 
 # [Main Class]

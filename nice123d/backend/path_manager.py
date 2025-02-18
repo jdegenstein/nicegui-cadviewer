@@ -27,13 +27,11 @@ class PathManager():
     # [Variables]
     settings_path = Path(__file__).parent / ".." / ".." / './_settings'
     models_path = Path(__file__).parent / ".." / ".." / '_models'
-    template_path = Path(__file__).parent / ".." / ".." / '_templates'
-    help_path = Path(__file__).parent / ".." / ".." / './_help'
     code_file = models_path / "basic.py"
     new_file = models_path / "new.py"
     
     # [Constructor]
-    def __init__(self, settings_path=None, models_path=None, help_path=None):
+    def __init__(self, settings_path=None, models_path=None):
         if settings_path and Path(settings_path).exists():
             self.settings_path = settings_path
         else:
@@ -44,11 +42,6 @@ class PathManager():
         else:
             print(f'[ERROR] User defined models path does not exist using {self.models_path}')
 
-        if help_path and Path(help_path).exists():
-            self.help_path = help_path
-        else:
-            print(f'[ERROR] User defined help path does not exist using {self.help_path}')
-
     # [API]
     @property
     def settings(self):
@@ -57,10 +50,6 @@ class PathManager():
     @property
     def models(self):
         return self.models_path
-
-    @property
-    def help(self):
-        return self.help_path
 
 
     # TODO: add logger to the path manager

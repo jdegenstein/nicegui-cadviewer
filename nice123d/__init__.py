@@ -12,6 +12,7 @@ description: |
 """
 
 # [Imports]
+from .elements.settings_view import SettingsView
 from .elements.code_editor import CodeEditor
-from .backend.parameter_group import ParameterGroup
-from .backend.parameters import IntParameter
+from .elements.model_viewer import ModelViewer
+# from .elements.logger_view import LoggerView

@@ -42,13 +42,7 @@ class SettingsView(BaseView):
     # [Variables]
     settings_config = {
         'application': SettingsItem('Application',  'settings',   'nice123d.yaml'),
-        'gallery':     SettingsItem('Gallery',      'folder',     'gallery.yaml'),
-        'customizer':  SettingsItem('Customizer',   'plumbing',   'customizer.yaml'),
-        'editor':      SettingsItem('Code Editor',  'code',       'editor.yaml'),
         'viewer':      SettingsItem('Model Viewer', 'view_in_ar', 'viewer.yaml'),
-        'logger':      SettingsItem('Logger',       'article',    'logger.yaml'),
-        'notes':       SettingsItem('Notes',        'info',       'notes.yaml'),
-        'help':        SettingsItem('Help',         'help',       'help.yaml'),
     }  
     # [Constructor]
     def __init__(self, path_manager=None, **kwargs):
@@ -78,20 +72,8 @@ class SettingsView(BaseView):
                             
                             with ui.tab_panel(self.application) as tab:
                                 self.load_settings_to_ui('application')
-                            with ui.tab_panel(self.gallery) as tab:
-                                self.load_settings_to_ui('gallery')
-                            with ui.tab_panel(self.customizer) as tab:
-                                self.load_settings_to_ui('customizer')
-                            with ui.tab_panel(self.editor) as tab:
-                                self.load_settings_to_ui('editor')
                             with ui.tab_panel(self.viewer) as tab:
                                 self.load_settings_to_ui('viewer')
-                            with ui.tab_panel(self.logger) as tab:
-                                self.load_settings_to_ui('logger')
-                            with ui.tab_panel(self.notes) as tab:
-                                self.load_settings_to_ui('notes')
-                            with ui.tab_panel(self.help) as tab:
-                                self.load_settings_to_ui('help')
 
     def filter_settings(self, dictionary):
         """
@@ -105,7 +87,7 @@ class SettingsView(BaseView):
         add an element to the user interface.
         
         # TODO: checkout knob, slider and range and color input               
-         
+        
         """
         
         if type(value) == dict:

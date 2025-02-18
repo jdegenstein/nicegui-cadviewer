@@ -15,14 +15,10 @@ description: |
 from nicegui import ui                                     #| [docs](https://nicegui.readthedocs.io/en/latest/)   
 from nicegui import events  
 from elements.base_button_bar import BaseButtonBar         #| [docs](https://nicegui.readthedocs.io/en/latest/elements.html#buttonbar)
-from elements.project_gallery import ProjectGallery        #| 
-from elements.note_viewer     import NoteViewer            #| 
-from elements.customizer_view import CustomizerView        #| 
 from elements.code_editor     import CodeEditor            #| 
 from elements.model_viewer    import ModelViewer           #| 
 from elements.console_view    import ConsoleView           #| 
 from elements.settings_view   import SettingsView          #| 
-from elements.help_view       import HelpView              #| 
 from backend.path_manager     import PathManager           #| Managing file and directory handling for the application
 from elements.view_manager    import ViewManager           #|
 from elements.view_data       import ViewData              #|
@@ -38,14 +34,10 @@ from elements.constants import *
 class MainViews():
     # [Variables]
     # - Views
-    gallery    = None
-    notes      = None
-    customizer = None
     editor     = None
     viewer     = None
     console    = None
     settings   = None
-    help       = None
 
     # - Management
     views_left  = None # TODO Move to view manager
@@ -64,27 +56,19 @@ class MainViews():
 
         self.manager = ViewManager(g__views, P__experimental)
         
-        self.gallery    = ProjectGallery(path_manager)
-        self.customizer = CustomizerView(path_manager)  
         self.editor     = CodeEditor(path_manager)
         self.settings   = SettingsView(path_manager)
-        self.notes      = NoteViewer(path_manager)
         self.viewer     = ModelViewer()
         self.console    = ConsoleView()
-        self.help       = HelpView(path_manager)
 
-        self.manager.add_new_view(self.gallery,      Side.LEFT,   'Project Gallery',  'folder')
-        self.manager.add_new_view(self.notes,        Side.RIGHT,  'Notes',            'info')
-        self.manager.add_new_view(self.customizer,   Side.BOTH,   'Customizer',       'plumbing')
         self.manager.add_new_view(self.editor,       Side.BOTH,   'Code Editor',      'code')
         self.manager.add_new_view(self.viewer,       Side.BOTH,   'Model Viewer',     'view_in_ar')
         self.manager.add_new_view(self.console,      Side.BOTH,   'Console',          'article')
         self.manager.add_new_view(self.settings,     Side.LEFT,   'Settings',         'settings')
-        self.manager.add_new_view(self.help,         Side.RIGHT,  'Help',             'help')
 
         
         # TODO: move the following lines to manager
-        self.list_views  = [self.gallery, self.customizer, self.editor, self.viewer, self.settings, self.notes, self.help]
+        self.list_views  = [self.editor, self.viewer, self.console, self.settings]
         self.show_left   = None
         self.show_right  = None
 
@@ -97,37 +81,23 @@ class MainViews():
             with main_splitter.before:
                 with ui.column().classes('w-full h-full items-stretch') as container:
                     self.left_container = container
-                    self.gallery.move(container)
-                    self.customizer.move(container)  
                     self.editor.move(container)
                     self.settings.move(container)
 
                     #  TODO: move this to view_manager ...
-                    self.left_views = [self.gallery, self.customizer, self.editor, self.settings]
-
-                    # TODO: the folowing block might generate the 50% issue
-                    #for view in self.left_views:
-                    #    view.classes('w-full h-full')
-                    #    view.set_visibility(False)
+                    self.left_views = [self.editor, self.settings]
 
 
             with main_splitter.after:
                 with ui.column().classes('w-full h-full items-stretch') as container:
                     self.right_container = container
 
-                    self.notes.move(container)
                     self.viewer.move(container)
                     self.console.move(container)
-                    self.help.move(container)
-
 
                     #  TODO: move this to view_manager ...
-                    self.right_views = [self.notes, self.viewer, self.console, self.help]
+                    self.right_views = [self.viewer, self.console]
 
-                    # TODO: this following is not necessary, and might generate issues with the view --- 2025-02-09
-                    #for view in self.right_views:
-                    #    view.classes('w-full h-full')
-                    #    view.set_visibility(False)
 
             with main_splitter.separator:
                 if P__use_splitter_buttons:
@@ -215,12 +185,12 @@ class MainViews():
                 
     def setup_views(self):
 
-        self.list_views = [self.gallery, self.customizer, self.editor, self.viewer, self.console, self.settings, self.notes, self.help]
-        self.show_left = self.gallery
-        self.show_right = self.notes
+        self.list_views = [self.editor, self.viewer, self.console, self.settings]
+        self.show_left = self.editor
+        self.show_right = self.viewer
     
-        self.list_views_left  = [self.gallery, self.editor, self.customizer, self.settings]
-        self.list_views_right = [self.notes,   self.viewer, self.console,    self.help]
+        self.list_views_left  = [ self.editor, self.settings]
+        self.list_views_right = [self.viewer,  self.console]
 
 
     def show_all(self):
@@ -286,23 +256,6 @@ class MainViews():
         else: # side == Side.RIGHT:
             self.manager.ensure_right_visible()
 
-    def show_gallery(self):
-        """Show the gallery page it is restricted to the left page.
-        
-        """
-
-        page = self.gallery
-        side = Side.LEFT
-        if self.already_shown_on_side(page, side):
-            self.modify_size(side)
-        else:
-            page.set_visibility(True)
-            self.show_left = self.gallery
-            if not self.show_right:
-                self.show_right = self.notes
-
-        self.update_views()
-
     def show_settings(self):
         """Show the settings page - it is restricted to the left side."""
 
@@ -314,35 +267,6 @@ class MainViews():
             self.manager.set_zoom(100)
             page.set_visibility(True)
             self.show_left = page
-
-        self.update_views()
-
-    def show_notes(self):
-        """Show the notes page - it is restricted to the right side."""
-
-        page = self.notes
-        side = Side.RIGHT
-        if self.already_shown_on_side(page, side):
-            self.modify_size(side)
-        else:
-            page.set_visibility(True)
-            self.show_right = page
-            if not self.show_left:
-                self.show_left = self.gallery
-
-        self.update_views()
-
-    def show_help(self):
-        """Show the help page - it is restricted to the right side."""
-
-        side = Side.RIGHT
-        if self.already_shown_on_side(self.help, side):
-            self.modify_size(side)
-        else:
-            self.gallery.set_visibility(True)
-            self.show_right = self.help
-            if not self.show_left:
-                self.show_left = self.editor
 
         self.update_views()
 
@@ -428,23 +352,19 @@ class MainViews():
                 
         self.update_views()
 
-    def show_customizer(self, side):
-
-        self.show_left_or_right(self.customizer, side, self.editor, self.viewer)
-
         
     def show_editor(self, side):
         if P__experimental:
-            self.show_left_or_right(self.editor, side, self.customizer, self.viewer)
+            self.show_left_or_right(self.editor, side, self.console, self.viewer)
         else:
-            self.show_left_or_right(self.editor, Side.LEFT, self.customizer, self.viewer)
+            self.show_left_or_right(self.editor, Side.LEFT, self.viewer, self.viewer)
         
     def show_viewer(self, side):
 
         if P__experimental:
-            self.show_left_or_right(self.viewer, side, self.editor, self.customizer)
+            self.show_left_or_right(self.viewer, side, self.editor, self.console)
         else:
-            self.show_left_or_right(self.viewer, Side.RIGHT, self.editor, self.customizer)
+            self.show_left_or_right(self.viewer, Side.RIGHT, self.editor, self.console)
 
     def show_console(self, side):
 
@@ -471,6 +391,7 @@ class MainViews():
 
         if main_modifier and e.action.keydown:
             if e.key.enter:
+                print(f'>>>>>>>>>>>>>> on run')
                 self.editor.on_run()             # TODO: fix editor
             elif e.key.name == "s":
                 self.editor.on_save()
@@ -479,50 +400,36 @@ class MainViews():
             elif e.key.name == "t":
                 self.editor.on_new()
             elif e.key.name == "1":
-                # TODO: change the short cuts based on the new setup (auto generated button bar in main_views.py)
-                self.manager.show_gallery_left(e)
-            elif e.key.name == "2":
-                self.manager.show_customizer_left(e)
-            elif e.key.name == "3":
                 self.manager.show_editor_left(e)
-            elif e.key.name == "4":
+            elif e.key.name == "2":
                 if P__experimental:
                     self.manager.show_viewer_left(e)
                 else:
                     self.manager.show_console_left(e)
-            elif e.key.name == "5":
+            elif e.key.name == "3":
                 if P__experimental:
                     self.manager.show_console_left(e)
                 else:
                     self.manager.show_settings_left(e)
-            elif e.key.name == "6":
+            elif e.key.name == "4":
                 if P__experimental:
                     self.manager.show_settings_left(e)
 
         elif e.modifiers.alt and e.action.keydown:
             if e.key.name == "1":
-                self.manager.show_notes_right(e)
-            elif e.key.name == "2":
-                self.manager.show_customizer_right(e)
-            elif e.key.name == "3":
                 if P__experimental:
                     self.manager.show_editor_right(e)
                 else:
                     self.manager.show_viewer_right(e)
-            elif e.key.name == "4":
+            elif e.key.name == "2":
                 if P__experimental:
                     self.manager.show_viewer_right(e)
                 else:
                     self.manager.show_console_right(e)
 
-            elif e.key.name == "5":
+            elif e.key.name == "3":
                 if P__experimental:
                     self.manager.show_console_right(e)
-                else:
-                    self.manager.show_help_right(e)
-
-            elif e.key.name == "6":
-                self.manager.show_help_right(e)
 
 
 
@@ -531,31 +438,23 @@ if P__experimental:
                     # use `Meta` for views that are used on both sides
                     # use `Ctrl` for views that are used on the left side
                     # use `Alt` for views that are used on the right side
-        'Ctrl+1':    ViewData('Gallery',    'folder',     left,  "Ctrl+1"),
-        'Alt+1' :    ViewData('Notes',      'info',       right, "Alt+1"),
-        'Meta+2':    ViewData('Customizer', 'plumbing',   both,  "Meta+2"), 
-        'Meta+3':    ViewData('Editor',     'code',       both,  "Meta+3"),
-        'Meta+4':    ViewData('Viewer',     'view_in_ar', both,  "Meta+4"),
-        'Meta+5':    ViewData('Console',    'article',    both,  "Meta+5"),
-        'Ctrl+6':    ViewData('Settings',   'settings',   left,  "Ctrl+6"),
-        'Alt+6' :    ViewData('Help',       'help',       right, "Alt+6"),
+        'Meta+1':    ViewData('Editor',     'code',       both,  "Meta+1"),
+        'Meta+2':    ViewData('Viewer',     'view_in_ar', both,  "Meta+2"),
+        'Meta+3':    ViewData('Console',    'article',    both,  "Meta+3"),
+        'Ctrl+4':    ViewData('Settings',   'settings',   left,  "Ctrl+4"),
     }
-    left_buttons  = ['Ctrl+1', 'Meta+2', 'Ctrl+3', 'Meta+4', 'Ctrl+5', 'Ctrl+6']
-    right_buttons = ['Alt+1', 'Meta+2',  'Alt+3',  'Meta+4', 'Alt+5', 'Alt+6']
+    left_buttons  = ['Meta+1', 'Meta+2', 'Meta+3', 'Ctrl+4']
+    right_buttons = ['Meta+1', 'Meta+2', 'Meta+3']
 
 else:
     g__views = {    # https://fonts.google.com/icons?icon.query=stop
                     # use `Meta` for views that are used on both sides
                     # use `Ctrl` for views that are used on the left side
                     # use `Alt` for views that are used on the right side
-        'Ctrl+1':    ViewData('Gallery',    'folder',     left,  "Ctrl+1"),
+        'Ctrl+1':    ViewData('Editor',     'code',       left,  "Ctrl+1"),
         'Alt+1' :    ViewData('Notes',      'info',       right, "Alt+1"),
-        'Meta+2':    ViewData('Customizer', 'plumbing',   both,  "Meta+2"), 
-        'Ctrl+3':    ViewData('Editor',     'code',       left,  "Ctrl+3"),
-        'Alt+3':     ViewData('Viewer',     'view_in_ar', right, "Alt+3"),
-        'Meta+4':    ViewData('Console',    'article',    both,  "Meta+4"),
-        'Ctrl+5':    ViewData('Settings',   'settings',   left,  "Ctrl+5"),
-        'Alt+5' :    ViewData('Help',       'help',       right, "Alt+5"),
+        'Meta+2':    ViewData('Console',    'article',    both,  "Meta+2"),
+        'Ctrl+3':    ViewData('Settings',   'settings',   left,  "Ctrl+3"),   
     } 
-    left_buttons  = ['Ctrl+1', 'Ctrl+2', 'Ctrl+3', 'Ctrl+4', 'Ctrl+5']
-    right_buttons = ['Alt+1',  'Alt+2',  'Alt+3',  'Alt+4', 'Alt+5']
+    left_buttons  = ['Ctrl+1', 'Meta+2', 'Ctrl+3']
+    right_buttons = ['Alt+1',  'Meta+2']

@@ -1,22 +1,14 @@
 from build123d import *
 from ocp_vscode import *
 
-try:
-    print(40*'-^')
-    with ParameterGroup('Par1') as Par:
-        IntParameter('a', 3)
-        IntParameter('b', 2)
-        IntParameter('c', 4)
-        IntParameter('w', 1)
-        StringParameter('box',  "Box")
-        StringParameter('color', "#aaaaaaff")
-
-    print(f"Parameters are available:")
-    print(f'{Par.a=}, {Par.b=}, {Par.c=}, {Par.w=}')    
-    print(f'{Par.color=}')
-
-except e:
-    print(f"{e=}")
+class Par:
+    a = 12 
+    w = 2 
+    b = 24
+    c = 4
+    box = "A"
+    color = "#440000"
+    
 
 try: 
     # Create a new part

@@ -14,4 +14,4 @@ Implementation for the programmatic part of the application.
 
 # Contents
 
-TODO: file_list
+- `path_manager.py`:: Necessary paths and file objects

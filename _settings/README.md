@@ -14,4 +14,5 @@ Application settings folder.
 
 # Contents
 
-TODO: file_list
+- `nice123d.yaml`:: Application settings
+- `viewer.yaml`:: OCP_vscode viewer settings

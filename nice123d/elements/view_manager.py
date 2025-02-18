@@ -53,31 +53,21 @@ class ViewManager():
 
         if P__experimental:
             self.map_button_to_views = {
-                'Ctrl+1': self.show_gallery_left,	
-                'Alt+1':  self.show_notes_right,
-                'Ctrl+2': self.show_customizer_left,
-                'Ctrl+3': self.show_editor_left,
-                'Ctrl+4': self.show_viewer_left,
-                'Ctrl+5': self.show_console_left,
-                'Ctrl+6': self.show_settings_left,
-                'Alt+2':  self.show_customizer_right,
-                'Alt+3':  self.show_editor_right,
-                'Alt+4':  self.show_viewer_right,
-                'Alt+5':  self.show_console_right,
-                'Alt+6':  self.show_help_right,
+                'Ctrl+1': self.show_editor_left,
+                'Alt+1':  self.show_editor_right,
+                'Ctrl+2': self.show_viewer_left,
+                'Alt+2':  self.show_viewer_right,
+                'Ctrl+3': self.show_console_left,
+                'Alt+3':  self.show_console_right,
+                'Ctrl+4': self.show_settings_left,
             }
         else:
             self.map_button_to_views = {
-                'Ctrl+1': self.show_gallery_left,	
-                'Ctrl+2': self.show_customizer_left,
-                'Ctrl+3': self.show_editor_left,
-                'Ctrl+4': self.show_console_left,
-                'Ctrl+5': self.show_settings_left,
-                'Alt+1':  self.show_notes_right,
-                'Alt+2':  self.show_customizer_right,
-                'Alt+3':  self.show_viewer_right,
-                'Alt+4':  self.show_console_right,
-                'Alt+5':  self.show_help_right,
+                'Ctrl+1': self.show_editor_left,
+                'Ctrl+2': self.show_console_left,
+                'Ctrl+3': self.show_settings_left,
+                'Alt+1':  self.show_viewer_right,
+                'Alt+2':  self.show_console_right,
             }
   
     def setup(self, views):
@@ -226,27 +216,6 @@ class ViewManager():
             # else: nothing to do - keep same button active
             self.last_button_right = button  
 
-    def show_gallery_left(self, event):
-        print(f'show_gallery_left')
-        self.views.show_gallery()
-        self.ctrl_bar.set_active_button(self.views.gallery.title)
-            
-
-    def show_notes_right(self, event):
-        print(f'show_notes_right')
-        self.views.show_notes()
-        self.alt_bar.set_active_button(self.views.notes.title)
-
-    def show_customizer_left(self, event):
-        print(f'show_customizer_left')
-        self.views.show_customizer(Side.LEFT)
-        self.ctrl_bar.set_active_button(self.views.customizer.title)
-        
-    def show_customizer_right(self, event):
-        print(f'show_customizer_right')
-        self.views.show_customizer(Side.RIGHT)
-        self.alt_bar.set_active_button(self.views.customizer.title)
-
     def show_editor_left(self, event):
         print(f'show_editor_left')
         self.views.show_editor(Side.LEFT)
@@ -283,11 +252,6 @@ class ViewManager():
         self.views.show_settings()
         self.ctrl_bar.set_active_button(self.views.settings.title)
 
-
-    def show_help_right(self, event):
-        print(f'show_help_right')
-        self.views.show_help()
-        self.alt_bar.set_active_button(self.views.help.title)
 
     def set_zoom(self, value):
         self.size_splitter.value = value        
