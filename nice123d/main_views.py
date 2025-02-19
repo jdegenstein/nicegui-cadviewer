@@ -49,17 +49,19 @@ class MainViews():
     # [Constructor]
     def __init__(self, path_manager):
 
-        
         if type(path_manager) is not PathManager:
             raise TypeError("The path_manager must be an instance of PathManager.")
         self.path_manager = path_manager
 
         self.manager = ViewManager(g__views, P__experimental)
         
+        # first console view to have the logger available
+        self.console    = ConsoleView(path_manager)
+        self.logger = path_manager.logger
+        
         self.editor     = CodeEditor(path_manager)
         self.settings   = SettingsView(path_manager)
-        self.viewer     = ModelViewer()
-        self.console    = ConsoleView()
+        self.viewer     = ModelViewer(path_manager)
 
         if P__experimental:
             self.manager.add_new_view(self.editor,       Side.BOTH,   'Code Editor',      'code')

@@ -47,7 +47,15 @@ class PathManager():
     def set_code_file_label(self, file_path):
         self.ui_code_file = file_path
 
+    def set_logger(self, logger):
+        self.logger = logger
+        
+
     # [API]
+    def push(self, msg):
+        if self.logger:        
+            self.logger.push(msg)
+
     @property
     def settings(self):
         return self.settings_path

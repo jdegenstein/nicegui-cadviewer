@@ -33,8 +33,10 @@ class ModelViewer(BaseView):
     """
     # [Variables]
     # [Constructor]
-    def __init__(self, ip_address= '127.0.0.1', port=3939, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, path_manager : PathManager, ip_address= '127.0.0.1', port=3939, **kwargs):
+        super().__init__(path_manager, **kwargs)
+        if path_manager:
+            self.logger = path_manager.logger
         self.port = port
         self.time_start('model_viewer')
         with self:

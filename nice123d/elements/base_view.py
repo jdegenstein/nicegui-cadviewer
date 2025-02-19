@@ -38,6 +38,8 @@ class BaseView(ui.element):
 
         if path_manager is not None:
             self._paths = path_manager
+            self.logger = path_manager.logger
+        
 
         self.start_time = {}
 
@@ -67,7 +69,7 @@ class BaseView(ui.element):
         used_time = ''
         if do_time:
             used_time = f'in {time.time() - self.start_time[call_id]:0.2}s'
-        return f'{timestamp}: [{function}] {message} {used_time}'
+        self.logger.push(f'{timestamp}: [{function}] {message} {used_time}')
 
     # [Event Handlers]
     def set_visibility(self, visible):

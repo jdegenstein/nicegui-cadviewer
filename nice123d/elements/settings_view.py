@@ -47,6 +47,8 @@ class SettingsView(BaseView):
     # [Constructor]
     def __init__(self, path_manager=None, **kwargs):
         super().__init__(path_manager, **kwargs)
+        self.logger = path_manager.logger
+        
         self.settings_path = self.paths.settings_path
 
         self.settings = {}

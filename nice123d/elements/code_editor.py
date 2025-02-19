@@ -17,6 +17,7 @@ from nicegui import app, events
 from elements.base_view import BaseView          #| Base class for all views
 from .constants import *                         #| The application constants
 from pathlib import Path                         #| Path handling
+import traceback
 # [Variables]
 # TODO: consider separate editor execution thread from nicegui thread
 
@@ -36,6 +37,7 @@ class CodeEditor(BaseView):
     def __init__(self, path_manager=None, **kwargs):
         """Initialize the Python editor component."""
         super().__init__(path_manager, **kwargs)
+        self.logger = path_manager.logger
         
         # TODO: use paths directly and not split it to extra members
         self.model_path      = self.paths.models_path
@@ -77,7 +79,16 @@ class CodeEditor(BaseView):
             exec(code)
             return "Code executed successfully"
         except Exception as e:
-            return f"Error: {str(e)}"
+            tb = traceback.format_exc()
+            print(f'{type(tb)}')
+            tb = tb.replace('<string>', self.code_file.name).replace('<module>', 'code')
+            
+            filtered_tb = ""
+            for count, line in enumerate(tb.splitlines()):
+                if count <= 3:
+                    continue
+                filtered_tb += line + '\n'
+            return f"Error: {str(e)}\nTraceback:\n{filtered_tb}"
 
     # [Event Handlers]
     def on_save(self):
@@ -119,5 +130,5 @@ class CodeEditor(BaseView):
         self.time_start('on_run')
         result = self.execute_code(self.editor.value)
         self.info('on_run', result, call_id='on_run')
-        
-        
+
+
