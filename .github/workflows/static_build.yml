@@ -1,0 +1,103 @@
+name: static_build
+# this workflow is designed to:
+# 1. create a static redistributable "build" of nice123d
+# 2. create an OS specific launcher executable as an obvious entry point
+
+on: [workflow_dispatch]
+
+env:
+  UV_INSTALL_DIR: uv
+  
+jobs:
+  builds:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12"]
+        # os: [windows-latest]
+        os: [macos-14, ubuntu-latest, windows-latest]
+        # os: [macos-13, macos-14, ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out nice123d from github repo
+        uses: actions/checkout@v4
+
+      - name: (linux) Download correct python-build-standalone
+        if: runner.os == 'Linux'
+        run: |
+          curl -L -O https://github.com/astral-sh/python-build-standalone/releases/download/20250212/cpython-3.12.9+20250212-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz
+          mkdir python_local
+          tar -xzf cpython-3.12.9+20250212-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz -C python_local
+          pwd
+          ls -lRa
+          python_local/python/bin/python -m pip install uv
+          python_local/python/bin/python -m uv pip install .
+          
+      - name: (mac14) Download correct python-build-standalone
+        if: matrix.os == 'macos-14'
+        run: |
+          brew install go
+          curl -L -O https://github.com/astral-sh/python-build-standalone/releases/download/20250212/cpython-3.12.9+20250212-aarch64-apple-darwin-install_only_stripped.tar.gz
+          mkdir python_local
+          tar -xzf cpython-3.12.9+20250212-aarch64-apple-darwin-install_only_stripped.tar.gz -C python_local
+          pwd
+          ls -lRa
+          python_local/python/bin/python -m pip install uv
+          python_local/python/bin/python -m uv pip install .
+          
+      - name: (win) Download correct python-build-standalone
+        if: runner.os == 'Windows'
+        shell: bash -l {0}
+        run: |
+          curl -L -O https://github.com/astral-sh/python-build-standalone/releases/download/20250212/cpython-3.12.9+20250212-x86_64-pc-windows-msvc-install_only_stripped.tar.gz
+          mkdir python_local
+          tar -xzf cpython-3.12.9+20250212-x86_64-pc-windows-msvc-install_only_stripped.tar.gz -C python_local
+
+          python_local/python/python.exe -m pip install uv
+          python_local/python/python.exe -m uv pip install .
+
+      - name: (linux) Build launcher with go
+        if: runner.os == 'Linux'
+        run: |
+          go version
+          cd tools/nice123d_run
+          go build -o nice123d_run main.go 
+          chmod +x nice123d_run
+          cp nice123d_run ../../python_local/
+
+      - name: (mac14) Build launcher with go
+        if: matrix.os == 'macos-14'
+        run: |
+          go version
+          cd tools/nice123d_run
+          go build -o nice123d_run main.go 
+          chmod +x nice123d_run
+          cp nice123d_run ../../python_local/
+
+      - name: (win) Build launcher with go
+        if: runner.os == 'Windows'
+        shell: bash -l {0}
+        run: |
+          go version
+          cd tools/nice123d_run
+          go build -o nice123d_run.exe main.go 
+          cp nice123d_run.exe ../../python_local/
+
+      - name: (all) Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nice123d-${{ matrix.os }}
+          path: ./python_local
+
+          
+      # ls -lRa           
+      # - name: Install the latest version of uv
+      #   uses: astral-sh/setup-uv@v5
+      #   with:
+      #     python-version: ${{ matrix.python-version }}
+      # - name: Install nice123d from local folder
+      #   run: uv pip install .
+      # - name: Enumerate venv dir
+      #   shell: bash --login {0}
+      #   run: ls -lRa

@@ -1,4 +1,3 @@
-
 <!--
 
 file:         /README.md
@@ -10,6 +9,7 @@ description:  This file contains the main information for the `nice123d` project
 -->
 # README: nice123d
 A nicegui-based CAD editor and viewer for OCP-based projects like build123d.
+
 
 * Thanks especially to the [ocp_vscode](https://github.com/bernhard-42/vscode-ocp-cad-viewer) project
 * Also thanks to the [nicegui](https://github.com/zauberzeug/nicegui) project
