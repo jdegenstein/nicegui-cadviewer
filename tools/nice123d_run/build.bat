@@ -1,1 +1,1 @@
-go build -o nice123d.exe main.go 
+go build -o nice123d_run.exe main.go 
