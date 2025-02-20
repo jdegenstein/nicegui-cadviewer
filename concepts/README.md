@@ -10,8 +10,8 @@ description:  This file contains the folder documentation. |
 
 # README concepts:
 
-TODO: description
+Used to place files that are created for implementing new concepts.
 
 # Contents
 
-TODO: file_list
+- None (all concepts are integrated into the `nice123d` folder).

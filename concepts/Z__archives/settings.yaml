@@ -1,5 +1,0 @@
-auth_token: auth_token
-doc: used from `git_integration.py`
-git_mode: remote
-git_url: https://github.com
-username: felix@42sol.ey

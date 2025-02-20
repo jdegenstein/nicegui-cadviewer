@@ -21,6 +21,8 @@ dependencies = [
   "copier",
   "pytest",
   "pyperclip",
+  "sphinx",
+  "sphinxcontib-mermaid",
 ]
 description = "A nicegui-based CAD editor and viewer for OCP-based projects like build123d"
 

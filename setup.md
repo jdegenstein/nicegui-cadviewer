@@ -11,14 +11,32 @@ description:  This file contains the folder documentation. |
 -->
 # Setup for usage
 
----
+## Setup
+
+> [!Note]
+> `python3` for Linux and MacOS.
+> `python` for Windows.
+
+```shell
+python3 -m pip install -e .     # install dependencies that are defined in `pyproject tomple.
+python3 -m nice123d             # run the application (default is `native      = True`)
+```
+
+## Setting up Sphinx 
+
+```shell
+mkdir docs
+cd docs
+sphinx-quickstart --ext-autodoc
+```
+
+## Other Notes 
 ```shell
 python3 -m venv .venv
 source .venv/bin/activate
 which python
 which pip
 ```
----
 
 Should show `...your path.../nicegui-cadviewer/.venv/bin/python`
 and `...your path.../nicegui-cadviewer/.venv/bin/pip`
