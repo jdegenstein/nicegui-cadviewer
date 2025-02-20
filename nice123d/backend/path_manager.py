@@ -33,6 +33,8 @@ class PathManager():
     
     # [Constructor]
     def __init__(self, settings_path=None, models_path=None):
+        """ Construcutor
+        """
         self.ui_code_file = None 
         if settings_path and Path(settings_path).exists():
             self.settings_path = settings_path

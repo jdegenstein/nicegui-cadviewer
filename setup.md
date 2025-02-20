@@ -21,6 +21,14 @@ description:  This file contains the folder documentation. |
 python3 -m pip install -e .     # install dependencies that are defined in `pyproject tomple.
 python3 -m nice123d             # run the application (default is `native      = True`)
 ```
+### Build the documentation 
+
+```shell 
+python -m pip install sphinxcontrib-mermaid
+cd docs 
+sphinx-apidoc -o .\source\ ..\nice123d
+make html
+```
 
 ## Setting up Sphinx 
 
