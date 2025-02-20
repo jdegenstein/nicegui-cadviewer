@@ -16,7 +16,7 @@ release = '0.0.1'
 
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinxcontib.mermaid',
+    'sphinxcontrib.mermaid',
 ]
 
 templates_path = ['_templates']

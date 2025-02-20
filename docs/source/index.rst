@@ -15,3 +15,12 @@ documentation for details.
    :maxdepth: 2
    :caption: Contents:
 
+modules
+
+.. mermaid::
+
+   graph TD;
+       A-->B;
+       A-->C;
+       B-->D;
+       C-->D;
