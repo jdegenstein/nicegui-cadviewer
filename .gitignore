@@ -4,6 +4,12 @@
 # project-id:   e2bbd03f-0ac6-41ec-89ae-2ad52fa0652a
 # description:  This file contains the list of files and directories that should be ignored by git.
 
+# Ignore all files in the build directory
+/build/*
+
+# Do not ignore README.md
+!/build/README.md
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
