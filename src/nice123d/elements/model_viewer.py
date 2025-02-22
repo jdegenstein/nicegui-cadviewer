@@ -13,9 +13,9 @@ description: |
 
 # [Imports]                                       #| description or links
 from nicegui import ui                            #| [docs](https://nicegui.readthedocs.io/en/latest/)   
-from elements.base_view import BaseView           #| Base class for all views
+from .base_view import BaseView           #| Base class for all views
 from .constants import *                          #| The application constants
-from backend.path_manager import PathManager      #| Managing file and directory handling for the application
+from ..backend.path_manager import PathManager      #| Managing file and directory handling for the application
 import subprocess                                 #| [docs](https://docs.python.org/3/library/subprocess.html)
 from ocp_vscode import *                          #| [docs](https://ocp_vscode.readthedocs.io/en/latest/)
 import time                                       #| [docs](https://docs.python.org/3/library/time.html)

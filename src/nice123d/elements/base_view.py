@@ -16,7 +16,7 @@ from typing import Optional                      #| [docs](https://docs.python.o
 from datetime import datetime                    #| [docs](https://docs.python.org/3/library/datetime.html)
 import time                                      #| [docs](https://docs.python.org/3/library/time.html)
 from .constants import *
-from backend.path_manager import PathManager     #| Managing file and directory handling for the application
+from ..backend.path_manager import PathManager    #| Managing file and directory handling for the application
 
 
 # [Main Class]

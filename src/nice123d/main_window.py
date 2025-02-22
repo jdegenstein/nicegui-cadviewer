@@ -15,9 +15,9 @@ description: |
 from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
 from nicegui.events import KeyEventArguments     #| [docs](https://nicegui.readthedocs.io/en/latest/events.html)
 from pathlib import Path                         #| [docs](https://docs.python.org/3/library/pathlib.html)
-from main_views import MainViews                 #| All views collected in main
-from backend.path_manager import PathManager     #| Path manager
-from elements.constants import *                 #| Constants
+from .main_views import MainViews       #| All views collected in main
+from .backend.path_manager import PathManager     #| Path manager
+from .elements.constants import *                 #| Constants
 # Add custom CSS for responsive sizing
 ui.add_css('''
     :root {
@@ -46,8 +46,8 @@ class MainWindow(ui.element):
         self.width =1800
         self.height= 900
         self.title="nice123d"
-        settings_path = Path(__file__).parent / '../../../data/_settings'
-        models_path = Path(__file__).parent / '../../../data/_models'
+        settings_path = Path(__file__).parent / '../../data/_settings'
+        models_path = Path(__file__).parent / '../../data/_models'
         self.path_manager = PathManager(models_path=models_path, settings_path=settings_path)
 
         self.views = MainViews(self.path_manager)    

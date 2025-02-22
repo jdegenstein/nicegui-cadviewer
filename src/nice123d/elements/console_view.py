@@ -14,13 +14,13 @@ description: |
 
 # [Imports]                                      #| description or links
 from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
-from elements.base_view import BaseView #| Base class for all views
-from .constants import *                          #| The application constants
-from backend.path_manager import PathManager   #| Managing file and directory handling for the application
 import logging
 from rich.logging import RichHandler  # https://rich.readthedocs.io/en/stable/logging.html
 from datetime import datetime
 import pyperclip
+from .constants import *                         #| The application constants
+from .base_view import BaseView         #| Base class for all views
+from ..backend.path_manager import PathManager    #| Managing file and directory handling for the application
 
 # [Variables]
 logger = logging.getLogger()

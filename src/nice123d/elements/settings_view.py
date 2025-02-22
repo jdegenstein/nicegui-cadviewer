@@ -23,9 +23,9 @@ description: |
 
 # [Imports]                                      #| description or links
 from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
-from elements.base_view import BaseView          #| Base class for all views
+from .base_view import BaseView         #| Base class for all views
 from .constants import *                         #| The application constants
-from backend.path_manager import PathManager     #| Managing file and directory handling for the application
+from ..backend.path_manager import PathManager   #| Managing file and directory handling for the application
 import yaml                                      #| [docs](https://pyyaml.org/wiki/PyYAMLDocumentation)
 from pathlib import Path
 from collections import namedtuple

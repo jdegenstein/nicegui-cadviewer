@@ -38,9 +38,9 @@ license:
 """
 
 # [Imports]
-from elements.constants import *
 from nicegui import app, ui
 from pathlib import Path
+from .elements.constants import *
 from .main_window import MainWindow
 
 # [Constants]

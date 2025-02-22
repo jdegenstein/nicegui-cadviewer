@@ -13,11 +13,11 @@ description: |
 
 # [Imports]                                      #| description or links
 from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
-from elements.base_button import BaseButton      #| Base class for all buttons
-from elements.base_button_bar import BaseButtonBar #| Base class for all button bars
-from elements.base_view import BaseView          #| Base class for all views
+from .base_button import BaseButton      #| Base class for all buttons
+from .base_button_bar import BaseButtonBar #| Base class for all button bars
+from .base_view import BaseView          #| Base class for all views
 from .constants import *                         #| The application constants
-from backend.path_manager import PathManager     #| Managing file and directory handling for the application
+from ..backend.path_manager import PathManager     #| Managing file and directory handling for the application
 
 # [Variables]
 

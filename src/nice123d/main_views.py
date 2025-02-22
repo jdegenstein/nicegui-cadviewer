@@ -14,17 +14,17 @@ description: |
 # [Imports]                                                #| description or links
 from nicegui import ui                                     #| [docs](https://nicegui.readthedocs.io/en/latest/)   
 from nicegui import events  
-from elements.base_button_bar import BaseButtonBar         #| [docs](https://nicegui.readthedocs.io/en/latest/elements.html#buttonbar)
-from elements.code_editor     import CodeEditor            #| 
-from elements.model_viewer    import ModelViewer           #| 
-from elements.console_view    import ConsoleView           #| 
-from elements.settings_view   import SettingsView          #| 
-from backend.path_manager     import PathManager           #| Managing file and directory handling for the application
-from elements.view_manager    import ViewManager           #|
-from elements.view_data       import ViewData              #|
+from .elements.base_button_bar import BaseButtonBar        #| [docs](https://nicegui.readthedocs.io/en/latest/elements.html#buttonbar)
+from .elements.code_editor     import CodeEditor           #| 
+from .elements.model_viewer    import ModelViewer          #| 
+from .elements.console_view    import ConsoleView          #| 
+from .elements.settings_view   import SettingsView         #| 
+from .backend.path_manager     import PathManager          #| Managing file and directory handling for the application
+from .elements.view_manager    import ViewManager          #|
+from .elements.view_data       import ViewData             #|
 
 # TODO: pass resize of splitter to elements.
-from elements.constants import *
+from .elements.constants import *
 
 
 # [Variable]

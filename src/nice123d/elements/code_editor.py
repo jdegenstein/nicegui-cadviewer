@@ -14,7 +14,7 @@ description: |
 # [Imports]                                      #| description or links
 from nicegui import ui                           #| [docs](https://nicegui.readthedocs.io/en/latest/)   
 from nicegui import app, events
-from elements.base_view import BaseView          #| Base class for all views
+from .base_view import BaseView          #| Base class for all views
 from .constants import *                         #| The application constants
 from pathlib import Path                         #| Path handling
 import traceback
