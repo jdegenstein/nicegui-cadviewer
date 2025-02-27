@@ -8,15 +8,6 @@ on: [workflow_dispatch]
 env:
   UV_INSTALL_DIR: uv
 
-on:
-  push:
-    branches:
-      - main
-      - 2025-03_felix_build
-  pull_request:
-    branches:
-      - main
-      - 2025-03_felix_build
 jobs:
   builds:
     strategy:
