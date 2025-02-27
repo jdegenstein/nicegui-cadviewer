@@ -3,7 +3,15 @@ name: static_build
 # 1. create a static redistributable "build" of nice123d
 # 2. create an OS specific launcher executable as an obvious entry point
 
-on: [workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
+      - 2025-03_felix_build
+  pull_request:
+    branches:
+      - main
+      - 2025-03_felix_build
 
 env:
   UV_INSTALL_DIR: uv
